@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import LandingLayout from "./components/layouts/landingLayout";
 import Hero from "./components/common/Hero";
 import CounterGroup from "./components/common/CounterGroup";

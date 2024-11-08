@@ -22,7 +22,9 @@ export default function Navbar() {
   return (
     <div>
       <nav className="flex justify-between py-7  px-[5%] items-center relative">
-        <Image src={'assets/logo.svg'} height={80} width={70} alt="triber-logo" className=' lg:w-[80px] w-[50px]'/>
+        <Link href={'/'}>
+        <Image src={'assets/logo.svg'} height={80} width={70} alt="triber-logo" className=' lg:w-[80px] w-[50px]'/></Link>
+       
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex gap-7 items-center">

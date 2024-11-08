@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import React, { useState } from "react";
 
 type Photo = {
@@ -30,7 +31,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
             height: "400px", // Set a fixed height for each photo container
           }}
         >
-          <img
+          <Image
             src={photo.src}
             alt={photo.label}
             className="w-full h-full object-cover"

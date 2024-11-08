@@ -5,7 +5,7 @@ export default function Cryptic() {
   return (
     <div className="bg1 text-center flex flex-col py-12 px-[20%]">
       <h1 className="lg:text-4xl text-3xl font-serif font-semibold mb-8">
-        Building A Business <br /> Shouldn't Be Cryptic
+        Building A Business <br /> Shouldn`&lsquo;t Be Cryptic
       </h1>
       <div className="lg:flex items-center justify-center lg:gap-12">
         <div className="flex-col flex gap-4 mb-4 lg:mb-0 lg:gap-7">
