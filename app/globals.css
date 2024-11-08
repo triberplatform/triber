@@ -2,20 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+
+body{
+  background-color: black;
+  color: white;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* styles/globals.css */
+@font-face {
+  font-family: 'NotoSerif-Regular';
+  src: url('/fonts/NotoSerif-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/Poppins-Black.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'CustomFont1', sans-serif; /* Fallback to sans-serif */
+}
+
+
+.bg1{
+  background-image: url('/assets/bg-black.png');
+  background-size: contain;
+}
+
+.map-bg{
+  background-image: url('/assets/bgMap.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
+.bg-teams{
+
+  background-image: url('/assets/teams-hero.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.bg-black-horizontal{
+  background-image: url('/assets/bg-black-horizontal.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.bg-career-map{
+  background-image: url('/assets/career-map.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media only screen and (max-width: 600px){
+  .bg-career-map{
+    background-image: none;
+  }
+}
+
+.bg-drop{
+  background-image: url('/assets/bg-drop.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
+.bg-drop-mobile{
+  background-image: url('/assets/bg-drop.png');
+  background-size: contain;
+  background-repeat: no-repeat;
 }
