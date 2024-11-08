@@ -5,9 +5,9 @@ export default function Sponsors() {
   return (
     <div className="pt-16 pb-20 lg:pb-32 mx-5 text-center">
       <p className="lg:text-4xl text-3xl font-serif font-semibold">
-        We’re Not Just Building a Platform
+        We&apos;re Not Just Building a Platform
       </p>
-      <p className="mt-3">We’re building a movement.</p>
+      <p className="mt-3">We&apos;re building a movement.</p>
       <div className="lg:flex-row flex-col flex items-center justify-center mt-10 mb-20">
         <div className="mt-7">
           <Image

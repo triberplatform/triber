@@ -89,19 +89,19 @@ export default function OpenRoles() {
           <BlackCard
             heading={"Business Accelerator"}
             body={
-              "Join our team of business accelerators! We're looking for partners to help support small businesses and startups. Collaborating, leveraging resources and expertise to drive entrepreneurship and economic development."
+              "Join our team of business accelerators! We&apos;re looking for partners to help support small businesses and startups. Collaborating, leveraging resources and expertise to drive entrepreneurship and economic development."
             }
           />
           <BlackCard
             heading={"Business Accelerator"}
             body={
-              "Join our team of business accelerators! We're looking for partners to help support small businesses and startups. Collaborating, leveraging resources and expertise to drive entrepreneurship and economic development."
+              "Join our team of business accelerators! We&apos;re looking for partners to help support small businesses and startups. Collaborating, leveraging resources and expertise to drive entrepreneurship and economic development."
             }
           />
           <BlackCard
             heading={"Business Accelerator"}
             body={
-              "Join our team of business accelerators! We're looking for partners to help support small businesses and startups. Collaborating, leveraging resources and expertise to drive entrepreneurship and economic development."
+              "Join our team of business accelerators! We&apos;re looking for partners to help support small businesses and startups. Collaborating, leveraging resources and expertise to drive entrepreneurship and economic development."
             }
           />
         </div>

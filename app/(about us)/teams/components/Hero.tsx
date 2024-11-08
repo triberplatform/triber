@@ -1,11 +1,11 @@
-import Image from 'next/image'
+
 import React from 'react'
 
 export default function Hero() {
   return (
     <div className='text-center mt-3 mb-16 '>
           <p className="lg:text-[3.2rem] text-4xl font-semibold font-serif">Meet Us.</p>
-          <p className="my-4 px-5">Triber, we’re more than just a team—we’re a community of innovators, strategists, and <br /> dreamers. Together, we’re building a platform that empowers small businesses to thrive.</p>
+          <p className="my-4 px-5">Triber, we&apos;re more than just a team—we&apos;re a community of innovators, strategists, and <br /> dreamers. Together, we&apos;re building a platform that empowers small businesses to thrive.</p>
           <div className='bg-teams pt-44 lg:pt-56 pb-10 mx-[5%] text-lg font-serif lg:px-16'>
             <p className='lg:text-5xl text-3xl font-serif font-semibold mb-3 lg:mb-5'>Our Journey Began in 2021…</p>
             <div className="flex flex-col gap-2 lg:gap-4 mx-5">
