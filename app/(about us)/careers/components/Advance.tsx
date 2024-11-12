@@ -43,6 +43,9 @@ export default function Advance() {
             className="s"
           />
         </div>
+
+
+    
         <div className="col-span-1 mb-5 lg:mb-0 pt-5">
           <p className="text-xl font-semibold mb-5">
             Building a Network of 1,000 Financial Evaluators
