@@ -34,16 +34,16 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex gap-7 items-center">
-          <Link className="hover:text-mainGreen" href="/">
+          <Link className="hover:text-mainGreen" href="/login">
             Fundability test
           </Link>
-          <Link className="hover:text-mainGreen" href="/">
+          <Link className="hover:text-mainGreen" href="/login">
             Valuation
           </Link>
-          <Link className="hover:text-mainGreen" href="/">
+          <Link className="hover:text-mainGreen" href="/login">
             Deal Room
           </Link>
-          <Link className="hover:text-mainGreen" href="/">
+          <Link className="hover:text-mainGreen" href="/login">
             Database
           </Link>
           <div className="relative">
@@ -105,28 +105,28 @@ export default function Navbar() {
           <div className="flex flex-col px-5 text-sm pt-20">
             <Link
               className="text-white text-lg py-3 hover:text-mainGreen"
-              href="/"
+              href="/login"
               onClick={() => setMobileMenuOpen(false)}
             >
               Fundability test
             </Link>
             <Link
               className="text-white text-lg py-3 hover:text-mainGreen"
-              href="/"
+              href="/login"
               onClick={() => setMobileMenuOpen(false)}
             >
               Valuation
             </Link>
             <Link
               className="text-white text-lg py-3 hover:text-mainGreen"
-              href="/"
+              href="/login"
               onClick={() => setMobileMenuOpen(false)}
             >
               Deal Room
             </Link>
             <Link
               className="text-white text-lg py-3 hover:text-mainGreen"
-              href="/"
+              href="/login"
               onClick={() => setMobileMenuOpen(false)}
             >
               Database
@@ -173,14 +173,14 @@ export default function Navbar() {
               )}
             </div>
             <div className="mt-10">
-              <Button link="/" text="Get Started" />
+              <Button link="/signup" text="Get Started" />
             </div>
           </div>
         </div>
 
         {/* Desktop Get Started Button */}
         <div className="hidden lg:block">
-          <Button link="/" text="Get Started" />
+          <Button link="/signup" text="Get Started" />
         </div>
       </nav>
     </div>

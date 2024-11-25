@@ -16,7 +16,7 @@ export default function Cryptic() {
        <PhotoGalleryMobile/>
       </div>
 
-      <div className="text-center flex flex-col px-[20%]">
+      {/* <div className="text-center flex flex-col px-[20%]">
         <h1 className="lg:text-4xl text-3xl font-serif font-semibold mb-8">
           Building A Business <br /> Shouldn`&lsquo;t Be Cryptic
         </h1>
@@ -61,7 +61,7 @@ export default function Cryptic() {
           alt="chats"
           className="ml-12 self-center hidden lg:block mt-8"
         />
-      </div>
+      </div> */}
     </div>
   );
 }

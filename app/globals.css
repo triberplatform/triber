@@ -28,12 +28,28 @@ body {
   font-family: 'CustomFont1', sans-serif; /* Fallback to sans-serif */
 }
 
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
 
 .bg1{
   background-image: url('/assets/bg-black.png');
   background-size: contain;
 }
 
+input{
+  background-color: black;
+}
 .map-bg{
   background-image: url('/assets/bgMap.png');
   background-size: contain;
@@ -77,4 +93,8 @@ body {
   background-image: url('/assets/bg-drop.png');
   background-size: contain;
   background-repeat: no-repeat;
+}
+
+.home-input{
+  border: 1px white;
 }

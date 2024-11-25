@@ -7,6 +7,7 @@ import BiggestChallenges from "./components/common/BiggestChallenges";
 import Cryptic from "./components/common/Cryptic";
 import Faq from "./components/common/Faq";
 import ConnectForm from "./components/common/ConnectForm";
+import Sponsor from "./components/common/Sponsor";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
     <BiggestChallenges/>
     <Cryptic/>
     <Faq/>
+    <Sponsor/>
     <ConnectForm/>
   </LandingLayout>
   );

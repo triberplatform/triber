@@ -42,7 +42,7 @@ export default function Carousel() {
   };
 
   return (
-    <div className="lg:px-[20%] px-5 pt-5 pb-16 lg:py-16">
+    <div className="lg:px-[5%] px-5 pt-5 pb-16 lg:py-16">
       <Slider {...settings}>
         <Image
           src={"/assets/slide1.png"}
