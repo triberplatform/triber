@@ -1,22 +1,65 @@
 "use client";
-
-import React from "react";
+import { useState } from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 import TextInput from "./TextInput";
-import { Form, Formik } from "formik";
-import Link from "next/link";
+import { signup } from "@/app/services/auth";
+import { signUpPayload } from "@/app/type";
+import Loading from "@/app/loading";
+import { useRouter } from "next/navigation";
 
-export default function SignUpForm() {
-  const handleSubmit = async (values: {
-    firstName: string;
-    lastName: string;
-  }) => {
-    console.log(values);
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulating a delay
+const SignUpForm = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter()
+
+
+  const handleSubmit = async (values: signUpPayload) => {
+    try {
+      setLoading(true);
+      const response = await signup(values);
+
+      if (!response) {
+        throw new Error("No response received from the server");
+      }
+     if (!response.ok) {
+      const errorData = await response.json();
+      alert(errorData.message || "Signup failed.");
+    }
+
+      if (response.ok) {
+        localStorage.setItem("userEmail", values.email);
+        router.push("/confirm-email");
+      }
+    } catch (error:any) {
+      alert(error.message || "An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+
+  const validationSchema = Yup.object({
+    firstName: Yup.string().required("First name is required"),
+    lastName: Yup.string().required("Last name is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    companyName: Yup.string().required("companyName is required"),
+    password: Yup.string()
+      .required("Password is required")
+      .min(8, "Password must be at least 8 characters"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password")], "Passwords must match")
+      .required("Please confirm your password"),
+  });
+
+  if (loading) {
+    return <Loading text={'Creating Account'} />;
+  }
 
   return (
     <div className="w-full">
-      <div className="my-10 lg:my-7  flex flex-col justify-center ">
+      <div className="my-10 lg:my-7 flex flex-col justify-center">
         <Formik
           initialValues={{
             firstName: "",
@@ -26,102 +69,99 @@ export default function SignUpForm() {
             password: "",
             confirmPassword: "",
           }}
+          validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          <Form>
-            <div className=" grid lg:grid-cols-2 px-5 lg:px-[15%] mb-4 gap-4 lg:gap-7">
-              <div className="col-span-1">
-                <TextInput
-                  label={"Enter your first name"}
-                  name={"firstName"}
-                  placeholder={"John"}
-                  type={"text"}
-                />
+          {({ values, errors, touched, handleChange, handleBlur }) => (
+            <Form>
+              <div className="grid lg:grid-cols-2 px-5 lg:px-[15%] gap-4 lg:gap-7">
+                <div className="col-span-1">
+                  <TextInput
+                    label="First Name"
+                    name="firstName"
+                    value={values.firstName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.firstName ? errors.firstName : undefined}
+                  />
+                </div>
+                <div className="col-span-1">
+                  <TextInput
+                    label="Last Name"
+                    name="lastName"
+                    value={values.lastName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.lastName ? errors.lastName : undefined}
+                  />
+                </div>
               </div>
-              <div className="col-span-1">
-                <TextInput
-                  label={"Enter your last name"}
-                  name={"lastName"}
-                  placeholder={"Doe"}
-                  type={"text"}
-                />
+
+              <div className="grid lg:grid-cols-2 px-5 lg:px-[15%] gap-4 lg:gap-7">
+                <div className="col-span-1">
+                  <TextInput
+                    label="Email"
+                    name="email"
+                    type="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.email ? errors.email : undefined}
+                  />
+                </div>
+                <div className="col-span-1">
+                  <TextInput
+                    label="Company Name"
+                    name="companyName"
+                    type="text"
+                    value={values.companyName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.companyName ? errors.companyName : undefined}
+                  />
+                </div>
               </div>
-            </div>
-            <div className=" grid lg:grid-cols-2 px-5 lg:px-[15%] mb-4 gap-4 lg:gap-7">
-              <div className="col-span-1">
-                <TextInput
-                  label={"Enter your email address *"}
-                  name={"email"}
-                  placeholder={"example@gmail.com"}
-                  type={"text"}
-                />
+
+              <div className="grid lg:grid-cols-2 px-5 lg:px-[15%] mb-4 gap-4 lg:gap-7">
+                <div className="col-span-1">
+                  <TextInput
+                    label="Password"
+                    name="password"
+                    type="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.password ? errors.password : undefined}
+                  />
+                </div>
+                <div className="col-span-1">
+                  <TextInput
+                    label="Confirm Password"
+                    name="confirmPassword"
+                    type="password"
+                    value={values.confirmPassword}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      touched.confirmPassword
+                        ? errors.confirmPassword
+                        : undefined
+                    }
+                  />
+                </div>
               </div>
-              <div className="col-span-1">
-                <TextInput
-                  label={"Enter your company registered name *"}
-                  name={"companyName"}
-                  placeholder={"LTD company Name"}
-                  type={"text"}
-                />
-              </div>
-            </div>
-            <div className=" grid lg:grid-cols-2 px-5 lg:px-[15%] mb-4 gap-4 lg:gap-7">
-              <div className="col-span-1">
-                <TextInput
-                  label={"Create a new password"}
-                  name={"password"}
-                  placeholder={"password"}
-                  type={"password"}
-                />
-              </div>
-              <div className="col-span-1">
-                <TextInput
-                  label={"Confirm password"}
-                  name={"confirmPassword"}
-                  placeholder={"confirm password"}
-                  type={"password"}
-                />
-              </div>
-              <span className=" text-left text-sm text-nowrap -mt-5 flex item-center">
-            <input type="checkbox" id="terms" name="terms" className="mr-2" />
-              I agree to the{" "}
-              <span
-                className="font-semibold hover:underline"
+              <button
+                type="submit"
+className="mt-4 py-2 px-5 bg-mainGreen text-white rounded hover:bg-green-700"
               >
-                Terms of Service
-              </span>
-              ,{" "}
-              <span
-                className="font-semibold hover:underline"
-              >
-                General Terms and Conditions
-              </span>
-              , and{" "}
-              <span
-                className="font-semibold hover:underline"
-              >
-                Privacy Policy
-              </span>
-              
-            </span>
-            </div>
-         
-            <button
-              type="submit"
-              className="mt-2 py-2 px-5 bg-mainGreen text-white rounded"
-            >
-              {" "}
-              Submit
-            </button>
-          </Form>
+                Submit
+              </button>
+            </Form>
+          )}
         </Formik>
       </div>
-      <p className="font-serif mb-5">
-        Already a Triber?{" "}
-        <Link href={"/login"} className="text-mainGreen underline ">
-          Login
-        </Link>{" "}
-      </p>
     </div>
   );
-}
+};
+
+export default SignUpForm;

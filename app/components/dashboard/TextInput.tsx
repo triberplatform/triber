@@ -1,35 +1,47 @@
 "use client";
-import { useField, useFormikContext } from "formik";
 
 interface TextInputProps {
   label: string;
   name: string;
   type?: string;
   placeholder?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  error?: string;
 }
 
-const TextInput: React.FC<TextInputProps> = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
-  const { submitCount } = useFormikContext();
-
+const TextInput: React.FC<TextInputProps> = ({
+  label,
+  name,
+  type = "text",
+  placeholder = "",
+  value,
+  onChange,
+  onBlur,
+  error,
+}) => {
   return (
     <div className="lg:mb-7">
       <label
         className="block text-left text-sm font-medium"
-        htmlFor={props.name}
+        htmlFor={name}
       >
         {label}
       </label>
       <input
-        className={`mt-1 block w-full bg-black placeholder:text-gray-500 text-white p-2 border border-gray-500 ${
-          submitCount > 0 && meta.error ? "border-red-500" : "border-gray-300"
-        } rounded-md focus:ring-indigo-500 focus:border-indigo-500 !bg-black`}
-        {...field}
-        {...props}
+        className={`mt-1 block w-full bg-black placeholder:text-gray-500 text-white p-2 border ${
+          error ? "border-red-500" : "border-gray-300"
+        } rounded-md focus:ring-indigo-500 focus:border-indigo-500`}
+        id={name}
+        name={name}
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
       />
-      {submitCount > 0 && meta.error ? (
-        <div className="text-red-500 text-sm mt-1">{meta.error}</div>
-      ) : null}
+      {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
     </div>
   );
 };
