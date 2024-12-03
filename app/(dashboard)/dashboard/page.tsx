@@ -1,3 +1,4 @@
+import ListBusiness from "@/app/components/dashboard/ListBusiness";
 import DashboardLayout from "@/app/components/layouts/dashboardLayout";
 import React from "react";
 import { BsBuildingsFill } from "react-icons/bs";
@@ -73,7 +74,7 @@ export default function page() {
         </div>
       </div>
       <div>
-
+          <ListBusiness/>
       </div>
     </div>
   );
