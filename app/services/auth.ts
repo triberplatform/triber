@@ -57,8 +57,8 @@ export const login = async (payload: loginpayload) => {
       body: JSON.stringify(payload),
     });
 
-    // Return the response object to be handled in the handleSubmit function
     return response;
+  
   } catch (error: any) {
     console.error("Login Error:", error.message);
     throw new Error(error.message || "Login failed. Please try again.");

@@ -1,19 +1,27 @@
 "use client";
 import { useState } from "react";
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import TextInput from "./TextInput";
 import { signup } from "@/app/services/auth";
 import { signUpPayload } from "@/app/type";
 import Loading from "@/app/loading";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const SignUpForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter()
+  const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
+  const router = useRouter();
 
   const handleSubmit = async (values: signUpPayload) => {
+    if (!agreeToTerms) {
+      setError("You must agree to the terms and conditions to sign up.");
+      return;
+    }
+    setError(""); // Clear error if checkbox is checked
+
     try {
       setLoading(true);
       const response = await signup(values);
@@ -21,40 +29,25 @@ const SignUpForm = () => {
       if (!response) {
         throw new Error("No response received from the server");
       }
-     if (!response.ok) {
-      const errorData = await response.json();
-      alert(errorData.message || "Signup failed.");
-    }
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.message || "Signup failed.");
+        return;
+      }
 
       if (response.ok) {
         localStorage.setItem("userEmail", values.email);
         router.push("/confirm-email");
       }
-    } catch (error:any) {
+    } catch (error: any) {
       alert(error.message || "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
   };
 
-
-  const validationSchema = Yup.object({
-    firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    companyName: Yup.string().required("companyName is required"),
-    password: Yup.string()
-      .required("Password is required")
-      .min(8, "Password must be at least 8 characters"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Passwords must match")
-      .required("Please confirm your password"),
-  });
-
   if (loading) {
-    return <Loading text={'Creating Account'} />;
+    return <Loading text={"Creating Account"} />;
   }
 
   return (
@@ -69,7 +62,6 @@ const SignUpForm = () => {
             password: "",
             confirmPassword: "",
           }}
-          validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {({ values, errors, touched, handleChange, handleBlur }) => (
@@ -77,8 +69,9 @@ const SignUpForm = () => {
               <div className="grid lg:grid-cols-2 px-5 lg:px-[15%] gap-4 lg:gap-7">
                 <div className="col-span-1">
                   <TextInput
-                    label="First Name"
+                    label="Enter your first name *"
                     name="firstName"
+                    placeholder={"John"}
                     value={values.firstName}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -87,8 +80,9 @@ const SignUpForm = () => {
                 </div>
                 <div className="col-span-1">
                   <TextInput
-                    label="Last Name"
+                    label="Enter your last name *"
                     name="lastName"
+                    placeholder={"Doe"}
                     value={values.lastName}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -100,9 +94,10 @@ const SignUpForm = () => {
               <div className="grid lg:grid-cols-2 px-5 lg:px-[15%] gap-4 lg:gap-7">
                 <div className="col-span-1">
                   <TextInput
-                    label="Email"
+                    label="Enter your email address *"
                     name="email"
                     type="email"
+                    placeholder={"john.doe@gmail.com"}
                     value={values.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -114,6 +109,7 @@ const SignUpForm = () => {
                     label="Company Name"
                     name="companyName"
                     type="text"
+                    placeholder={"Doe Ltd."}
                     value={values.companyName}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -125,9 +121,10 @@ const SignUpForm = () => {
               <div className="grid lg:grid-cols-2 px-5 lg:px-[15%] mb-4 gap-4 lg:gap-7">
                 <div className="col-span-1">
                   <TextInput
-                    label="Password"
+                    label="Create a new password"
                     name="password"
                     type="password"
+                    placeholder={"********"}
                     value={values.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -136,9 +133,10 @@ const SignUpForm = () => {
                 </div>
                 <div className="col-span-1">
                   <TextInput
-                    label="Confirm Password"
+                    label="Confirm password"
                     name="confirmPassword"
                     type="password"
+                    placeholder={"********"}
                     value={values.confirmPassword}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -150,12 +148,49 @@ const SignUpForm = () => {
                   />
                 </div>
               </div>
-              <button
-                type="submit"
-className="mt-4 py-2 px-5 bg-mainGreen text-white rounded hover:bg-green-700"
-              >
-                Submit
-              </button>
+
+              <div className="px-5 lg:px-[15%] flex items-center gap-2 mb-4">
+                <input
+                  type="checkbox"
+                  id="agreeToTerms"
+                  name="agreeToTerms"
+                  checked={agreeToTerms}
+                  onChange={() => setAgreeToTerms(!agreeToTerms)}
+                  className="w-4 h-4"
+                />
+                <label
+                  htmlFor="agreeToTerms"
+                  className="text-sm text-white cursor-pointer"
+                >
+                  I agree to the{" "}
+                  <span className="text-mainGreen underline">
+                    Terms and Conditions
+                  </span>{" "}
+                  and the{" "}
+                  <span className="text-mainGreen underline">
+                    Privacy Policy
+                  </span>
+                  .
+                </label>
+              </div>
+              <div className="relative">
+                {error && (
+                  <div className="text-red-500 text-left px-5 lg:px-[15%] absolute italic text-sm">
+                    {error}
+                  </div>
+                )}
+              </div>
+
+              <div className="px-5 lg:px-[15%]">
+                <button
+                  type="submit"
+                  className="mt-4 py-2 px-5 bg-mainGreen text-white rounded hover:bg-green-700"
+                >
+                  Sign Up
+                </button>
+
+                <p className="mt-4 text-sm">Already a triber? <Link href={"/login"}><span className="underline text-mainGreen">Log In</span></Link> </p>
+              </div>
             </Form>
           )}
         </Formik>

@@ -9,7 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'mainGreen':'#42B27C'
+        'mainGreen':'#42B27C',
+        'mainBlack':'#1E1E1E',
+        'mainBlacks':'#2D2D2D',
+        'mainGreens':'#134F32'
       },
       fontFamily: {
         serif: ['NotoSerif-Regular', 'serif'],

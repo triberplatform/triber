@@ -1,6 +1,5 @@
 "use client";
 
-import TextInput from "@/app/components/dashboard/TextInput";
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -9,36 +8,52 @@ import Link from "next/link";
 import { login } from "@/app/services/auth";
 import { useRouter } from "next/navigation";
 import { loginpayload } from "@/app/type";
+import TextInput from "@/app/components/dashboard/TextInput";
+import Modal from "./Modal";
+
 
 export default function LoginForm() {
-  const [loading,setLoading]= useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
   const router = useRouter();
 
   const handleSubmit = async (values: loginpayload) => {
     try {
       setLoading(true);
       const response = await login(values);
-      const data = await response.json(); // Parse the response body once
-  
+
+      if (!response) {
+        console.log("No response from server");
+        return;
+      }
       if (!response.ok) {
-        // Handle the error based on the response data
         const data = await response.json();
-        alert(data.message);
-        return; // Exit the function early if there's an error
+        setModalMessage(data.error)
+        setModalOpen(true);
+        return; 
+      }
+
+      if (response.ok){
+        const data = await response.json(); 
+        localStorage.setItem("token", data.token);
+        setModalMessage(data.message || "Login successful!");
+        setModalOpen(true);
+        router.push("/dashboard");
+        setTimeout(() => {
+          setModalOpen(false);
+        }, 3000);
       }
   
-      // Save the token to localStorage and navigate to the dashboard
-      localStorage.setItem("token", data.token);
-      router.push("/dashboard");
+     
     } catch (error: any) {
-      // Catch any unexpected errors
-      alert(error.message || "An unexpected error occurred.");
+      setModalMessage(error.message || "An unexpected error occurred.");
+      setModalOpen(true);
     } finally {
       setLoading(false);
     }
   };
 
-  // Validation schema for form fields
   const validationSchema = Yup.object({
     email: Yup.string()
       .email("Invalid email address")
@@ -49,7 +64,6 @@ export default function LoginForm() {
   if (loading) {
     return <Loading text={"Logging in..."} />;
   }
-
 
   return (
     <div className="my-12 px-5 lg:w-[40%]">
@@ -62,7 +76,7 @@ export default function LoginForm() {
           isSubmitting ? (
             <Loading text="Logging In" />
           ) : (
-            <Form className="flex flex-col gap-4 justify-center">
+            <Form className="flex flex-col justify-center">
               <TextInput
                 label="Enter your email address *"
                 name="email"
@@ -83,7 +97,9 @@ export default function LoginForm() {
                 onBlur={handleBlur}
                 error={touched.password ? errors.password : undefined}
               />
-              <p className="text-mainGreen text-right text-sm">Forgot Password?</p>
+              <p className="text-mainGreen text-right text-sm">
+                Forgot Password?
+              </p>
               <button
                 type="submit"
                 className="mt-2 py-2 px-5 bg-mainGreen text-white rounded"
@@ -101,6 +117,14 @@ export default function LoginForm() {
           Sign up
         </Link>
       </p>
+
+      {/* Modal Component */}
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Login Status"
+        message={modalMessage}
+      />
     </div>
   );
 }

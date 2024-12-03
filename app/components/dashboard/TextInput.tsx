@@ -22,7 +22,7 @@ const TextInput: React.FC<TextInputProps> = ({
   error,
 }) => {
   return (
-    <div className="lg:mb-7">
+    <div className="lg:mb-7 relative">
       <label
         className="block text-left text-sm font-medium"
         htmlFor={name}
@@ -41,7 +41,7 @@ const TextInput: React.FC<TextInputProps> = ({
         onChange={onChange}
         onBlur={onBlur}
       />
-      {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
+      {error && <div className="text-red-500 text-sm mt-1 absolute mx-auto italic ">{error}</div>}
     </div>
   );
 };
