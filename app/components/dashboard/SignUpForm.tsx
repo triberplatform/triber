@@ -4,9 +4,9 @@ import { Formik, Form } from "formik";
 import TextInput from "./TextInput";
 import { signup } from "@/app/services/auth";
 import { signUpPayload } from "@/app/type";
-import Loading from "@/app/loading";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Modal from "./Modal";
 
 const SignUpForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -47,7 +47,13 @@ const SignUpForm = () => {
   };
 
   if (loading) {
-    return <Loading text={"Creating Account"} />;
+    return   <Modal>
+    {" "}
+    <div className="flex justify-center flex-col gap-1 p-6 items-center">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-mainGreen"></div>
+      <div className="text-lg">Signing Up</div>
+    </div>
+  </Modal>;
   }
 
   return (

@@ -22,12 +22,12 @@ const CreateProfileButton = () => {
       </button>
       {isDropdownOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-mainBlack border-mainGreen border-t-2 flex items-center flex-col text-sm rounded-md shadow-lg z-10">
-         <Link href={''} className="hover:bg-mainGreen px-3 py-3 w-full mt-3">
-        Add Business Profile
+         <Link href={'/dashboard/register-business'} className="hover:bg-mainGreen px-3 py-3 w-full mt-3" onClick={toggleDropdown}>
+             Add Business Profile
          </Link>
             
          
-         <Link href={''} className="hover:bg-mainGreen px-3 py-3 w-full mb-3">Add  Investor Profile</Link>
+         <Link href={''} className="hover:bg-mainGreen px-3 py-3 w-full mb-3" onClick={toggleDropdown}>Add  Investor Profile</Link>
           
 
         </div>

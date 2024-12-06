@@ -1,5 +1,6 @@
 import { emailPayload, loginpayload, signUpPayload } from "../type";
 import config from "../config/config";
+import { useRouter } from "next/navigation";
 
 export const signup = async (payload: signUpPayload) => {
   try {
@@ -58,9 +59,23 @@ export const login = async (payload: loginpayload) => {
     });
 
     return response;
-  
+
   } catch (error: any) {
     console.error("Login Error:", error.message);
     throw new Error(error.message || "Login failed. Please try again.");
   }
+};
+
+export const useLogout = () => {
+  const router = useRouter();
+
+  const logout = () => {
+    // Clear the token from localStorage
+    localStorage.removeItem("token");
+
+    // Redirect to the login page
+    router.push("/login");
+  };
+
+  return logout;
 };

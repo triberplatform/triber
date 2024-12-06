@@ -3,14 +3,12 @@
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import Loading from "@/app/loading";
 import Link from "next/link";
 import { login } from "@/app/services/auth";
 import { useRouter } from "next/navigation";
 import { loginpayload } from "@/app/type";
 import TextInput from "@/app/components/dashboard/TextInput";
 import Modal from "./Modal";
-
 
 export default function LoginForm() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,13 +27,13 @@ export default function LoginForm() {
       }
       if (!response.ok) {
         const data = await response.json();
-        setModalMessage(data.error)
+        setModalMessage(data.error);
         setModalOpen(true);
-        return; 
+        return;
       }
 
-      if (response.ok){
-        const data = await response.json(); 
+      if (response.ok) {
+        const data = await response.json();
         localStorage.setItem("token", data.token);
         setModalMessage(data.message || "Login successful!");
         setModalOpen(true);
@@ -44,8 +42,6 @@ export default function LoginForm() {
           setModalOpen(false);
         }, 3000);
       }
-  
-     
     } catch (error: any) {
       setModalMessage(error.message || "An unexpected error occurred.");
       setModalOpen(true);
@@ -61,10 +57,6 @@ export default function LoginForm() {
     password: Yup.string().required("Password is required"),
   });
 
-  if (loading) {
-    return <Loading text={"Logging in..."} />;
-  }
-
   return (
     <div className="my-12 px-5 lg:w-[40%]">
       <Formik
@@ -72,9 +64,22 @@ export default function LoginForm() {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, values, errors, touched, handleChange, handleBlur }) =>
+        {({
+          isSubmitting,
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+        }) =>
           isSubmitting ? (
-            <Loading text="Logging In" />
+            <Modal>
+              {" "}
+              <div className="flex justify-center items-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-mainGreen"></div>
+                <div className="text-lg">Logging In</div>
+              </div>
+            </Modal>
           ) : (
             <Form className="flex flex-col justify-center">
               <TextInput
@@ -118,13 +123,29 @@ export default function LoginForm() {
         </Link>
       </p>
 
-      {/* Modal Component */}
-      <Modal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title="Login Status"
-        message={modalMessage}
-      />
+      {modalOpen && (
+        <Modal>
+          <div className="flex p-6">{modalMessage}</div>
+          <div>
+            <button
+              className="px-3 py-1 text-sm rounded bg-mainGreen"
+              onClick={() => setModalOpen(false)}
+            >
+              Close
+            </button>
+          </div>
+        </Modal>
+      )}
+
+      {loading && (
+        <Modal>
+          {" "}
+          <div className="flex justify-center flex-col gap-1 p-6 items-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-mainGreen"></div>
+            <div className="text-lg">Logging In</div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

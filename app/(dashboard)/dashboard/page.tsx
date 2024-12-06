@@ -1,5 +1,6 @@
+"use client"
 import ListBusiness from "@/app/components/dashboard/ListBusiness";
-import DashboardLayout from "@/app/components/layouts/dashboardLayout";
+import { useUser } from "@/app/components/layouts/UserContext";
 import React from "react";
 import { BsBuildingsFill } from "react-icons/bs";
 import { GiProgression } from "react-icons/gi";
@@ -7,9 +8,16 @@ import { IoPricetagOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 
 export default function page() {
+
+  const { user } = useUser();
+
+  if (!user) {
+    return <p>No user details available</p>;
+  }
+
   return (
     <div className="">
-      <div className="font-serif text-2xl mb-4">Welcome to Triber</div>
+      <div className="font-serif text-2xl mb-4">hi, {user.firstname}Welcome to Triber</div>
       <div className="grid grid-cols-10 gap-4 font-serif mb-4">
         <div className="col-span-6 bg-mainBlack p-4 rounded-xl">
           <p className="text-lg mb-4">
