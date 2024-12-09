@@ -18,6 +18,7 @@ import Loading from "@/app/loading";
 import { getUserDetails } from "@/app/services/dashboard";
 import { UserDetails } from "@/app/type";
 import { UserProvider } from "./UserContext";
+import Modal from "../dashboard/Modal";
 
 export default function DashboardLayout({
   children,
@@ -26,6 +27,7 @@ export default function DashboardLayout({
 }>) {
   const [open, setOpen] = useState<boolean>(true);
   const [user, setUser] = useState<null | UserDetails>(null);
+  const [modal, showModal] = useState<boolean>(false)
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const logout = useLogout();
@@ -58,7 +60,7 @@ export default function DashboardLayout({
   }, [router]);
 
   if (loading) {
-    return <Loading text="loading" />;
+    return <Loading text="Loading" />;
   }
 
   return (
@@ -82,7 +84,7 @@ export default function DashboardLayout({
               <Link href="/dashboard" className="items-center gap-2 hover:text-mainGreen flex">
                 <LuLayoutDashboard /> Home
               </Link>
-              <Link href="#" className="items-center gap-2 hover:text-mainGreen flex">
+              <Link href="/dashboard/fundability-test" className="items-center gap-2 hover:text-mainGreen flex">
                 <MdOutlineBusinessCenter /> Fundability Test
               </Link>
               <Link href="#" className="items-center gap-2 hover:text-mainGreen flex">
@@ -97,7 +99,7 @@ export default function DashboardLayout({
               <Link href="#" className="items-center gap-2 hover:text-mainGreen flex">
                 <BiSupport /> Support
               </Link>
-              <button onClick={logout} className="items-center gap-2 hover:text-mainGreen flex">
+              <button onClick={()=>showModal(true)} className="items-center gap-2 hover:text-mainGreen flex">
                 <IoLogOutOutline /> Logout
               </button>
             </div>
@@ -126,7 +128,18 @@ export default function DashboardLayout({
 
           <main className="p-6">{children}</main>
         </div>
+        {modal && <Modal>
+          <div className="flex flex-col p-4 gap-8">
+            <p>Are you sure you want to log out? You will need to sign in again to access your account.</p>
+            <div className="flex gap-4 ">
+              <button className="px-3 py-1 shadow text-sm rounded shadow-white" onClick={logout}>
+                Logout
+                </button><button className="px-3 py-1 text-sm rounded bg-mainGreen" onClick={()=>showModal(false)}>No</button>
+            </div>
+          </div>
+          </Modal>}
       </div>
+
     </UserProvider>
   );
 }

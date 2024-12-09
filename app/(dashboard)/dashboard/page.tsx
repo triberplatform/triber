@@ -17,7 +17,7 @@ export default function page() {
 
   return (
     <div className="">
-      <div className="font-serif text-2xl mb-4">hi, {user.firstname}Welcome to Triber</div>
+      <div className="font-serif text-2xl mb-4">Hi, {user.firstname} welcome to Triber</div>
       <div className="grid grid-cols-10 gap-4 font-serif mb-4">
         <div className="col-span-6 bg-mainBlack p-4 rounded-xl">
           <p className="text-lg mb-4">

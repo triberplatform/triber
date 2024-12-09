@@ -98,3 +98,10 @@ input{
 .home-input{
   border: 1px white;
 }
+
+.bg-fundability{
+  background-image: url('/assets/fundability.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}

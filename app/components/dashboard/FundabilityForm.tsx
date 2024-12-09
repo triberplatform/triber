@@ -11,7 +11,7 @@ import Modal from "./Modal";
 import { FaCheckDouble } from "react-icons/fa";
 import Link from "next/link";
 
-export default function RegisterBusiness() {
+export default function FundabilityForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [modal, showModal] = useState(false);
@@ -349,11 +349,9 @@ export default function RegisterBusiness() {
   return (
     <div className="grid grid-cols-11 gap-4 font-serif">
       <div className="col-span-3 map-bg pt-12 pb-36">
-        <p className="text-3xl mb-4">Register a Business</p>
+        <p className="text-3xl mb-4">Fundability test (readiness assessment)</p>
         <p className="text-sm">
-          Information entered here is displayed publicly to match you with the
-          right set of investors and buyers. Do not mention business
-          name/information which can identify the business.
+        Please enter your details here. Information entered here is not publicly displayed. 
         </p>
       </div>
       <div className="col-span-8">

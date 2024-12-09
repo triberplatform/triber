@@ -125,10 +125,10 @@ export default function LoginForm() {
 
       {modalOpen && (
         <Modal>
-          <div className="flex p-6">{modalMessage}</div>
+          <div className="p-6">{modalMessage}</div>
           <div>
             <button
-              className="px-3 py-1 text-sm rounded bg-mainGreen"
+              className="px-3 py-1 mb-4 text-sm rounded bg-mainGreen"
               onClick={() => setModalOpen(false)}
             >
               Close
