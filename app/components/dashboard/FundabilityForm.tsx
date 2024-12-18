@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikProps } from "formik";
 import * as Yup from "yup";
 import FormInput from "./FormInput";
 import OptionInput from "./OptionInput";
 import { FundabilityPayload } from "@/app/type";
 import Modal from "./Modal";
-import { FaCheckDouble, FaRegThumbsUp } from "react-icons/fa";
-import Link from "next/link";
+import { FaRegThumbsUp } from "react-icons/fa";
 import { fundabilityTest } from "@/app/services/dashboard";
 import ArrayInput from "./ArrayInput";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
@@ -155,7 +154,7 @@ export default function FundabilityForm() {
       setLoading(false);
     }
   };
-  const renderStepContent = (formikProps: any) => {
+  const renderStepContent = (formikProps: FormikProps<FundabilityPayload>) => {
     switch (currentStep) {
       case 0:
         return (
@@ -168,7 +167,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.registeredCompany}
+                value={formikProps.values.registeredCompany.toString()}
                 onBlur={formikProps.handleBlur}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
@@ -242,7 +241,7 @@ export default function FundabilityForm() {
                 value={formikProps.values.registeredAddress}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
-                error={formikProps.registeredAddress}
+                error={formikProps.errors.registeredAddress}
                 touched={formikProps.touched.registeredAddress}
               />
 
@@ -279,8 +278,8 @@ export default function FundabilityForm() {
                 value={formikProps.values.startupStage}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
-                error={formikProps.errors.startUpStage}
-                touched={formikProps.touched.startUpStage}
+                error={formikProps.errors.startupStage}
+                touched={formikProps.touched.startupStage}
               />
             </div>
 
@@ -366,7 +365,7 @@ export default function FundabilityForm() {
                   { value: "true", label: "Yes" }, // Store as string
                   { value: "false", label: "No" },
                 ]}
-                value={formikProps.values.companyLegalCases}
+                value={formikProps.values.companyLegalCases.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue("companyLegalCases", booleanValue);
@@ -383,7 +382,7 @@ export default function FundabilityForm() {
         return (
           <div className=" bg-mainBlack gap-5 py-8 px-5">
             {/* Left Column */}
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-2 gap-5 items-end">
               <ArrayInput
                 label="Ownership (who owns the business)"
                 name="ownership"
@@ -401,7 +400,7 @@ export default function FundabilityForm() {
                 }
               />
             </div>
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-2 gap-5 items-end">
               <ArrayInput
                 label="Legal Advisors optional*"
                 name="legalAdvisors"
@@ -421,7 +420,7 @@ export default function FundabilityForm() {
             </div>
 
             {/* Right Column */}
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-2 gap-5 items-end">
               <OptionInput
                 label="ISIC Industry (do you belong to any industry Association)"
                 name="isicIndustry"
@@ -429,7 +428,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.values.isicIndustry}
+                value={formikProps.values.isicIndustry.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue("isicIndustry", booleanValue);
@@ -446,7 +445,7 @@ export default function FundabilityForm() {
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 error={formikProps.errors.isicActivity}
-                touched={formikProps.touched.isicActivityf}
+                touched={formikProps.touched.isicActivity}
               />
             </div>
           </div>
@@ -486,7 +485,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.values.auditedFinancialStatement}
+                value={formikProps.values.auditedFinancialStatement.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue(
@@ -505,7 +504,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.values.companyPitchDeck}
+                value={formikProps.values.companyPitchDeck.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue("companyPitchDeck", booleanValue);
@@ -523,7 +522,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.values.companyBusinessPlan}
+                value={formikProps.values.companyBusinessPlan.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue(
@@ -542,7 +541,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.values.company5yearCashFlow}
+                value={formikProps.values.company5yearCashFlow.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue(
@@ -564,7 +563,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.values.companySolidAssetHolding}
+                value={formikProps.values.companySolidAssetHolding.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue(
@@ -583,7 +582,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.values.companyLargeInventory}
+                value={formikProps.values.companyLargeInventory.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue(
@@ -604,7 +603,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.values.company3YearProfitable}
+                value={formikProps.values.company3YearProfitable.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue(
@@ -624,7 +623,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.values.companyHighScalibilty}
+                value={formikProps.values.companyHighScalibilty.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue(
@@ -645,7 +644,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.values.companyCurrentLiabilities}
+                value={formikProps.values.companyCurrentLiabilities.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue(
@@ -664,7 +663,7 @@ export default function FundabilityForm() {
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
-                value={formikProps.values.ownerCurrentLiabilities}
+                value={formikProps.values.ownerCurrentLiabilities.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
                   formikProps.setFieldValue(

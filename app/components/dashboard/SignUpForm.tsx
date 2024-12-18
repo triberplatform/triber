@@ -44,8 +44,8 @@ const SignUpForm = () => {
         localStorage.setItem("userEmail", values.email);
         router.push("/confirm-email");
       }
-    } catch (error: any) {
-      alert(error.message || "An unexpected error occurred.");
+    } catch  {
+      alert( "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }

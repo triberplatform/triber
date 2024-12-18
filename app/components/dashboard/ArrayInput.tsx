@@ -6,7 +6,7 @@ interface ArrayInputProps {
   name: string;
   values: string[]; // Array of input values
   onChange: (values: string[]) => void;
-  onBlur?: (e: React.FocusEvent<any>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void; 
   errors?: string[]; // Array of errors for each input
   touched?: boolean[]; // Array of touched states for each input
 }

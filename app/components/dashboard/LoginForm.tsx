@@ -44,8 +44,8 @@ export default function LoginForm() {
           setModalOpen(false);
         }, 3000);
       }
-    } catch (error: any) {
-      setModalMessage(error.message || "An unexpected error occurred.");
+    } catch {
+      setModalMessage("an error occured");
       setModalOpen(true);
     } finally {
       setLoading(false);
@@ -73,44 +73,40 @@ export default function LoginForm() {
           touched,
           handleChange,
           handleBlur,
-        }) =>
-          isSubmitting ? (
-            <Loading text={"please wait"} />
-          ) : (
-            <Form className="flex flex-col justify-center">
-              <TextInput
-                label="Enter your email address *"
-                name="email"
-                type="text"
-                placeholder="example@gmail.com"
-                value={values.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.email ? errors.email : undefined}
-              />
-              <TextInput
-                label="Password"
-                name="password"
-                type="password"
-                placeholder="password"
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.password ? errors.password : undefined}
-              />
-              <p className="text-mainGreen text-right text-sm">
-                Forgot Password?
-              </p>
-              <button
-                type="submit"
-                className="mt-2 py-2 px-5 bg-mainGreen text-white rounded"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </button>
-            </Form>
-          )
-        }
+        }) => (
+          <Form className="flex flex-col justify-center">
+            <TextInput
+              label="Enter your email address *"
+              name="email"
+              type="text"
+              placeholder="example@gmail.com"
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.email ? errors.email : undefined}
+            />
+            <TextInput
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="password"
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.password ? errors.password : undefined}
+            />
+            <p className="text-mainGreen text-right text-sm">
+              Forgot Password?
+            </p>
+            <button
+              type="submit"
+              className="mt-2 py-2 px-5 bg-mainGreen text-white rounded"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Submit"}
+            </button>
+          </Form>
+        )}
       </Formik>
       <p className="mt-5 font-serif">
         Want to become a Tribe member?{" "}

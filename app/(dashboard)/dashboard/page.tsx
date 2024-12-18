@@ -7,7 +7,7 @@ import { GiProgression } from "react-icons/gi";
 import { IoPricetagOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 
-export default function page() {
+export default function Page() {
 
   const { user } = useUser();
 

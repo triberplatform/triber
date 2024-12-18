@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikProps } from "formik";
 import * as Yup from "yup";
 import FormInput from "./FormInput";
 import OptionInput from "./OptionInput";
@@ -95,7 +95,7 @@ export default function RegisterBusiness() {
       setLoading(false);
     }
   };
-  const renderStepContent = (formikProps: any) => {
+  const renderStepContent = (formikProps: FormikProps<RegisterBusinessPayload>) => {
     switch (currentStep) {
       case 0:
         return (
@@ -452,6 +452,7 @@ export default function RegisterBusiness() {
           </div>
         </Modal>
       )}
+      <div className="hidden">{modalMessage}</div>
     </div>
   );
 }

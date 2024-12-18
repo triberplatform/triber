@@ -2,7 +2,7 @@ import { FundabilityPayload, RegisterBusinessPayload } from "../type";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const getUserDetails = async (token: any) => {
+export const getUserDetails = async (token: string) => {
   try {
     const response = await fetch(`${apiUrl}/get-user`, {
       headers: {
@@ -18,7 +18,7 @@ export const getUserDetails = async (token: any) => {
 
 }
 
-export const registerBusiness = async (payload: RegisterBusinessPayload, token: any) => {
+export const registerBusiness = async (payload: RegisterBusinessPayload, token: string) => {
   try {
     const response = await fetch(`${apiUrl}/save-business`, {
       method: "POST",
@@ -31,9 +31,9 @@ export const registerBusiness = async (payload: RegisterBusinessPayload, token: 
 
     return response;
 
-  } catch (error: any) {
-    console.error("Login Error:", error.message);
-    throw new Error(error.message || "Login failed. Please try again.");
+  } catch {
+    console.error("Login Error:");
+    throw new Error("Login failed. Please try again.");
   }
 };
 
@@ -50,8 +50,8 @@ export const fundabilityTest = async (payload: FundabilityPayload, token: string
 
     return response;
 
-  } catch (error: any) {
-    console.error("Error:", error.message);
-    throw new Error(error.message || "Login failed. Please try again.");
+  } catch  {
+    console.error("Error:");
+    throw new Error("Login failed. Please try again.");
   }
 }

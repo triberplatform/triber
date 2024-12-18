@@ -7,7 +7,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaBusinessTime, FaLayerGroup } from "react-icons/fa";
 
 export default function ListBusiness() {
-  const formattedDate = (date: any) =>
+  const formattedDate = (date: string) =>
     new Date(date).toLocaleDateString(undefined, {
       year: "numeric",
       month: "long",

@@ -1,5 +1,4 @@
 import { emailPayload, loginpayload, signUpPayload } from "../type";
-import config from "../config/config";
 import { useRouter } from "next/navigation";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -17,8 +16,8 @@ export const signup = async (payload: signUpPayload) => {
     });
 
     return response;
-  } catch (error: any) {
-    console.error("Signup Error:", error.message);
+  } catch {
+    console.error("Signup Error:");
   }
 };
 
@@ -42,11 +41,11 @@ export const confirmEmail = async (payload: emailPayload) => {
     // Parse and return the response data
     const data = await response.json();
     return data;
-  } catch (error: any) {
-    console.error("Signup Error:", error.message);
+  } catch  {
+    console.error("Signup Error:");
 
     // Throw a new error with a user-friendly message
-    throw new Error(error.message || "Signup failed. Please try again.");
+    throw new Error( "Signup failed. Please try again.");
   }
 };
 
@@ -63,9 +62,9 @@ export const login = async (payload: loginpayload) => {
 
     return response;
 
-  } catch (error: any) {
-    console.error("Login Error:", error.message);
-    throw new Error(error.message || "Login failed. Please try again.");
+  } catch  {
+    console.error("Login Error:");
+    throw new Error("Login failed. Please try again.");
   }
 };
 

@@ -1,7 +1,6 @@
 "use client";
 import React from 'react';
 import { photosMobile } from './PhotoGallery';
-import Button from './Button';
 import Link from 'next/link';
 
 export default function PhotoGalleryMobile() {
