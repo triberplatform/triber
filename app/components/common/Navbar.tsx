@@ -173,14 +173,14 @@ export default function Navbar() {
               )}
             </div>
             <div className="mt-10">
-              <Button link="/signup" text="Get Started" />
+              <Button link="/login" text="Get Started" />
             </div>
           </div>
         </div>
 
         {/* Desktop Get Started Button */}
         <div className="hidden lg:block">
-          <Button link="/signup" text="Get Started" />
+          <Button link="/login" text="Get Started" />
         </div>
       </nav>
     </div>

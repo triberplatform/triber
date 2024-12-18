@@ -10,26 +10,31 @@ const CreateProfileButton = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-
-
   return (
     <div className="relative inline-block text-left">
       <button
         onClick={toggleDropdown}
         className="bg-mainGreen text-white px-4 py-2 text-sm rounded-md shadow-md  items-center flex gap-1 hover:bg-green-600 focus:outline-none"
       >
-      <CgProfile/>  Add a Profile <VscTriangleDown/>
+        <CgProfile /> Add a Profile <VscTriangleDown />
       </button>
       {isDropdownOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-mainBlack border-mainGreen border-t-2 flex items-center flex-col text-sm rounded-md shadow-lg z-10">
-         <Link href={'/dashboard/register-business'} className="hover:bg-mainGreen px-3 py-3 w-full mt-3" onClick={toggleDropdown}>
-             Add Business Profile
-         </Link>
-            
-         
-         <Link href={''} className="hover:bg-mainGreen px-3 py-3 w-full mb-3" onClick={toggleDropdown}>Add  Investor Profile</Link>
-          
+          <Link
+            href={"/dashboard/register-business"}
+            className="hover:bg-mainGreen px-3 py-3 w-full mt-3"
+            onClick={toggleDropdown}
+          >
+            Add Business Profile
+          </Link>
 
+          <Link
+            href={""}
+            className="hover:bg-mainGreen px-3 py-3 w-full mb-3"
+            onClick={toggleDropdown}
+          >
+            Add Investor Profile
+          </Link>
         </div>
       )}
     </div>

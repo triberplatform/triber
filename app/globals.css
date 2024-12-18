@@ -50,15 +50,21 @@ body {
 input{
   background-color: black;
 }
-.map-bg{
+
+.map-bg {
   background-image: url('/assets/bgMap.png');
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
-  background-position: bottom;
+  background-position: top;
+
+  /* Define explicit size */
+  width: 300px; /* Adjust to your desired width */
+  height: 400px; /* Adjust to your desired height */
+
+
+  margin: 0 auto;
 }
-
 .bg-teams{
-
   background-image: url('/assets/teams-hero.png');
   background-size: cover;
   background-repeat: no-repeat;

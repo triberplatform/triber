@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 
@@ -29,13 +30,13 @@ export default function page() {
 
         <div className="bg-mainBlack p-3 flex flex-col gap-2">
             <Image src="/assets/fundability-subs.png" width={300} height={30} alt="fund" className="w-full"/>
-            <p>Startup</p>
-            <span className="text-center my-3"><button className="text-center bg-black shadow shadow-white py-1 px-5">Take Test</button></span>
+            <p className="my-4">Startup</p>
+            <span className="text-center my-3"><button className="text-center bg-black shadow-sm shadow-white py-1 px-5">Take Test</button></span>
         </div>
         <div className="bg-mainBlack p-3 flex flex-col gap-2">
             <Image src="/assets/fundability-sub.png" width={300} height={30} alt="fund" className="w-full"/>
-            <p>SMEs</p>
-            <span className="text-center my-3"><button className="text-center bg-black shadow shadow-white py-1 px-5">Take Test</button></span>
+            <p className="my-4">SMEs</p>
+           <Link href={'fundability-test/test-page'} className="text-center my-3"> <span className="text-center my-3"><button className="text-center bg-black shadow-white shadow-sm py-1 px-5">Take Test</button></span></Link>
         </div>
       </div>
     </div>

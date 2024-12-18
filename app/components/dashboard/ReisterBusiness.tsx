@@ -10,6 +10,7 @@ import { RegisterBusinessPayload } from "@/app/type";
 import Modal from "./Modal";
 import { FaCheckDouble } from "react-icons/fa";
 import Link from "next/link";
+import Loading from "@/app/loading";
 
 export default function RegisterBusiness() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -420,13 +421,7 @@ export default function RegisterBusiness() {
         </Formik>
       </div>
       {loading && (
-        <Modal>
-          {" "}
-          <div className="flex justify-center flex-col gap-1 items-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-mainGreen"></div>
-            <div className="text-lg">Registering Business</div>
-          </div>
-        </Modal>
+      <Loading text="Registering"/>
       )}
 
       {modal && (

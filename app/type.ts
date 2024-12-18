@@ -78,3 +78,43 @@ export interface BusinessDetails {
     businesses: BusinessDetails[];
   }
   
+  export interface FundabilityPayload {
+    registeredCompany: boolean;
+    legalName: string;
+    companyRegistration: string;
+    city: string;
+    country: string;
+    industry: string;
+    registeredAddress: string;
+    companyEmail: string;
+    contactNumber: string;
+    principalAddress: string;
+    applicantsAddress: string;
+    position: string;
+    title: string;
+    yearsOfOperation: number;
+    companySize: number;
+    companyLegalCases: boolean;
+    startupStage: string;
+    
+    ownership: string[];
+    executiveManagement: string[];
+    boardOfDirectors: string[];
+    isicIndustry: boolean;
+    isicActivity: string;
+    legalAdvisors: string[];
+  
+    averageAnnualRevenue: number;
+    revenueGrowthRate: number;
+    auditedFinancialStatement: boolean;
+    companyPitchDeck: boolean;
+    companyBusinessPlan: boolean;
+    company5yearCashFlow: boolean;
+    companySolidAssetHolding: boolean;
+    companyLargeInventory: boolean;
+    company3YearProfitable: boolean;
+    companyHighScalibilty: boolean;
+    companyCurrentLiabilities: boolean;
+    ownerCurrentLiabilities: boolean;
+  }
+  

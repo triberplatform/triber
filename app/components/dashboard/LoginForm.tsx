@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { loginpayload } from "@/app/type";
 import TextInput from "@/app/components/dashboard/TextInput";
 import Modal from "./Modal";
+import { AiOutlineClose, AiOutlineInfoCircle } from "react-icons/ai";
+import Loading from "@/app/loading";
 
 export default function LoginForm() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -73,13 +75,7 @@ export default function LoginForm() {
           handleBlur,
         }) =>
           isSubmitting ? (
-            <Modal>
-              {" "}
-              <div className="flex justify-center items-center">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-mainGreen"></div>
-                <div className="text-lg">Logging In</div>
-              </div>
-            </Modal>
+            <Loading text={"please wait"} />
           ) : (
             <Form className="flex flex-col justify-center">
               <TextInput
@@ -125,24 +121,34 @@ export default function LoginForm() {
 
       {modalOpen && (
         <Modal>
-          <div className="p-6">{modalMessage}</div>
-          <div>
+          <div className="p-8 bg-black text-white rounded-lg shadow-md relative">
+            {/* Close Button */}
             <button
-              className="px-3 py-1 mb-4 text-sm rounded bg-mainGreen"
+              className="absolute top-4 right-4 text-gray-300 hover:text-white focus:outline-none"
               onClick={() => setModalOpen(false)}
+              aria-label="Close modal"
             >
-              Close
+              <AiOutlineClose size={20} />
             </button>
-          </div>
-        </Modal>
-      )}
 
-      {loading && (
-        <Modal>
-          {" "}
-          <div className="flex justify-center flex-col gap-1 p-6 items-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-mainGreen"></div>
-            <div className="text-lg">Logging In</div>
+            {/* Icon and Heading */}
+            <div className="text-center">
+              <AiOutlineInfoCircle
+                size={40}
+                className="mx-auto text-mainGreen mb-4"
+              />
+              <p className="text-sm text-gray-300 mb-6">{modalMessage}</p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-center">
+              <button
+                className="px-6 py-2 text-sm font-medium text-white bg-mainGreen rounded shadow hover:bg-green-600 focus:outline-none"
+                onClick={() => setModalOpen(false)}
+              >
+                Dismiss
+              </button>
+            </div>
           </div>
         </Modal>
       )}

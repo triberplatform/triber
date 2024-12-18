@@ -5,7 +5,7 @@ import React from "react";
 interface OptionInputProps {
   label: string;
   name: string;
-  options: { value: string; label: string }[];
+  options: { value: any; label: string }[];
   value: string;
   placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -39,7 +39,7 @@ touched,
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        className={`mt-1 block bg-mainBlack placeholder:text-white text-gray-400 p-[0.65rem] w-full border ${
+        className={`mt-1 block bg-mainBlack placeholder:text-white text-white p-[0.65rem] w-full border ${
          touched && error ? "border-red-500" : "border-gray-300"
         } rounded-md focus:ring-mainGreen focus:border-mainGreen`}
       >

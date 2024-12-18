@@ -79,7 +79,7 @@ export default function DashboardLayout({
             alt="triber-logo"
             className=" lg:w-[70px] w-[50px]"
           />
-          <nav className="py-10 flex flex-col gap-52 text-sm ">
+          <nav className="py-10 flex flex-col gap-52 text-base ">
             <div className="flex flex-col gap-6">
               <Link href="/dashboard" className="items-center gap-2 hover:text-mainGreen flex">
                 <LuLayoutDashboard /> Home
@@ -129,7 +129,7 @@ export default function DashboardLayout({
           <main className="p-6">{children}</main>
         </div>
         {modal && <Modal>
-          <div className="flex flex-col p-4 gap-8">
+          <div className="flex flex-col p-4 gap-8 bg-mainBlack">
             <p>Are you sure you want to log out? You will need to sign in again to access your account.</p>
             <div className="flex gap-4 ">
               <button className="px-3 py-1 shadow text-sm rounded shadow-white" onClick={logout}>

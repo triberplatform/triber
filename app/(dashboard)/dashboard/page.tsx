@@ -17,8 +17,8 @@ export default function page() {
 
   return (
     <div className="">
-      <div className="font-serif text-2xl mb-4">Hi, {user.firstname} welcome to Triber</div>
-      <div className="grid grid-cols-10 gap-4 font-serif mb-4">
+      <div className=" text-2xl mb-4">Hi {user.firstname}, welcome to Triber</div>
+      <div className="grid grid-cols-10 gap-4 mb-4">
         <div className="col-span-6 bg-mainBlack p-4 rounded-xl">
           <p className="text-lg mb-4">
             Ready to Take your Business to the Next Level?
@@ -52,7 +52,7 @@ export default function page() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-9 gap-4 font-serif mb-4">
+      <div className="grid grid-cols-9 gap-4 font-sansSerif mb-4">
         <div className="col-span-3 bg-mainGreens p-4 flex flex-col gap-5 rounded-xl">
           <div className="flex gap-2 items-center">
           <IoPricetagOutline />
@@ -77,7 +77,7 @@ export default function page() {
           <p>Deal Room</p>
 
           </div>
-          <p className="w-[70%]">Connect, negotiate, and finalize investments all in one place.</p>
+          <p className="w-[70%] text-sm">Connect, negotiate, and finalize investments all in one place.</p>
          
         </div>
       </div>

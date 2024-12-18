@@ -7,11 +7,15 @@ import { signUpPayload } from "@/app/type";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Modal from "./Modal";
+import Loading from "@/app/loading";
+import { AiOutlineClose, AiOutlineInfoCircle } from "react-icons/ai";
 
 const SignUpForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [modalMessage, setModalMessage] = useState<string>("");
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -30,8 +34,9 @@ const SignUpForm = () => {
         throw new Error("No response received from the server");
       }
       if (!response.ok) {
-        const errorData = await response.json();
-        alert(errorData.message || "Signup failed.");
+        const data = await response.json();
+        setModalMessage(data.error);
+        setModalOpen(true);
         return;
       }
 
@@ -45,16 +50,6 @@ const SignUpForm = () => {
       setLoading(false);
     }
   };
-
-  if (loading) {
-    return   <Modal>
-    {" "}
-    <div className="flex justify-center flex-col gap-1 p-6 items-center">
-      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-mainGreen"></div>
-      <div className="text-lg">Signing Up</div>
-    </div>
-  </Modal>;
-  }
 
   return (
     <div className="w-full">
@@ -195,12 +190,51 @@ const SignUpForm = () => {
                   Sign Up
                 </button>
 
-                <p className="mt-4 text-sm">Already a triber? <Link href={"/login"}><span className="underline text-mainGreen">Log In</span></Link> </p>
+                <p className="mt-4 text-sm">
+                  Already a triber?{" "}
+                  <Link href={"/login"}>
+                    <span className="underline text-mainGreen">Log In</span>
+                  </Link>{" "}
+                </p>
               </div>
             </Form>
           )}
         </Formik>
       </div>
+      {modalOpen && (
+        <Modal>
+          <div className="p-8 bg-black text-white rounded-lg shadow-md relative">
+            {/* Close Button */}
+            <button
+              className="absolute top-4 right-4 text-gray-300 hover:text-white focus:outline-none"
+              onClick={() => setModalOpen(false)}
+              aria-label="Close modal"
+            >
+              <AiOutlineClose size={20} />
+            </button>
+
+            {/* Icon and Heading */}
+            <div className="text-center">
+              <AiOutlineInfoCircle
+                size={40}
+                className="mx-auto text-mainGreen mb-4"
+              />
+              <p className="text-sm text-gray-300 mb-6">{modalMessage}</p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-center">
+              <button
+                className="px-6 py-2 text-sm font-medium text-white bg-mainGreen rounded shadow hover:bg-green-600 focus:outline-none"
+                onClick={() => setModalOpen(false)}
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+      {loading && <Loading text="signing up" />}
     </div>
   );
 };

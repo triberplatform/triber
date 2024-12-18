@@ -2,10 +2,13 @@ import { emailPayload, loginpayload, signUpPayload } from "../type";
 import config from "../config/config";
 import { useRouter } from "next/navigation";
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+
 export const signup = async (payload: signUpPayload) => {
   try {
     // Send POST request to the signup endpoint using fetch
-    const response = await fetch('https://backend.triberrr.com/api/register', {
+    const response = await fetch(`${apiUrl}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -22,7 +25,7 @@ export const signup = async (payload: signUpPayload) => {
 export const confirmEmail = async (payload: emailPayload) => {
   try {
 
-    const response = await fetch('https://backend.triberrr.com/api/email-confirmation', {
+    const response = await fetch(`${apiUrl}/email-confirmation`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +53,7 @@ export const confirmEmail = async (payload: emailPayload) => {
 
 export const login = async (payload: loginpayload) => {
   try {
-    const response = await fetch('https://backend.triberrr.com/api/login', {
+    const response = await fetch(`${apiUrl}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

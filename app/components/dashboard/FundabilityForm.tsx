@@ -5,61 +5,122 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormInput from "./FormInput";
 import OptionInput from "./OptionInput";
-import { registerBusiness } from "@/app/services/dashboard";
-import { RegisterBusinessPayload } from "@/app/type";
+import { FundabilityPayload } from "@/app/type";
 import Modal from "./Modal";
-import { FaCheckDouble } from "react-icons/fa";
+import { FaCheckDouble, FaRegThumbsUp } from "react-icons/fa";
 import Link from "next/link";
+import { fundabilityTest } from "@/app/services/dashboard";
+import ArrayInput from "./ArrayInput";
+import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
+import Loading from "@/app/loading";
 
 export default function FundabilityForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [modal, showModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  
+  const [modalMessage, setModalMessage] = useState<number>(0);
 
   const validationSchema = Yup.object().shape({
-    businessName: Yup.string().required("Business Name is required"),
-    businessPhone: Yup.string()
-      .required("Business Phone is required")
-      .matches(/^\+234\d{10}$/, "Must be a valid phone number"),
-    businessEmail: Yup.string()
-      .email("Invalid email address")
-      .required("Business Email is required"),
-    businessStatus: Yup.string().required("Business Status is required"),
-    interestedIn: Yup.string().required("This field is required"),
+    registeredCompany: Yup.boolean().required("This field is required"),
+    legalName: Yup.string().required("Legal Name is required"),
+    companyRegistration: Yup.string().required(
+      "Company Registration type is required"
+    ),
+    city: Yup.string().required("City is required"),
+    country: Yup.string().required("Country is required"),
     industry: Yup.string().required("Industry is required"),
-    businessLegalEntity: Yup.string().required("Legal Entity Type is required"),
-    description: Yup.string().required("Description is required"),
-    reportedSales: Yup.string().required("Reported Sales is required"),
-    numOfEmployees: Yup.string().required("Number of Employees is required"),
-    yearEstablished: Yup.number()
-      .max(new Date().getFullYear(), "Year cannot be in the future")
-      .required("Year Established is required"),
-    location: Yup.string().required("Location is required"),
-    assets: Yup.string().required("Assets description is required"),
+    registeredAddress: Yup.string().required("Registered Address is required"),
+    companyEmail: Yup.string()
+      .email("Invalid email address")
+      .required("Company Email is required"),
+    contactNumber: Yup.string()
+      .matches(/^\+234\d{10}$/, "Must be a valid phone number")
+      .required("Contact Number is required"),
+    principalAddress: Yup.string().required("Principal Address is required"),
+    applicantsAddress: Yup.string().required("Applicant's Address is required"),
+    position: Yup.string().required("Position is required"),
+    title: Yup.string().required("Title is required"),
+    yearsOfOperation: Yup.number()
+      .min(0, "Years of Operation cannot be negative")
+      .notRequired(),
+    companySize: Yup.number()
+      .min(0, "Company Size cannot be negative")
+      .required("Company Size is required"),
+    companyLegalCases: Yup.boolean().required("This field is required"),
+    startupStage: Yup.string().required("Startup Stage is required"),
+    ownership: Yup.array().of(
+      Yup.string().required("Ownership cannot be empty")
+    ),
+    executiveManagement: Yup.array()
+      .of(Yup.string().required("Executive Management cannot be empty"))
+      .required("Executive Management is required"),
+    boardOfDirectors: Yup.array()
+      .of(Yup.string().required("Board of Directors cannot be empty"))
+      .required("Board of Directors is required"),
+    isicIndustry: Yup.boolean().required("This field is required"),
+    isicActivity: Yup.string().notRequired(),
+    legalAdvisors: Yup.array().of(Yup.string()).notRequired(),
+    averageAnnualRevenue: Yup.number()
+      .min(0, "Revenue cannot be negative")
+      .required("Average Annual Revenue is required"),
+    revenueGrowthRate: Yup.number()
+      .min(0, "Growth rate cannot be negative")
+      .notRequired(),
+    auditedFinancialStatement: Yup.boolean().required("This field is required"),
+    companyPitchDeck: Yup.boolean().required("This field is required"),
+    companyBusinessPlan: Yup.boolean().required("This field is required"),
+    company5yearCashFlow: Yup.boolean().required("This field is required"),
+    companySolidAssetHolding: Yup.boolean().required("This field is required"),
+    companyLargeInventory: Yup.boolean().required("This field is required"),
+    company3YearProfitable: Yup.boolean().required("This field is required"),
+    companyHighScalibilty: Yup.boolean().required("This field is required"),
+    companyCurrentLiabilities: Yup.boolean().required("This field is required"),
+    ownerCurrentLiabilities: Yup.boolean().required("This field is required"),
   });
 
   const initialValues = {
-    businessName: "",
-    businessPhone: "",
-    businessEmail: "",
-    businessStatus: "",
-    interestedIn: "",
+    registeredCompany: true,
+    legalName: "",
+    companyRegistration: "",
+    city: "",
+    country: "",
     industry: "",
-    businessLegalEntity: "",
-    description: "",
-    reportedSales: "",
-    numOfEmployees: "",
-    yearEstablished: 0,
-    location: "",
-    assets: "",
+    registeredAddress: "",
+    companyEmail: "",
+    contactNumber: "",
+    principalAddress: "",
+    applicantsAddress: "",
+    position: "",
+    title: "",
+    yearsOfOperation: 0,
+    companySize: 0,
+    companyLegalCases: false,
+    startupStage: "",
+    ownership: [""],
+    executiveManagement: [""],
+    boardOfDirectors: [""],
+    isicIndustry: false,
+    isicActivity: "",
+    legalAdvisors: [""],
+    averageAnnualRevenue: 0,
+    revenueGrowthRate: 0,
+    auditedFinancialStatement: false,
+    companyPitchDeck: false,
+    companyBusinessPlan: false,
+    company5yearCashFlow: false,
+    companySolidAssetHolding: false,
+    companyLargeInventory: false,
+    company3YearProfitable: false,
+    companyHighScalibilty: false,
+    companyCurrentLiabilities: false,
+    ownerCurrentLiabilities: false,
   };
+
   const handleRefreshRedirect = () => {
     window.location.href = "/dashboard"; // Replace with the desired path
   };
-  const handleNext = (isValid: boolean, errors: object) => {
-    if (isValid && Object.keys(errors).length === 0 && currentStep < 1) {
+  const handleNext = () => {
+    if (currentStep < 2) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -68,11 +129,11 @@ export default function FundabilityForm() {
     if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
 
-  const handleSubmit = async (values: RegisterBusinessPayload) => {
+  const handleSubmit = async (values: FundabilityPayload) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await registerBusiness(values, token);
+      const response = await fundabilityTest(values, token || "");
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -81,12 +142,12 @@ export default function FundabilityForm() {
       }
       if (response.ok) {
         const data = await response.json();
-        setModalMessage(data.message);
+        setModalMessage(data.score);
         showModal(true);
         return;
       }
       if (!response) {
-        setModalMessage("An Error Occured try again");
+        alert("An Error Occured try again");
       }
     } catch (e) {
       console.log(e);
@@ -98,246 +159,523 @@ export default function FundabilityForm() {
     switch (currentStep) {
       case 0:
         return (
-          <div className="grid grid-cols-2 bg-mainBlack gap-5 pb-32 py-8 px-5">
-            <FormInput
-              label="Business Name"
-              name="businessName"
-              placeholder="Business Name"
-              value={formikProps.values.businessName}
-              onChange={formikProps.handleChange}
-              onBlur={formikProps.handleBlur}
-              error={formikProps.errors.businessName}
-              touched={formikProps.touched.businessName}
-            />
-            <FormInput
-              label="Business Phone Number"
-              name="businessPhone"
-              placeholder="+2348000000000"
-              value={formikProps.values.businessPhone}
-              onChange={formikProps.handleChange}
-              onBlur={formikProps.handleBlur}
-              error={formikProps.errors.businessPhone}
-              touched={formikProps.touched.businessPhone}
-            />
-            <FormInput
-              label="Business Email"
-              name="businessEmail"
-              placeholder="Business Email"
-              value={formikProps.values.businessEmail}
-              onChange={formikProps.handleChange}
-              onBlur={formikProps.handleBlur}
-              error={formikProps.errors.businessEmail}
-              touched={formikProps.touched.businessEmail}
-            />
-            <OptionInput
-              label="Business Status"
-              name="businessStatus"
-              options={[
-                { value: "OWNER", label: "Owner" },
-                { value: "MEMBER", label: "Member" },
-                { value: "BROKER", label: "Broker" },
-              ]}
-              value={formikProps.values.businessStatus}
-              onBlur={formikProps.handleBlur}
-              onChange={formikProps.handleChange}
-              error={formikProps.errors.businessStatus}
-              touched={formikProps.touched.businessStatus}
-            />
-          </div>
-        );
-
-      case 1:
-        return (
-          <div className="grid grid-cols-2 bg-mainBlack gap-5 py-8 px-5">
-            {/* Left Column */}
-            <div>
+          <div className=" bg-mainBlack gap-5 pb-12 py-8 px-5">
+            <div className="grid grid-cols-2 gap-5 items-end">
               <OptionInput
-                label="You are interested in"
-                name="interestedIn"
+                label="Are you a registered Company?"
+                name="registeredCompany"
                 options={[
-                  {
-                    value: "FULL_SALE_OF_BUSINESS",
-                    label: "Full Sale of Business",
-                  },
-                  { value: "PARTIAL_STAKE", label: "Partial Stake" },
-                  { value: "LOAN", label: "Loan" },
-                  {
-                    value: "SELL_OR_LEASE_OF_BUSINESS_ASSETS",
-                    label: "Sell or Lease Business Assets",
-                  },
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
                 ]}
-                value={formikProps.values.interestedIn}
+                value={formikProps.registeredCompany}
+                onBlur={formikProps.handleBlur}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue("registeredCompany", booleanValue);
+                }}
+                error={formikProps.errors.registeredCompany}
+                touched={formikProps.touched.registeredCompany}
+              />
+              <FormInput
+                label="Legal Name (Company Name as on the Company registration document)"
+                name="legalName"
+                placeholder="example company name"
+                value={formikProps.values.legalName}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
-                error={formikProps.errors.interestedIn}
-                touched={formikProps.touched.interestedIn}
+                error={formikProps.errors.legalName}
+                touched={formikProps.touched.legalName}
               />
-              <OptionInput
-                label="Select business industry"
+            </div>
+            <div className="grid grid-cols-2 gap-3 items-end">
+              <FormInput
+                label="Company registration (LTD, Enterprise, Sole proprietorship, others) *"
+                name="companyRegistration"
+                placeholder="Company Regisration"
+                value={formikProps.values.companyRegistration}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.companyRegistration}
+                touched={formikProps.touched.companyRegistration}
+              />
+              <FormInput
+                label="City"
+                name="city"
+                placeholder="Enter your city"
+                value={formikProps.values.city}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.city}
+                touched={formikProps.touched.city}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-5 items-end">
+              <FormInput
+                label="Country"
+                name="country"
+                placeholder="Country"
+                value={formikProps.values.country}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.country}
+                touched={formikProps.touched.country}
+              />
+
+              <FormInput
+                label="Industry"
                 name="industry"
-                options={[
-                  { value: "IT", label: "IT" },
-                  { value: "FINANCE", label: "Finance" },
-                  { value: "HEALTH", label: "Health" },
-                  { value: "EDUCATION", label: "Education" },
-                  { value: "MEDIA", label: "Media" },
-                  { value: "OTHER", label: "Other" },
-                ]}
+                placeholder="Industry"
                 value={formikProps.values.industry}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 error={formikProps.errors.industry}
                 touched={formikProps.touched.industry}
               />
-              <OptionInput
-                label="Select business legal entity type"
-                name="businessLegalEntity"
-                options={[
-                  {
-                    value: "PRIVATE_LIABILITY_COMPANY",
-                    label: "Private Liability Company",
-                  },
-                  {
-                    value: "LIMITED_LIABILITY_COMPANY",
-                    label: "Limited Liability Company",
-                  },
-                  {
-                    value: "PUBLIC_LIMITED_COMPANY",
-                    label: "Public Limited Company",
-                  },
-                  {
-                    value: "GENERAL_PARTNERSHIP",
-                    label: "General Partnership",
-                  },
-                  {
-                    value: "SOLE_PROPRIETORSHIP",
-                    label: "Sole Proprietorship",
-                  },
-                ]}
-                value={formikProps.values.businessLegalEntity}
+            </div>
+
+            <div className="grid grid-cols-2 gap-5 items-end">
+              <FormInput
+                label="Registered Address"
+                name="registeredAddress"
+                placeholder="Registered Address"
+                value={formikProps.values.registeredAddress}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
-                error={formikProps.errors.businessLegalEntity}
-                touched={formikProps.touched.businessLegalEntity}
+                error={formikProps.registeredAddress}
+                touched={formikProps.touched.registeredAddress}
+              />
+
+              <FormInput
+                label="Company Email Address (Official Mail)"
+                name="companyEmail"
+                placeholder="contact@tech.com"
+                value={formikProps.values.companyEmail}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.companyEmail}
+                touched={formikProps.touched.companyEmail}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-5 items-end">
+              <FormInput
+                label="Contact Number"
+                name="contactNumber"
+                placeholder="+443648292"
+                value={formikProps.values.contactNumber}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.contactNumber}
+                touched={formikProps.touched.contactNumber}
+              />
+              <OptionInput
+                label="Startup stage"
+                name="startupStage"
+                options={[
+                  { value: "post-revenue", label: "Post-revenue" },
+                  { value: "pre-revenue", label: "Pre-revenue" },
+                ]}
+                value={formikProps.values.startupStage}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.startUpStage}
+                touched={formikProps.touched.startUpStage}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-5 items-end">
+              <FormInput
+                label="Principal address of the business"
+                name="principalAddress"
+                placeholder="no.5 wall street"
+                value={formikProps.values.principalAddress}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.principalAddress}
+                touched={formikProps.touched.principalAddress}
               />
               <FormInput
-                label="Describe the business in a single line"
-                name="description"
-                placeholder="e.g., Public company for sale in Lagos, Nigeria"
-                value={formikProps.values.description}
+                label="Applicants mail address"
+                name="applicantsAddress"
+                placeholder="johndoe@mail.com"
+                value={formikProps.values.applicantsAddress}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
-                error={formikProps.errors.description}
-                touched={formikProps.touched.description}
+                error={formikProps.errors.applicantsAddress}
+                touched={formikProps.touched.applicantsAddress}
               />
-             
-                <FormInput
-                label="Describe your facility such as built-up area, number of floors, rental/lease details"
-                name="assets"
-                placeholder="e.g., 5000 sqft, 2 floors, leased property"
-                value={formikProps.values.assets}
+            </div>
+            <div className="grid grid-cols-2 gap-5 items-end">
+              <OptionInput
+                label="Position"
+                name="position"
+                options={[
+                  { value: "exec", label: "Exec" },
+                  { value: "mid", label: "Mid" },
+                  { value: "other", label: "Other" },
+                ]}
+                value={formikProps.values.position}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
-                error={formikProps.errors.assets}
-                touched={formikProps.touched.assets}
+                error={formikProps.errors.position}
+                touched={formikProps.touched.position}
+              />
+              <FormInput
+                label="Title"
+                name="title"
+                placeholder="e.g Chief Executive officer"
+                value={formikProps.values.title}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.title}
+                touched={formikProps.touched.title}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-5 items-end">
+              <FormInput
+                label="How many years have you been operating optional*"
+                name="yearsOfOperation"
+                type="number"
+                placeholder="Years of Operation"
+                value={formikProps.values.yearsOfOperation}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.yearsOfOperation}
+                touched={formikProps.touched.yearsOfOperation}
+              />
+              <FormInput
+                label="Company Size (number of employees)"
+                name="companySize"
+                type="number"
+                placeholder="Company Size"
+                value={formikProps.values.companySize}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.companySize}
+                touched={formikProps.touched.companySize}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-5 items-end">
+              <OptionInput
+                label="Have your company been involved in a legal case?"
+                name="companyLegalCases"
+                options={[
+                  { value: "true", label: "Yes" }, // Store as string
+                  { value: "false", label: "No" },
+                ]}
+                value={formikProps.values.companyLegalCases}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue("companyLegalCases", booleanValue);
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.companyLegalCases}
+                touched={formikProps.touched.companyLegalCases}
+              />
+            </div>
+          </div>
+        );
+
+      case 1:
+        return (
+          <div className=" bg-mainBlack gap-5 py-8 px-5">
+            {/* Left Column */}
+            <div className="grid grid-cols-2 gap-5">
+              <ArrayInput
+                label="Ownership (who owns the business)"
+                name="ownership"
+                values={formikProps.values.ownership}
+                onChange={(newValues) =>
+                  formikProps.setFieldValue("ownership", newValues)
+                }
+              />
+              <ArrayInput
+                label="Executive Management"
+                name="executiveManagement"
+                values={formikProps.values.executiveManagement}
+                onChange={(newValues) =>
+                  formikProps.setFieldValue("executiveManagement", newValues)
+                }
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-5">
+              <ArrayInput
+                label="Legal Advisors optional*"
+                name="legalAdvisors"
+                values={formikProps.values.legalAdvisors}
+                onChange={(newValues) =>
+                  formikProps.setFieldValue("legalAdvisors", newValues)
+                }
+              />
+              <ArrayInput
+                label="Board of Directions"
+                name="boardOfDirectors"
+                values={formikProps.values.boardOfDirectors}
+                onChange={(newValues) =>
+                  formikProps.setFieldValue("boardOfDirectors", newValues)
+                }
               />
             </div>
 
             {/* Right Column */}
-            <div>
+            <div className="grid grid-cols-2 gap-5">
               <OptionInput
-                label="How many employees does the business have?"
-                name="numOfEmployees"
+                label="ISIC Industry (do you belong to any industry Association)"
+                name="isicIndustry"
                 options={[
-                  { value: "LESS_THAN_10", label: "Less than 10" },
-                  { value: "BETWEEN_10_AND_50", label: "10-50" },
-                  { value: "BETWEEN_50_AND_100", label: "50-100" },
-                  { value: "BETWEEN_100_AND_500", label: "100-500" },
-                  { value: "BETWEEN_500_AND_1000", label: "500-1000" },
-                  { value: "OVER_1000", label: "Over 1000" },
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
                 ]}
-                value={formikProps.values.numOfEmployees}
-                onChange={formikProps.handleChange}
+                value={formikProps.values.isicIndustry}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue("isicIndustry", booleanValue);
+                }}
                 onBlur={formikProps.handleBlur}
-                error={formikProps.errors.numOfEmployees}
-                touched={formikProps.touched.numOfEmployees}
+                error={formikProps.errors.isicIndustry}
+                touched={formikProps.touched.isicIndustry}
               />
               <FormInput
-                label="When was the business established?"
-                name="yearEstablished"
-                type="number"
-                placeholder="e.g., 2020"
-                value={formikProps.values.yearEstablished}
+                label="ISIC Activities (International standard industrial classification) optional*"
+                name="isicActivity"
+                placeholder="e.g., Selling"
+                value={formikProps.values.isicActivity}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
-                error={formikProps.errors.yearEstablished}
-                touched={formikProps.touched.yearEstablished}
-              />
-              <FormInput
-                label="Where is the business located / headquartered?"
-                name="location"
-                placeholder="e.g., Lagos"
-                value={formikProps.values.location}
-                onChange={formikProps.handleChange}
-                onBlur={formikProps.handleBlur}
-                error={formikProps.errors.location}
-                touched={formikProps.touched.location}
-              />
-             <OptionInput
-                label="At present, what is your average monthly sales?"
-                name="reportedSales"
-                options={[
-                  { value: "0-100000", label: "0-100,000" },
-                  { value: "100000-1000000", label: "100,000-1,000,000" },
-                ]}
-                value={formikProps.values.reportedSales}
-                onChange={formikProps.handleChange}
-                onBlur={formikProps.handleBlur}
-                error={formikProps.errors.reportedSales}
-                touched={formikProps.touched.reportedSales}
+                error={formikProps.errors.isicActivity}
+                touched={formikProps.touched.isicActivityf}
               />
             </div>
           </div>
         );
       case 2:
         return (
-          <div className="bg-mainBlack py-8 px-5 pb-">
-            <div className="font-sansSerif text-sm text-white p-6 rounded-lg space-y-8">
-              {/* Stepper Section */}
-              <div className="space-y-4">
-                {/* Step 1 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex items-center justify-center w-6 h-6 bg-green-500 rounded-full"></div>
-                  <p className="font-semibold ">
-                    Business Information (Complete)
-                  </p>
-                </div>
-                {/* Step 2 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex items-center justify-center w-6 h-6 border-2 border-green-500 rounded-full"></div>
-                  <p className="font-semibold">Verification</p>
-                </div>
-                {/* Step 3 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex items-center justify-center w-6 h-6 border-2 border-green-500 rounded-full"></div>
-                  <p className="font-semibold">Approval</p>
-                </div>
-              </div>
+          <div className=" bg-mainBlack gap-5 py-8 px-5">
+            <div className="grid grid-cols-2 items-end gap-5">
+              <FormInput
+                label="Company ARR/TTM (Average Annual Revenue)"
+                name="averageAnnualRevenue"
+                type="number"
+                placeholder="e.g, 1000000"
+                value={formikProps.values.averageAnnualRevenue}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.averageAnnualRevenue}
+                touched={formikProps.touched.averageAnnualRevenue}
+              />
+              <FormInput
+                label="Revenue growth rate CAGR (%) optional*"
+                name="revenueGrowthRate"
+                type="number"
+                placeholder="e.g 60"
+                value={formikProps.values.revenueGrowthRate}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.revenueGrowthRate}
+                touched={formikProps.touched.revenueGrowthRate}
+              />
+            </div>
+            <div className="grid grid-cols-2 items-end gap-5">
+              <OptionInput
+                label="Do you have an audited financial statement?"
+                name="auditedFinancialStatement"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                value={formikProps.values.auditedFinancialStatement}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue(
+                    "auditedFinancialStatement",
+                    booleanValue
+                  );
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.auditedFinancialStatement}
+                touched={formikProps.touched.auditedFinancialStatement}
+              />
+              <OptionInput
+                label="Do you have a company pitch deck?"
+                name="companyPitchDeck"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                value={formikProps.values.companyPitchDeck}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue("companyPitchDeck", booleanValue);
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.companyPitchDeck}
+                touched={formikProps.touched.companyPitchDeck}
+              />
+            </div>
+            <div className="grid grid-cols-2 items-end gap-5">
+              <OptionInput
+                label="Does your company have a business Plan?"
+                name="companyBusinessPlan"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                value={formikProps.values.companyBusinessPlan}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue(
+                    "companyBusinessPlan",
+                    booleanValue
+                  );
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.companyBusinessPlan}
+                touched={formikProps.touched.companyBusinessPlan}
+              />
+              <OptionInput
+                label="Company has a 5-year Financial Cashflow (3 model Financial Analysis)"
+                name="company5yearCashFlow"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                value={formikProps.values.company5yearCashFlow}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue(
+                    "company5yearCashFlow",
+                    booleanValue
+                  );
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.company5yearCashFlow}
+                touched={formikProps.touched.company5yearCashFlow}
+              />
+            </div>
 
-              {/* What's Next Section */}
-              <div>
-                <h3 className="text-xl font-semibold">What’s Next?</h3>
-                <ul className="list-disc list-inside space-y-2">
-                  <li>
-                    Check your dashboard for real-time updates on your profile
-                    status.
-                  </li>
-                  <li>
-                    Once verified, your business will be visible in the Deal
-                    Room, ready for investor connections!
-                  </li>
-                </ul>
-              </div>
+            <div className="grid grid-cols-2 items-end gap-5">
+              <OptionInput
+                label="Asset Base (Does your company possess significant SOLID asset holding?)"
+                name="companySolidAssetHolding"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                value={formikProps.values.companySolidAssetHolding}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue(
+                    "companySolidAssetHolding",
+                    booleanValue
+                  );
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.companySolidAssetHolding}
+                touched={formikProps.touched.companySolidAssetHolding}
+              />
+              <OptionInput
+                label="Inventory Base (Does the company possessa large inventory value?)"
+                name="companyLargeInventory"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                value={formikProps.values.companyLargeInventory}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue(
+                    "companyLargeInventory",
+                    booleanValue
+                  );
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.companyLargeInventory}
+                touched={formikProps.touched.companyLargeInventory}
+              />
+            </div>
+            <div className="grid grid-cols-2 items-end gap-5">
+              <OptionInput
+                label="Has the company been 3 years profitable"
+                name="company3YearProfitable"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                value={formikProps.values.company3YearProfitable}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue(
+                    "company3YearProfitable",
+                    booleanValue
+                  ); // Correct key
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.company3YearProfitable}
+                touched={formikProps.touched.company3YearProfitable}
+              />
+
+              <OptionInput
+                label="Is the company highly scalable"
+                name="companyHighScalibilty"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                value={formikProps.values.companyHighScalibilty}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue(
+                    "companyHighScalibilty",
+                    booleanValue
+                  );
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.companyHighScalibilty}
+                touched={formikProps.touched.companyHighScalibilty}
+              />
+            </div>
+            <div className="grid grid-cols-2 items-end gap-5">
+              <OptionInput
+                label="Does the company possess any current Liabilities/Debt"
+                name="companyCurrentLiabilities"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                value={formikProps.values.companyCurrentLiabilities}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue(
+                    "companyCurrentLiabilities",
+                    booleanValue
+                  );
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.companyCurrentLiabilities}
+                touched={formikProps.touched.companyCurrentLiabilities}
+              />
+              <OptionInput
+                label="Does the Owner/Proprietor possess any current Liabilities/Debt"
+                name="ownerCurrentLiabilities"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                value={formikProps.values.ownerCurrentLiabilities}
+                onChange={(e) => {
+                  const booleanValue = e.target.value === "true"; // Convert string to boolean
+                  formikProps.setFieldValue(
+                    "ownerCurrentLiabilities",
+                    booleanValue
+                  );
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.ownerCurrentLiabilities}
+                touched={formikProps.touched.ownerCurrentLiabilities}
+              />
             </div>
           </div>
         );
@@ -347,11 +685,12 @@ export default function FundabilityForm() {
   };
 
   return (
-    <div className="grid grid-cols-11 gap-4 font-serif">
+    <div className="grid grid-cols-11 gap-4 font-sansSerif">
       <div className="col-span-3 map-bg pt-12 pb-36">
         <p className="text-3xl mb-4">Fundability test (readiness assessment)</p>
         <p className="text-sm">
-        Please enter your details here. Information entered here is not publicly displayed. 
+          Please enter your details here. Information entered here is not
+          publicly displayed. 
         </p>
       </div>
       <div className="col-span-8">
@@ -362,7 +701,7 @@ export default function FundabilityForm() {
             }`}
             onClick={() => setCurrentStep(0)}
           >
-            Confidential Information
+            General Information
           </p>
           <p
             className={`cursor-pointer ${
@@ -378,7 +717,7 @@ export default function FundabilityForm() {
             }`}
             onClick={() => setCurrentStep(2)}
           >
-            Profile Status
+            Financial Information
           </p>
         </div>
         <Formik
@@ -387,69 +726,98 @@ export default function FundabilityForm() {
           onSubmit={handleSubmit}
         >
           {(formikProps) => (
-            <Form>
-              <div>
-                {renderStepContent(formikProps)}
-                <div className="flex justify-between mt-4">
-                  <button
-                    className={`px-4 py-2 text-white bg-gray-500 rounded ${
-                      currentStep === 0 && "opacity-50 cursor-not-allowed"
-                    }`}
-                    onClick={handlePrevious}
-                    disabled={currentStep === 0}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    className={`px-4 py-2 text-white bg-mainGreen rounded ${
-                      currentStep === 2 && "opacity-50 cursor-not-allowed"
-                    }`}
-                   onClick={() =>
-                  handleNext(formikProps.isValid, formikProps.errors)
+        <Form>
+        <div>
+          {renderStepContent(formikProps)}
+          <div className="flex justify-between mt-4">
+            {/* Previous Button */}
+            <button
+              className={`px-4 py-2 text-white bg-gray-500 rounded ${
+                currentStep === 0 && "opacity-50 cursor-not-allowed"
+              }`}
+              onClick={(e) => {
+                e.preventDefault(); // Prevent form submission
+                handlePrevious();
+              }}
+              disabled={currentStep === 0}
+              type="button" // Ensure this does not submit the form
+            >
+              Previous
+            </button>
+      
+            {/* Next/Submit Button */}
+            <button
+              className={`px-4 py-2 text-white bg-mainGreen rounded `}
+              onClick={(e) => {
+                if (currentStep !== 2) {
+                  e.preventDefault(); // Prevent form submission on intermediate steps
+                  handleNext();
                 }
-                type={currentStep === 1 ? "submit" : "button"}
-              >
-                {currentStep === 1 ? "Submit" : "Next"}
-                  </button>
-                </div>
-              </div>
-            </Form>
+              }}
+              type={currentStep === 2 ? "submit" : "button"} // Submit only on the last step
+            >
+              {currentStep === 2 ? "Submit" : "Next"}
+            </button>
+          </div>
+        </div>
+      </Form>
+      
           )}
         </Formik>
       </div>
       {loading && (
-        <Modal>
-          {" "}
-          <div className="flex justify-center flex-col gap-1 items-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-mainGreen"></div>
-            <div className="text-lg">Registering Business</div>
-          </div>
-        </Modal>
+        <Loading text="Calculating"/>
       )}
 
       {modal && (
-        <Modal>
-          {" "}
-          <div className="bg-mainBlack p-6">
-            <div className="grid grid-cols-10">
-              <div className="col-span-7">
-                <p className="text-xl mb-3 font-bold">Profile Submitted!</p>
-                <p>
-                  Your business profile has been successfully submitted. We’re
-                  now reviewing your information and verifying your financial
-                  records. This process may take up to 48 hours.
+          <Modal>
+          <div className="bg-mainBlack p-8 rounded-lg text-white">
+            <div className="grid grid-cols-10 gap-4">
+              {/* Left Section */}
+              <div className="col-span-6">
+                <p className="text-2xl mb-4 font-bold">Your Fundability Score is Ready!</p>
+                <p className="text-sm mb-4">
+                  Your business profile has been successfully submitted. We’re now reviewing your
+                  information and verifying your financial records. This process may take up to 48
+                  hours.
+                </p>
+                <p className="text-sm flex items-center gap-2">
+                  <FaRegThumbsUp className="text-mainGreen" />
+                  <span>Well done!</span>
                 </p>
               </div>
-              <div className="col-span-3 flex justify-center item-center mt-6">
-                <FaCheckDouble className="text-mainGreen text-6xl" />
+  
+              {/* Right Section */}
+              <div className="col-span-4 flex justify-center items-center">
+                <div className="w-32 h-32">
+                  <CircularProgressbar
+                    value={modalMessage}
+                    text={`${modalMessage}%`}
+                    styles={buildStyles({
+                      textColor: "#42B27C", // Adjusted for "mainGreen"
+                      pathColor: "#42B27C",
+                      trailColor: "#2D2D2D",
+                      // textSize: "25px",
+                      
+                    })}
+                  />
+                </div>
               </div>
             </div>
-            <div className="flex mt-8 gap-6">
-              <button className="bg-mainGreen py-2 px-4 rounded">
-                <Link href="/dashboard">Take Fundability test</Link>
+  
+            {/* Buttons */}
+            <div className="flex justify-center gap-6 mt-8">
+              <button
+                className="bg-black text-white py-2 px-6 rounded text-sm hover:bg-gray-800"
+                onClick={handleRefreshRedirect}
+              >
+                View Dashboard
               </button>
-              <button className="bg-black py-1 px-3 rounded" onClick={handleRefreshRedirect}>
-                 View Dashboard
+              <button
+                className="bg-mainGreen text-white py-2 px-6 rounded text-sm hover:bg-green-600"
+                onClick={() => showModal(false)}
+              >
+                Retake Test
               </button>
             </div>
           </div>
