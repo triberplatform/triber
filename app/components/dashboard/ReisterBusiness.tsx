@@ -73,7 +73,7 @@ export default function RegisterBusiness() {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await registerBusiness(values, token);
+      const response = await registerBusiness(values, token ?? "");
 
       if (!response.ok) {
         const errorData = await response.json();
