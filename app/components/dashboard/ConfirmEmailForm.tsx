@@ -40,8 +40,8 @@ const ConfirmEmailForm = () => {
         alert("Email confirmed successfully!");
         router.push("/login"); // Redirect after successful confirmation
       }
-    } catch (error: any) {
-      alert(error.message || "Failed to confirm email. Please try again.");
+    } catch  {
+      alert( "Failed to confirm email. Please try again.");
     } finally {
       setLoading(false);
     }

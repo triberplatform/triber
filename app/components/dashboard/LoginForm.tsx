@@ -45,7 +45,7 @@ export default function LoginForm() {
         }, 3000);
       }
     } catch {
-      setModalMessage("an error occured");
+      setModalMessage("an error occURED");
       setModalOpen(true);
     } finally {
       setLoading(false);
@@ -148,6 +148,7 @@ export default function LoginForm() {
           </div>
         </Modal>
       )}
+      {loading && <Loading text="Logging in"/>}
     </div>
   );
 }
