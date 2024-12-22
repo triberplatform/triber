@@ -73,7 +73,7 @@ export default function DashboardLayout({
           } transition-transform duration-300 ease-in-out w-44`}
         >
           <Image
-            src={"/assets/logo.svg"}
+            src={"/assets/logos.svg"}
             height={80}
             width={70}
             alt="triber-logo"
