@@ -45,7 +45,7 @@ export default function LoginForm() {
         }, 3000);
       }
     } catch {
-      setModalMessage("an error occURED");
+      setModalMessage("An error occured");
       setModalOpen(true);
     } finally {
       setLoading(false);
