@@ -2,7 +2,7 @@ import React from "react";
 
 export default function ConnectForm() {
   return (
-    <div className="pt-16 pb-28 px-5 lg:px-[10%] w-full map-bg">
+    <div className="pt-16 pb-28 px-5 lg:px-[10%] w-full map-bgs">
       <p className="lg:text-4xl text-3xl font-semibold mb-2  font-serif">
         Connect Directly with our Partners
       </p>
