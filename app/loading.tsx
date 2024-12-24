@@ -17,7 +17,7 @@ const Loading: React.FC<LoadingProps> = ({ text}) => {
     >
       {/* Animated Image */}
       <motion.img
-        src={'/assets/logo.svg'}
+        src={'/assets/logos.svg'}
         alt="Loading"
         className="w-24 h-24"
         initial={{ scale: 1 }}

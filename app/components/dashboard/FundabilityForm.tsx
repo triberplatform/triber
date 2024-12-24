@@ -17,7 +17,9 @@ export default function FundabilityForm() {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [modal, showModal] = useState(false);
+  const [errorModal, showErrorModal] = useState(false);
   const [modalMessage, setModalMessage] = useState<number>(0);
+  const [modalErrors, setModalErrors] = useState<string[]>([]);
 
   const validationSchema = Yup.object().shape({
     registeredCompany: Yup.boolean().required("This field is required"),
@@ -722,70 +724,78 @@ export default function FundabilityForm() {
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          onSubmit={(values) => handleSubmit(values)}
         >
           {(formikProps) => (
-        <Form>
-        <div>
-          {renderStepContent(formikProps)}
-          <div className="flex justify-between mt-4">
-            {/* Previous Button */}
-            <button
-              className={`px-4 py-2 text-white bg-gray-500 rounded ${
-                currentStep === 0 && "opacity-50 cursor-not-allowed"
-              }`}
-              onClick={(e) => {
-                e.preventDefault(); // Prevent form submission
-                handlePrevious();
-              }}
-              disabled={currentStep === 0}
-              type="button" // Ensure this does not submit the form
-            >
-              Previous
-            </button>
-      
-            {/* Next/Submit Button */}
-            <button
-              className={`px-4 py-2 text-white bg-mainGreen rounded `}
-              onClick={(e) => {
-                if (currentStep !== 2) {
-                  e.preventDefault(); // Prevent form submission on intermediate steps
-                  handleNext();
-                }
-              }}
-              type={currentStep === 2 ? "submit" : "button"} // Submit only on the last step
-            >
-              {currentStep === 2 ? "Submit" : "Next"}
-            </button>
-          </div>
-        </div>
-      </Form>
-      
+            <Form>
+              <div>
+                {renderStepContent(formikProps)}
+                <div className="flex justify-between mt-4">
+                  {/* Previous Button */}
+                  <button
+                    className={`px-4 py-2 text-white bg-gray-500 rounded ${
+                      currentStep === 0 && "opacity-50 cursor-not-allowed"
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent form submission
+                      handlePrevious();
+                    }}
+                    disabled={currentStep === 0}
+                    type="button" // Ensure this does not submit the form
+                  >
+                    Previous
+                  </button>
+
+                  {/* Next/Submit Button */}
+                  <button
+                    className="px-4 py-2 text-white bg-mainGreen rounded"
+                    onClick={(e) => {
+                      if (currentStep === 2) {
+                        if (Object.keys(formikProps.errors).length > 0) {
+                          setModalErrors(
+                            Object.values(formikProps.errors) as string[]
+                          );
+                          showErrorModal(true);
+                        } else {
+                          formikProps.handleSubmit(); // Ensure Formik handles the submit process
+                        }
+                      } else {
+                        e.preventDefault(); // Prevent default only for non-submit actions
+                        handleNext(); // Call handleNext for non-final steps
+                      }
+                    }}
+                    type={currentStep === 2 ? "submit" : "button"}
+                  >
+                    {currentStep === 2 ? "Submit" : "Next"}
+                  </button>
+                </div>
+              </div>
+            </Form>
           )}
         </Formik>
       </div>
-      {loading && (
-        <Loading text="Calculating"/>
-      )}
+      {loading && <Loading text="Calculating" />}
 
       {modal && (
-          <Modal>
+        <Modal>
           <div className="bg-mainBlack p-8 rounded-lg text-white">
             <div className="grid grid-cols-10 gap-4">
               {/* Left Section */}
               <div className="col-span-6">
-                <p className="text-2xl mb-4 font-bold">Your Fundability Score is Ready!</p>
+                <p className="text-2xl mb-4 font-bold">
+                  Your Fundability Score is Ready!
+                </p>
                 <p className="text-sm mb-4">
-                  Your business profile has been successfully submitted. We’re now reviewing your
-                  information and verifying your financial records. This process may take up to 48
-                  hours.
+                  Your business profile has been successfully submitted. We’re
+                  now reviewing your information and verifying your financial
+                  records. This process may take up to 48 hours.
                 </p>
                 <p className="text-sm flex items-center gap-2">
                   <FaRegThumbsUp className="text-mainGreen" />
                   <span>Well done!</span>
                 </p>
               </div>
-  
+
               {/* Right Section */}
               <div className="col-span-4 flex justify-center items-center">
                 <div className="w-32 h-32">
@@ -797,13 +807,12 @@ export default function FundabilityForm() {
                       pathColor: "#42B27C",
                       trailColor: "#2D2D2D",
                       // textSize: "25px",
-                      
                     })}
                   />
                 </div>
               </div>
             </div>
-  
+
             {/* Buttons */}
             <div className="flex justify-center gap-6 mt-8">
               <button
@@ -819,6 +828,66 @@ export default function FundabilityForm() {
                 Retake Test
               </button>
             </div>
+          </div>
+        </Modal>
+      )}
+
+      {errorModal && (
+        <Modal>
+          <div className="p-6 flex flex-col rounded-lg shadow-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-red-600 flex items-center gap-2">
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6 text-red-600"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v3.75m0 3.75h.007M21.25 12A9.25 9.25 0 1 1 3.75 12a9.25 9.25 0 0 1 17.5 0z"
+                    />
+                  </svg>
+                </span>
+                Missing Required Fields
+              </h2>
+              <button onClick={() => showErrorModal(false)}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <p className="text-gray-400 mb-3">
+              Please ensure the following fields are filled correctly:
+            </p>
+            <ul className="list-disc list-inside text-sm text-gray-400">
+              {modalErrors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+
+            <button
+              className="mt-5 px-6 py-2 bg-mainGreen text-white font-medium rounded hover:bg-green-700 transition duration-300"
+              onClick={() => showErrorModal(false)}
+            >
+              Close
+            </button>
           </div>
         </Modal>
       )}

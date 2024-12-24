@@ -15,9 +15,9 @@ import Loading from "@/app/loading";
 export default function RegisterBusiness() {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
+   const [errorModal, showErrorModal] = useState(false);
   const [modal, showModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  
+  const [modalErrors, setModalErrors] = useState<string[]>([]);
 
   const validationSchema = Yup.object().shape({
     businessName: Yup.string().required("Business Name is required"),
@@ -59,8 +59,8 @@ export default function RegisterBusiness() {
   const handleRefreshRedirect = () => {
     window.location.href = "/dashboard"; // Replace with the desired path
   };
-  const handleNext = (isValid: boolean, errors: object) => {
-    if (isValid && Object.keys(errors).length === 0 && currentStep < 1) {
+  const handleNext = () => {
+    if (currentStep < 1) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -69,6 +69,7 @@ export default function RegisterBusiness() {
     if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
 
+ 
   const handleSubmit = async (values: RegisterBusinessPayload) => {
     try {
       setLoading(true);
@@ -80,22 +81,21 @@ export default function RegisterBusiness() {
         alert(errorData.message);
         return;
       }
-      if (response.ok) {
+      if(response.ok){
         const data = await response.json();
-        setModalMessage(data.message);
-        showModal(true);
-        return;
+        showModal(true)
+        alert(data.message);
       }
-      if (!response) {
-        setModalMessage("An Error Occured try again");
-      }
+     
     } catch (e) {
-      console.log(e);
+      console.error(e);
     } finally {
       setLoading(false);
     }
   };
-  const renderStepContent = (formikProps: FormikProps<RegisterBusinessPayload>) => {
+  const renderStepContent = (
+    formikProps: FormikProps<RegisterBusinessPayload>
+  ) => {
     switch (currentStep) {
       case 0:
         return (
@@ -231,8 +231,8 @@ export default function RegisterBusiness() {
                 error={formikProps.errors.description}
                 touched={formikProps.touched.description}
               />
-             
-                <FormInput
+
+              <FormInput
                 label="Describe your facility such as built-up area, number of floors, rental/lease details"
                 name="assets"
                 placeholder="e.g., 5000 sqft, 2 floors, leased property"
@@ -284,7 +284,7 @@ export default function RegisterBusiness() {
                 error={formikProps.errors.location}
                 touched={formikProps.touched.location}
               />
-             <OptionInput
+              <OptionInput
                 label="At present, what is your average monthly sales?"
                 name="reportedSales"
                 options={[
@@ -300,55 +300,14 @@ export default function RegisterBusiness() {
             </div>
           </div>
         );
-      case 2:
-        return (
-          <div className="bg-mainBlack py-8 px-5 pb-">
-            <div className="font-sansSerif text-sm text-white p-6 rounded-lg space-y-8">
-              {/* Stepper Section */}
-              <div className="space-y-4">
-                {/* Step 1 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex items-center justify-center w-6 h-6 bg-green-500 rounded-full"></div>
-                  <p className="font-semibold ">
-                    Business Information (Complete)
-                  </p>
-                </div>
-                {/* Step 2 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex items-center justify-center w-6 h-6 border-2 border-green-500 rounded-full"></div>
-                  <p className="font-semibold">Verification</p>
-                </div>
-                {/* Step 3 */}
-                <div className="flex items-start space-x-4">
-                  <div className="flex items-center justify-center w-6 h-6 border-2 border-green-500 rounded-full"></div>
-                  <p className="font-semibold">Approval</p>
-                </div>
-              </div>
 
-              {/* What's Next Section */}
-              <div>
-                <h3 className="text-xl font-semibold">What’s Next?</h3>
-                <ul className="list-disc list-inside space-y-2">
-                  <li>
-                    Check your dashboard for real-time updates on your profile
-                    status.
-                  </li>
-                  <li>
-                    Once verified, your business will be visible in the Deal
-                    Room, ready for investor connections!
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        );
       default:
         return null;
     }
   };
 
   return (
-    <div className="grid grid-cols-11 gap-4 font-serif">
+    <div className="grid grid-cols-11 gap-4 font-sansSerif">
       <div className="col-span-3 map-bg pt-12 pb-36">
         <p className="text-3xl mb-4">Register a Business</p>
         <p className="text-sm">
@@ -375,19 +334,11 @@ export default function RegisterBusiness() {
           >
             Business Information
           </p>
-          <p
-            className={`cursor-pointer ${
-              currentStep === 2 ? " border-b-2  border-mainGreen" : ""
-            }`}
-            onClick={() => setCurrentStep(2)}
-          >
-            Profile Status
-          </p>
         </div>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          onSubmit={(values) => handleSubmit(values)}
         >
           {(formikProps) => (
             <Form>
@@ -407,12 +358,24 @@ export default function RegisterBusiness() {
                     className={`px-4 py-2 text-white bg-mainGreen rounded ${
                       currentStep === 2 && "opacity-50 cursor-not-allowed"
                     }`}
-                   onClick={() =>
-                  handleNext(formikProps.isValid, formikProps.errors)
-                }
-                type={currentStep === 1 ? "submit" : "button"}
-              >
-                {currentStep === 1 ? "Submit" : "Next"}
+                    onClick={(e) => {
+                      if (currentStep === 1) {
+                        if (Object.keys(formikProps.errors).length > 0) {
+                          setModalErrors(
+                            Object.values(formikProps.errors) as string[]
+                          );
+                          showErrorModal(true);
+                        } else {
+                          formikProps.handleSubmit(); // Ensure Formik handles the submit process
+                        }
+                      } else {
+                        e.preventDefault(); // Prevent default only for non-submit actions
+                        handleNext(); // Call handleNext for non-final steps
+                      }
+                    }}
+                    type={currentStep === 1 ? "submit" : "button"}
+                  >
+                    {currentStep === 1 ? "Submit" : "Next"}
                   </button>
                 </div>
               </div>
@@ -420,10 +383,18 @@ export default function RegisterBusiness() {
           )}
         </Formik>
       </div>
-      {loading && (
-      <Loading text="Registering"/>
-      )}
+      {loading && <Loading text="Registering" />}
 
+      {modal && (
+        <Modal>
+          <h2 className="text-xl font-bold mb-4">Validation Errors</h2>
+          <ul className="list-disc ml-5">
+            {modalErrors.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ul>
+        </Modal>
+      )}
       {modal && (
         <Modal>
           {" "}
@@ -443,16 +414,82 @@ export default function RegisterBusiness() {
             </div>
             <div className="flex mt-8 gap-6">
               <button className="bg-mainGreen py-2 px-4 rounded">
-                <Link href="/dashboard">Take Fundability test</Link>
+                <Link href="/dashboard/fundability-test/test-page">Take Fundability test</Link>
               </button>
-              <button className="bg-black py-1 px-3 rounded" onClick={handleRefreshRedirect}>
-                 View Dashboard
+              <button
+                className="bg-black py-1 px-3 rounded"
+                onClick={handleRefreshRedirect}
+              >
+                View Dashboard
               </button>
             </div>
           </div>
         </Modal>
       )}
-      <div className="hidden">{modalMessage}</div>
+      {errorModal && (
+      <Modal>
+      <div className="p-6 flex flex-col rounded-lg shadow-lg">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-red-600 flex items-center gap-2">
+            <span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 text-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 9v3.75m0 3.75h.007M21.25 12A9.25 9.25 0 1 1 3.75 12a9.25 9.25 0 0 1 17.5 0z"
+                />
+              </svg>
+            </span>
+            Missing Required Fields
+          </h2>
+          <button
+            
+            onClick={() => showErrorModal(false)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+    
+        <p className="text-gray-400 mb-3">
+          Please ensure the following fields are filled correctly:
+        </p>
+        <ul className="list-disc list-inside text-sm text-gray-400">
+          {modalErrors.map((error, index) => (
+            <li key={index}>{error}</li>
+          ))}
+        </ul>
+    
+        <button
+          className="mt-5 px-6 py-2 bg-mainGreen text-white font-medium rounded hover:bg-green-700 transition duration-300"
+          onClick={() => showErrorModal(false)}
+        >
+          Close
+        </button>
+      </div>
+    </Modal>
+    
+      )}
+      {/* <div className="hidden">{modalMessage}</div> */}
     </div>
   );
 }
