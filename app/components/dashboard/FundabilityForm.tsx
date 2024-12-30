@@ -62,11 +62,13 @@ export default function FundabilityForm() {
     isicActivity: Yup.string().notRequired(),
     legalAdvisors: Yup.array().of(Yup.string()).notRequired(),
     averageAnnualRevenue: Yup.number()
-      .min(0, "Revenue cannot be negative")
-      .required("Average Annual Revenue is required"),
-    revenueGrowthRate: Yup.number()
-      .min(0, "Growth rate cannot be negative")
-      .notRequired(),
+      .typeError("Must be a number")
+      .positive("Must be positive")
+      .required("This field is required"),
+      revenueGrowthRate: Yup.number()
+      .typeError("Must be a number")
+      .min(0, "Must be 0 or higher")
+      .max(100, "Must be 100 or lower"),
     auditedFinancialStatement: Yup.boolean().required("This field is required"),
     companyPitchDeck: Yup.boolean().required("This field is required"),
     companyBusinessPlan: Yup.boolean().required("This field is required"),
@@ -88,7 +90,7 @@ export default function FundabilityForm() {
     industry: "",
     registeredAddress: "",
     companyEmail: "",
-    contactNumber: "",
+    contactNumber: "+234",
     principalAddress: "",
     applicantsAddress: "",
     position: "",
@@ -190,10 +192,18 @@ export default function FundabilityForm() {
               />
             </div>
             <div className="grid grid-cols-2 gap-3 items-end">
-              <FormInput
-                label="Company registration (LTD, Enterprise, Sole proprietorship, others) *"
+              <OptionInput
+                label="Type of Company Registration"
                 name="companyRegistration"
-                placeholder="Company Regisration"
+                options={[
+                  { value: "LTD", label: "LTD" },
+                  { value: "Enterprise", label: "Enterprise" },
+                  {
+                    value: "Sole Proprietorship",
+                    label: "Sole Proprietorship",
+                  },
+                  { value: "others", label: "others" },
+                ]}
                 value={formikProps.values.companyRegistration}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
@@ -271,7 +281,7 @@ export default function FundabilityForm() {
                 touched={formikProps.touched.contactNumber}
               />
               <OptionInput
-                label="Startup stage"
+                label="Current Business Stage"
                 name="startupStage"
                 options={[
                   { value: "post-revenue", label: "Post-revenue" },
@@ -312,9 +322,16 @@ export default function FundabilityForm() {
                 label="Position"
                 name="position"
                 options={[
-                  { value: "exec", label: "Exec" },
-                  { value: "mid", label: "Mid" },
-                  { value: "other", label: "Other" },
+                  { value: "Executive", label: "Executive" },
+                  {
+                    value: "Mid Level Management",
+                    label: "Mid Level Management",
+                  },
+                  {
+                    value: "Lower Level Management",
+                    label: "Lower Level Management",
+                  },
+                  { value: "Other", label: "Other" },
                 ]}
                 value={formikProps.values.position}
                 onChange={formikProps.handleChange}
@@ -336,7 +353,7 @@ export default function FundabilityForm() {
 
             <div className="grid grid-cols-2 gap-5 items-end">
               <FormInput
-                label="How many years have you been operating optional*"
+                label="Years of Operation"
                 name="yearsOfOperation"
                 type="number"
                 placeholder="Years of Operation"
@@ -459,25 +476,50 @@ export default function FundabilityForm() {
               <FormInput
                 label="Company ARR/TTM (Average Annual Revenue)"
                 name="averageAnnualRevenue"
-                type="number"
-                placeholder="e.g, 1000000"
-                value={formikProps.values.averageAnnualRevenue}
-                onChange={formikProps.handleChange}
+                type="text" // Use text to allow formatted input
+                placeholder="e.g., 1,000,000"
+                value={
+                  formikProps.values.averageAnnualRevenue
+                    ? formikProps.values.averageAnnualRevenue
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    : ""
+                }
+                onChange={(e) => {
+                  const formattedValue = e.target.value.replace(/,/g, ""); // Remove commas
+                  if (!isNaN(Number(formattedValue))) {
+                    formikProps.setFieldValue(
+                      "averageAnnualRevenue",
+                      formattedValue
+                    ); // Update as raw number
+                  }
+                }}
                 onBlur={formikProps.handleBlur}
                 error={formikProps.errors.averageAnnualRevenue}
                 touched={formikProps.touched.averageAnnualRevenue}
               />
-              <FormInput
-                label="Revenue growth rate CAGR (%) optional*"
-                name="revenueGrowthRate"
-                type="number"
-                placeholder="e.g 60"
-                value={formikProps.values.revenueGrowthRate}
-                onChange={formikProps.handleChange}
-                onBlur={formikProps.handleBlur}
-                error={formikProps.errors.revenueGrowthRate}
-                touched={formikProps.touched.revenueGrowthRate}
-              />
+
+<FormInput
+  label="Revenue growth rate CAGR (%) optional*"
+  name="revenueGrowthRate"
+  type="text" // Use "text" to allow a percentage sign
+  placeholder="e.g., 60"
+  value={
+    formikProps.values.revenueGrowthRate !== undefined &&
+    formikProps.values.revenueGrowthRate !== null
+      ? `${formikProps.values.revenueGrowthRate}%` // Append % sign
+      : ""
+  }
+  onChange={(e) => {
+    const rawValue = e.target.value.replace(/%/g, ""); // Remove % sign
+    if (!isNaN(Number(rawValue))) {
+      formikProps.setFieldValue("revenueGrowthRate", rawValue); // Update raw number
+    }
+  }}
+  onBlur={formikProps.handleBlur}
+  error={formikProps.errors.revenueGrowthRate}
+  touched={formikProps.touched.revenueGrowthRate}
+/>
             </div>
             <div className="grid grid-cols-2 items-end gap-5">
               <OptionInput
@@ -559,7 +601,7 @@ export default function FundabilityForm() {
 
             <div className="grid grid-cols-2 items-end gap-5">
               <OptionInput
-                label="Asset Base (Does your company possess significant SOLID asset holding?)"
+                label="Does your company possess significant SOLID asset holding?(Asset Base)"
                 name="companySolidAssetHolding"
                 options={[
                   { value: true, label: "Yes" },
@@ -578,7 +620,7 @@ export default function FundabilityForm() {
                 touched={formikProps.touched.companySolidAssetHolding}
               />
               <OptionInput
-                label="Inventory Base (Does the company possessa large inventory value?)"
+                label="Does the company possessa large inventory value?(Inventory Base)"
                 name="companyLargeInventory"
                 options={[
                   { value: true, label: "Yes" },
@@ -619,7 +661,7 @@ export default function FundabilityForm() {
               />
 
               <OptionInput
-                label="Is the company highly scalable"
+                label="Does the company have a high growth potential"
                 name="companyHighScalibilty"
                 options={[
                   { value: true, label: "Yes" },
@@ -688,7 +730,7 @@ export default function FundabilityForm() {
   return (
     <div className="grid grid-cols-11 gap-4 font-sansSerif">
       <div className="col-span-3 map-bg pt-12 pb-36">
-        <p className="text-3xl mb-4">Fundability test (readiness assessment)</p>
+        <p className="text-3xl mb-4">Fundability Check (readiness assessment)</p>
         <p className="text-sm">
           Please enter your details here. Information entered here is not
           publicly displayed. 

@@ -85,7 +85,7 @@ export default function DashboardLayout({
                 <LuLayoutDashboard /> Home
               </Link>
               <Link href="/dashboard/fundability-test" className="items-center gap-2 hover:text-mainGreen flex">
-                <MdOutlineBusinessCenter /> Fundability Test
+                <MdOutlineBusinessCenter /> Fundability Check
               </Link>
               <Link href="#" className="items-center gap-2 hover:text-mainGreen flex">
                 <BsGraphUp /> Deal Room

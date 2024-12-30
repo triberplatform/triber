@@ -4,6 +4,7 @@ import React from 'react'
 export default function Sponsor() {
   return (
     <div>
+    
          <div className="lg:flex-row flex-col flex gap-10  lg:gap-20 mt-10 items-center justify-center">
           <Image
             src={"/assets/fcmb-logo.svg"}

@@ -36,7 +36,7 @@ export default function Sponsors() {
       </div>
       <div>
         <p className="lg:text-4xl text-3xl hidden lg:block font-serif font-semibold mb-8">
-          Empowering Growth Through <br /> Strategic Partnerships
+          Empowering Growth Through <br /> Our Strategic Partnerships
         </p>
         <p className="lg:text-4xl text-3xl font-serif lg:hidden font-semibold mb-8">
           Empowering Growth Through Strategic Partnerships

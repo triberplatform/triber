@@ -11,7 +11,7 @@ export default function page() {
         <div className="relative text-white">
           Discover Your SME/Startup <br />
           Fundability Score with our <br />
-          Fundability Test (Readiness assessment)
+          Fundability Check (Readiness assessment)
         </div>{" "}
       </div>
       <div className="py-4 px-5 bg-mainBlack text-sm flex items-center gap-5">
