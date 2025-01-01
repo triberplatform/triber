@@ -65,7 +65,7 @@ export default function FundabilityForm() {
       .typeError("Must be a number")
       .positive("Must be positive")
       .required("This field is required"),
-      revenueGrowthRate: Yup.number()
+    revenueGrowthRate: Yup.number()
       .typeError("Must be a number")
       .min(0, "Must be 0 or higher")
       .max(100, "Must be 100 or lower"),
@@ -421,7 +421,7 @@ export default function FundabilityForm() {
             </div>
             <div className="grid grid-cols-2 gap-5 items-end">
               <ArrayInput
-                label="Legal Advisors optional*"
+                label="Legal Advisors "
                 name="legalAdvisors"
                 values={formikProps.values.legalAdvisors}
                 onChange={(newValues) =>
@@ -457,7 +457,7 @@ export default function FundabilityForm() {
                 touched={formikProps.touched.isicIndustry}
               />
               <FormInput
-                label="ISIC Activities (International standard industrial classification) optional*"
+                label="ISIC Activities (International standard industrial classification)"
                 name="isicActivity"
                 placeholder="e.g., Selling"
                 value={formikProps.values.isicActivity}
@@ -479,19 +479,21 @@ export default function FundabilityForm() {
                 type="text" // Use text to allow formatted input
                 placeholder="e.g., 1,000,000"
                 value={
-                  formikProps.values.averageAnnualRevenue
+                  formikProps.values.averageAnnualRevenue !== undefined &&
+                  formikProps.values.averageAnnualRevenue !== null
                     ? formikProps.values.averageAnnualRevenue
                         .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",") // Format with commas
                     : ""
                 }
                 onChange={(e) => {
-                  const formattedValue = e.target.value.replace(/,/g, ""); // Remove commas
-                  if (!isNaN(Number(formattedValue))) {
+                  const rawValue = e.target.value.replace(/,/g, ""); // Remove commas
+                  const numericValue = Number(rawValue); // Convert to number
+                  if (!isNaN(numericValue)) {
                     formikProps.setFieldValue(
                       "averageAnnualRevenue",
-                      formattedValue
-                    ); // Update as raw number
+                      numericValue
+                    ); // Store numeric value
                   }
                 }}
                 onBlur={formikProps.handleBlur}
@@ -499,27 +501,31 @@ export default function FundabilityForm() {
                 touched={formikProps.touched.averageAnnualRevenue}
               />
 
-<FormInput
-  label="Revenue growth rate CAGR (%) optional*"
-  name="revenueGrowthRate"
-  type="text" // Use "text" to allow a percentage sign
-  placeholder="e.g., 60"
-  value={
-    formikProps.values.revenueGrowthRate !== undefined &&
-    formikProps.values.revenueGrowthRate !== null
-      ? `${formikProps.values.revenueGrowthRate}%` // Append % sign
-      : ""
-  }
-  onChange={(e) => {
-    const rawValue = e.target.value.replace(/%/g, ""); // Remove % sign
-    if (!isNaN(Number(rawValue))) {
-      formikProps.setFieldValue("revenueGrowthRate", rawValue); // Update raw number
-    }
-  }}
-  onBlur={formikProps.handleBlur}
-  error={formikProps.errors.revenueGrowthRate}
-  touched={formikProps.touched.revenueGrowthRate}
-/>
+              <FormInput
+                label="Revenue growth rate CAGR (%)"
+                name="revenueGrowthRate"
+                type="text" // Use "text" to allow a percentage sign
+                placeholder="e.g., 60"
+                value={
+                  formikProps.values.revenueGrowthRate !== undefined &&
+                  formikProps.values.revenueGrowthRate !== null
+                    ? `${formikProps.values.revenueGrowthRate}%` // Append % sign for display
+                    : ""
+                }
+                onChange={(e) => {
+                  const rawValue = e.target.value.replace(/%/g, ""); // Remove % sign
+                  const numericValue = Number(rawValue); // Convert to number
+                  if (!isNaN(numericValue)) {
+                    formikProps.setFieldValue(
+                      "revenueGrowthRate",
+                      numericValue
+                    ); // Store numeric value
+                  }
+                }}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.revenueGrowthRate}
+                touched={formikProps.touched.revenueGrowthRate}
+              />
             </div>
             <div className="grid grid-cols-2 items-end gap-5">
               <OptionInput
@@ -730,7 +736,9 @@ export default function FundabilityForm() {
   return (
     <div className="grid grid-cols-11 gap-4 font-sansSerif">
       <div className="col-span-3 map-bg pt-12 pb-36">
-        <p className="text-3xl mb-4">Fundability Check (readiness assessment)</p>
+        <p className="text-3xl mb-4">
+          Fundability Check (readiness assessment)
+        </p>
         <p className="text-sm">
           Please enter your details here. Information entered here is not
           publicly displayed. 
