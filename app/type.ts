@@ -79,7 +79,7 @@ export interface BusinessDetails {
   }
   
   export interface FundabilityPayload {
-    registeredCompany: boolean;
+    registeredCompany: boolean | string;
     legalName: string;
     companyRegistration: string;
     city: string;
@@ -94,27 +94,27 @@ export interface BusinessDetails {
     title: string;
     yearsOfOperation: number;
     companySize: number;
-    companyLegalCases: boolean;
+    companyLegalCases: boolean | string; 
     startupStage: string;
     
     ownership: string[];
     executiveManagement: string[];
     boardOfDirectors: string[];
-    isicIndustry: boolean;
+    isicIndustry: boolean | string;
     isicActivity: string;
     legalAdvisors: string[];
   
     averageAnnualRevenue: number;
     revenueGrowthRate: number;
-    auditedFinancialStatement: boolean;
-    companyPitchDeck: boolean;
-    companyBusinessPlan: boolean;
-    company5yearCashFlow: boolean;
-    companySolidAssetHolding: boolean;
-    companyLargeInventory: boolean;
-    company3YearProfitable: boolean;
-    companyHighScalibilty: boolean;
-    companyCurrentLiabilities: boolean;
-    ownerCurrentLiabilities: boolean;
+    auditedFinancialStatement: boolean | string;
+    companyPitchDeck: boolean | string;
+    companyBusinessPlan: boolean | string;
+    company5yearCashFlow: boolean | string;
+    companySolidAssetHolding: boolean | string;
+    companyLargeInventory: boolean | string;
+    company3YearProfitable: boolean | string;
+    companyHighScalibilty: boolean | string;
+    companyCurrentLiabilities: boolean | string;
+    ownerCurrentLiabilities: boolean | string;
   }
   

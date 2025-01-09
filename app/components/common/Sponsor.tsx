@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function Sponsor() {
   return (
-    <div>
+    <div className='pb-12'>
     
          <div className="lg:flex-row flex-col flex gap-10  lg:gap-20 mt-10 items-center justify-center">
           <Image

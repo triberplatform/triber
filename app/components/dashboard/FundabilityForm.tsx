@@ -47,7 +47,13 @@ export default function FundabilityForm() {
     companySize: Yup.number()
       .min(0, "Company Size cannot be negative")
       .required("Company Size is required"),
-    companyLegalCases: Yup.boolean().required("This field is required"),
+    companyLegalCases: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("Company Legal Cases is required"),
     startupStage: Yup.string().required("Startup Stage is required"),
     ownership: Yup.array().of(
       Yup.string().required("Ownership cannot be empty")
@@ -58,7 +64,13 @@ export default function FundabilityForm() {
     boardOfDirectors: Yup.array()
       .of(Yup.string().required("Board of Directors cannot be empty"))
       .required("Board of Directors is required"),
-    isicIndustry: Yup.boolean().required("This field is required"),
+    isicIndustry: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("ISIC industry is required"),
     isicActivity: Yup.string().notRequired(),
     legalAdvisors: Yup.array().of(Yup.string()).notRequired(),
     averageAnnualRevenue: Yup.number()
@@ -69,20 +81,80 @@ export default function FundabilityForm() {
       .typeError("Must be a number")
       .min(0, "Must be 0 or higher")
       .max(100, "Must be 100 or lower"),
-    auditedFinancialStatement: Yup.boolean().required("This field is required"),
-    companyPitchDeck: Yup.boolean().required("This field is required"),
-    companyBusinessPlan: Yup.boolean().required("This field is required"),
-    company5yearCashFlow: Yup.boolean().required("This field is required"),
-    companySolidAssetHolding: Yup.boolean().required("This field is required"),
-    companyLargeInventory: Yup.boolean().required("This field is required"),
-    company3YearProfitable: Yup.boolean().required("This field is required"),
-    companyHighScalibilty: Yup.boolean().required("This field is required"),
-    companyCurrentLiabilities: Yup.boolean().required("This field is required"),
-    ownerCurrentLiabilities: Yup.boolean().required("This field is required"),
+    auditedFinancialStatement: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("Audited Financial Statement is required"),
+    companyPitchDeck: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("Company Pitch Deck is required"),
+    companyBusinessPlan: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("Company Business Plan is required"),
+    company5yearCashFlow: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("Company 5 year Cash flow is required"),
+    companySolidAssetHolding: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("Company Solid Asset Holding is required"),
+    companyLargeInventory: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("Company Large Inventory is required"),
+    company3YearProfitable: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("Company 3 year Profitable is required"),
+    companyHighScalibilty: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("Company High Scalibilty is required"),
+    companyCurrentLiabilities: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("Company Current Liabilities is required"),
+    ownerCurrentLiabilities: Yup.mixed()
+      .test(
+        "is-boolean-or-empty",
+        "This field is required",
+        (value) => value === true || value === false || value === ""
+      )
+      .required("Owner Current Liabilities is required"),
   });
 
   const initialValues = {
-    registeredCompany: true,
+    registeredCompany: "" as boolean | string,
     legalName: "",
     companyRegistration: "",
     city: "",
@@ -97,26 +169,26 @@ export default function FundabilityForm() {
     title: "",
     yearsOfOperation: 0,
     companySize: 0,
-    companyLegalCases: false,
+    companyLegalCases: "" as boolean | string,
     startupStage: "",
     ownership: [""],
     executiveManagement: [""],
     boardOfDirectors: [""],
-    isicIndustry: false,
+    isicIndustry: "" as boolean | string,
     isicActivity: "",
     legalAdvisors: [""],
     averageAnnualRevenue: 0,
     revenueGrowthRate: 0,
-    auditedFinancialStatement: false,
-    companyPitchDeck: false,
-    companyBusinessPlan: false,
-    company5yearCashFlow: false,
-    companySolidAssetHolding: false,
-    companyLargeInventory: false,
-    company3YearProfitable: false,
-    companyHighScalibilty: false,
-    companyCurrentLiabilities: false,
-    ownerCurrentLiabilities: false,
+    auditedFinancialStatement: "" as boolean | string,
+    companyPitchDeck: "" as boolean | string,
+    companyBusinessPlan: "" as boolean | string,
+    company5yearCashFlow: "" as boolean | string,
+    companySolidAssetHolding: "" as boolean | string,
+    companyLargeInventory: "" as boolean | string,
+    company3YearProfitable: "" as boolean | string,
+    companyHighScalibilty: "" as boolean | string,
+    companyCurrentLiabilities: "" as boolean | string,
+    ownerCurrentLiabilities: "" as boolean | string,
   };
 
   const handleRefreshRedirect = () => {
@@ -168,6 +240,7 @@ export default function FundabilityForm() {
                 label="Are you a registered Company?"
                 name="registeredCompany"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
@@ -381,7 +454,8 @@ export default function FundabilityForm() {
                 label="Have your company been involved in a legal case?"
                 name="companyLegalCases"
                 options={[
-                  { value: "true", label: "Yes" }, // Store as string
+                  { value: "", label: "Select an Option" },
+                  { value: "true", label: "Yes" },
                   { value: "false", label: "No" },
                 ]}
                 value={formikProps.values.companyLegalCases.toString()}
@@ -444,6 +518,7 @@ export default function FundabilityForm() {
                 label="ISIC Industry (do you belong to any industry Association)"
                 name="isicIndustry"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
@@ -532,6 +607,7 @@ export default function FundabilityForm() {
                 label="Do you have an audited financial statement?"
                 name="auditedFinancialStatement"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
@@ -551,6 +627,7 @@ export default function FundabilityForm() {
                 label="Do you have a company pitch deck?"
                 name="companyPitchDeck"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
@@ -569,6 +646,7 @@ export default function FundabilityForm() {
                 label="Does your company have a business Plan?"
                 name="companyBusinessPlan"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
@@ -588,6 +666,7 @@ export default function FundabilityForm() {
                 label="Company has a 5-year Financial Cashflow (3 model Financial Analysis)"
                 name="company5yearCashFlow"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
@@ -610,6 +689,7 @@ export default function FundabilityForm() {
                 label="Does your company possess significant SOLID asset holding?(Asset Base)"
                 name="companySolidAssetHolding"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
@@ -629,6 +709,7 @@ export default function FundabilityForm() {
                 label="Does the company possessa large inventory value?(Inventory Base)"
                 name="companyLargeInventory"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
@@ -650,6 +731,7 @@ export default function FundabilityForm() {
                 label="Has the company been 3 years profitable"
                 name="company3YearProfitable"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
@@ -670,6 +752,7 @@ export default function FundabilityForm() {
                 label="Does the company have a high growth potential"
                 name="companyHighScalibilty"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
@@ -691,6 +774,7 @@ export default function FundabilityForm() {
                 label="Does the company possess any current Liabilities/Debt"
                 name="companyCurrentLiabilities"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}
@@ -710,6 +794,7 @@ export default function FundabilityForm() {
                 label="Does the Owner/Proprietor possess any current Liabilities/Debt"
                 name="ownerCurrentLiabilities"
                 options={[
+                  { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
                 ]}

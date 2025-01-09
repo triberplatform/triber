@@ -5,7 +5,7 @@ import BlackCardCarousel from "./blackCardCarousel";
 
 export default function BiggestChallenges() {
   return (
-    <div className="bg-white text-black  mt-10  px-[10%] py-12">
+    <div className="bg-white text-black  mt-10  px-[10%] py-20">
       <div className="flex items-end gap-5">
         <h1 className="font-serif text-3xl lg:w-[50%] lg:text-left text-center lg:text-4xl font-semibold">
           Biggest challenges faced by  Businesses and founders today

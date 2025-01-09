@@ -64,7 +64,7 @@ input{
   background-position: top;
 
   /* Define explicit size */
-  width: 300px; /* Adjust to your desired width */
+  width: 500px; /* Adjust to your desired width */
   height: 400px; /* Adjust to your desired height */
 
 
@@ -116,4 +116,29 @@ input{
   background-size: cover;
   background-repeat: no-repeat;
   background-position: bottom;
+}
+
+.modal-scroll {
+  overflow-y: auto;
+}
+
+/* Custom scrollbar styles for WebKit browsers */
+.modal-scroll::-webkit-scrollbar {
+  width: 8px; /* Scrollbar width */
+}
+.modal-scroll::-webkit-scrollbar-track {
+  background: #222; /* Background of the scrollbar track */
+}
+.modal-scroll::-webkit-scrollbar-thumb {
+  background: #444; /* Scrollbar thumb color */
+  border-radius: 10px; /* Rounded scrollbar edges */
+}
+.modal-scroll::-webkit-scrollbar-thumb:hover {
+  background: #666; /* Hover effect for thumb */
+}
+
+/* Custom scrollbar styles for Firefox */
+.modal-scroll {
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: #444 #222; /* Thumb and track colors */
 }

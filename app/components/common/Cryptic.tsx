@@ -4,9 +4,9 @@ import PhotoGalleryMobile from "./PhotoGalleryMobile";
 
 export default function Cryptic() {
   return (
-    <div className="bg1 flex flex-col py-12 ">
+    <div className="bg1 flex flex-col py-16 ">
       <h1 className="lg:text-4xl text-center text-3xl font-serif font-semibold my-8">
-        How Triber solves these <br /> challenges
+        How Triber solves these <br /> Challenges
       </h1>
       <div className="hidden lg:block">
       <Photos />

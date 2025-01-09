@@ -18,7 +18,7 @@ export default function Home() {
     <BiggestChallenges/>
     <Cryptic/>
     <Faq/>
-    <p className='font-serif pl-32 text-4xl   font-bold'>Meet our Partners</p>
+    <p className='font-serif px-[10%] text-4xl pt-10  font-bold'>Meet our Partners</p>
     <Sponsor/>
     <ConnectForm/>
   </LandingLayout>

@@ -64,7 +64,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
                 {photo.description && (
                   <p className="text-sm mb-12">{photo.description}</p>
                 )}
-                <Button link={'/'} text={'Get Started'}/>
+                <Button link={'/login'} text={'Get Started'}/>
               </div>
             )}
           </div>

@@ -45,7 +45,7 @@ const Faq: React.FC = () => {
   };
 
   return (
-    <div className='lg:px-[10%] px-5 py-16'>
+    <div className='lg:px-[10%] px-5 py-20'>
       <p className='lg:text-4xl text-3xl font-serif  font-semibold mb-4 lg:mb-8'>Frequently Asked Questions</p>
       
       <div className="lg:grid flex flex-col-reverse lg:grid-cols-2 py-5 gap-8">

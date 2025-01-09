@@ -11,7 +11,7 @@ export default function Footer() {
             <p className="text-2xl font-semibold font-serif">
             Ready to Take <br /> the Next Step?
             </p>
-            <Link href={'/'} className="bg-black py-3 px-5 lg:px-12 rounded-lg">
+            <Link href={'/login'} className="bg-black py-3 px-5 lg:px-12 rounded-lg">
                 Get Started
             </Link>
 
@@ -28,10 +28,10 @@ export default function Footer() {
         <div>
           <p className="text-xl font-semibold font-serif">Product</p>
           <div className="flex flex-col gap-2 mt-2">
-            <Link href={"/"}>Fundability Test</Link>
-            <Link href={"/"}>Valuation</Link>
-            <Link href={"/"}>Deal Room</Link>
-            <Link href={"/"}>Database</Link>
+            <Link href={"/login"}>Fundability Test</Link>
+            <Link href={"/login"}>Valuation</Link>
+            <Link href={"/login"}>Deal Room</Link>
+            <Link href={"/login"}>Database</Link>
           </div>
         </div>
         <div>
@@ -47,19 +47,19 @@ export default function Footer() {
         <div>
           <p className="text-xl font-semibold font-serif">Product</p>
           <div className="flex flex-col gap-2 mt-2">
-            <Link href={"/"}>Fundability Test</Link>
-            <Link href={"/"}>Valuation</Link>
-            <Link href={"/"}>Deal Room</Link>
-            <Link href={"/"}>Database</Link>
+            <Link href={"/login"}>Fundability Test</Link>
+            <Link href={"/login"}>Valuation</Link>
+            <Link href={"/login"}>Deal Room</Link>
+            <Link href={"/login"}>Database</Link>
           </div>
         </div>
         <div>
           <p className="text-xl font-semibold font-serif">About Us</p>
           <div className="flex flex-col gap-2 mt-2">
-            <Link href={"/"}>Team</Link>
-            <Link href={"/"}>Careers</Link>
-            <Link href={"/"}>Research</Link>
-            <Link href={"/"}>Partners</Link>
+            <Link href={"/teams"}>Team</Link>
+            <Link href={"/career"}>Careers</Link>
+            <Link href={"/team"}>Research</Link>
+            <Link href={"/team"}>Partners</Link>
           </div>
         </div>
       </div>
