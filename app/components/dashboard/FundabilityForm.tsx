@@ -306,10 +306,30 @@ export default function FundabilityForm() {
                 touched={formikProps.touched.country}
               />
 
-              <FormInput
+           
+                <OptionInput
                 label="Industry"
                 name="industry"
-                placeholder="Industry"
+                options={[
+                  { value: "Agriculture", label: "Agriculture" },
+                  { value: "Mining", label: "Mining" },
+                  { value: "Manufacturing", label: "Manufacturing" },
+                  { value: "Electricity", label: "Electricity" },
+                  { value: "Water Supply", label: "Water Supply" },
+                  { value: "Construction", label: "Construction" },
+                  { value: "Wholesales", label: "Wholesales" },
+                  { value: "Transportation", label: "Transportation" },
+                  { value: "Accomodation", label: "Accomodation" },
+                  { value: "Information Technology", label: "Information Technology" },
+                  { value: "Finance", label: "Finance" },
+                  { value: "Real Estate", label: "Real Estate" },
+                  { value: "Legal", label: "Legal" },
+                  { value: "Education", label: "Education" },
+                  { value: "Public Administration", label: "Public Administration" },
+                  { value: "Health", label: "Health" },
+                  { value: "Arts and Entertainment", label: "Arts and Entertainment" },
+                  { value: "Others", label: "Others" },
+                ]}
                 value={formikProps.values.industry}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
@@ -822,7 +842,7 @@ export default function FundabilityForm() {
     <div className="grid grid-cols-11 gap-4 font-sansSerif">
       <div className="col-span-3 map-bg pt-12 pb-36">
         <p className="text-3xl mb-4">
-          Fundability Check (readiness assessment)
+          Fundability Check <br /> <span className="text-lg">(readiness assessment)</span> 
         </p>
         <p className="text-sm">
           Please enter your details here. Information entered here is not

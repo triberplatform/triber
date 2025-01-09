@@ -64,7 +64,7 @@ input{
   background-position: top;
 
   /* Define explicit size */
-  width: 500px; /* Adjust to your desired width */
+  min-width: 300px; /* Adjust to your desired width */
   height: 400px; /* Adjust to your desired height */
 
 
