@@ -22,31 +22,7 @@ export default function Advance() {
             and business leaders with the skills and knowledge they need to
             succeed
           </p>
-        </div>
-        <div className="col-span-1  lg:flex justify-end">
-          <Image
-            src={"/assets/career-image.png"}
-            height={50}
-            width={350}
-            alt="career-image"
-            className=""
-          />
-        </div>
-      </div>
-      <div className="lg:grid flex flex-col-reverse lg:grid-cols-2 my-10  lg:my-16">
-        <div className="col-span-1 flex justify-start">
-          <Image
-            src={"/assets/career-image2.png"}
-            height={50}
-            width={350}
-            alt="career-image"
-            className="s"
-          />
-        </div>
-
-
-    
-        <div className="col-span-1 mb-5 lg:mb-0 pt-5">
+          <div className="mb-5 mt-16 lg:mb-0 pt-5">
           <p className="text-xl font-semibold mb-5">
             Building a Network of 1,000 Financial Evaluators
           </p>
@@ -55,6 +31,17 @@ export default function Advance() {
             startups, providing expert insights and accurate valuations to
             ensure businesses are set up for funding success.
           </p>
+        </div>
+        </div>
+        
+        <div className="col-span-1 px-10 lg:flex justify-end">
+          <Image
+            src={"/assets/career-image.png"}
+            height={50}
+            width={350}
+            alt="career-image"
+            className=" w-full object-contain"
+          />
         </div>
       </div>
       <div className="bg-career-map pt-12 pb-10 lg:pb-52">

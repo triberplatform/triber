@@ -36,7 +36,7 @@ export default function page() {
         <div className="bg-mainBlack p-3 flex flex-col gap-2">
             <Image src="/assets/fundability-sub.png" width={300} height={30} alt="fund" className="w-full"/>
             <p className="my-4">SMEs</p>
-           <Link href={'fundability-test/test-page'} className="text-center my-3"> <span className="text-center my-3"><button className="text-center bg-black shadow-white shadow-sm py-1 px-5">Take Test</button></span></Link>
+           <Link href={'fundability-test/select-business'} className="text-center my-3"> <span className="text-center my-3"><button className="text-center bg-black shadow-white shadow-sm py-1 px-5">Take Test</button></span></Link>
         </div>
       </div>
     </div>

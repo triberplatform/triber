@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import Button from "./Button";
 import { LiaAngleDownSolid } from "react-icons/lia";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { AiOutlineProfile } from "react-icons/ai";
 
 export default function Navbar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -173,14 +174,14 @@ export default function Navbar() {
               )}
             </div>
             <div className="mt-10">
-              <Button link="/login" text="Get Started" />
+              <Button link="/login" text={`Create a Profile`} />
             </div>
           </div>
         </div>
 
         {/* Desktop Get Started Button */}
         <div className="hidden lg:block">
-          <Button link="/login" text="Get Started" />
+          <Button link="/login" text={`Create a Profile`} />
         </div>
       </nav>
     </div>

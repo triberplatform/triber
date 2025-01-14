@@ -16,11 +16,12 @@ export default function BusinessDetail() {
   const { id } = useParams(); // Extract the dynamic ID from the route
   const { businessDetails } = useUser();
 
-  const business = businessDetails.find((b) => b.id === Number(id));
+  const business = businessDetails.find((b) => b.publicId === id);
 
   if (!business) {
     return <p className="text-center text-white">Business not found</p>;
   }
+  console.log(business);
 
   const renderContent = () => {
     switch (currentStep) {
@@ -30,7 +31,7 @@ export default function BusinessDetail() {
             <div className="grid grid-cols-12">
               <div className="col-span-2">
                 <Image
-                  src={"/assets/business.jpg"}
+                  src={business.businessLogo}
                   width={130}
                   height={100}
                   alt="test"
@@ -38,7 +39,7 @@ export default function BusinessDetail() {
                 />
               </div>
               <div className="col-span-5 flex flex-col">
-                <p className="text-2xl mb-4">{business.businessName}</p>
+                <p className="text-2xl mb-4">{business.publicId}</p>
                 <p className="text-xs">{business.description}</p>
               </div>
               <div className="col-span-2 flex gap-2 text-xl self-end">
@@ -99,9 +100,12 @@ export default function BusinessDetail() {
                 business is for funding
               </p>
 
-         <Link href={'/dashboard/fundability-test/test-page'}>    <button className="bg-black shadow mt-3 shadow-white text-center px-3 py-1 rounded text-sm">
-                Fundability Check
-              </button></Link> 
+              <Link href={`/dashboard/fundability-test/${id}`}>
+                {" "}
+                <button className="bg-black shadow mt-3 shadow-white text-center px-3 py-1 rounded text-sm">
+                  Fundability Check
+                </button>
+              </Link>
             </div>
           </div>
         );

@@ -14,7 +14,7 @@ export default function OpenRoles() {
         <button
           onClick={() => setDisplayRoles(1)}
           className={`lg:px-6 px-2 py-2 text-sm rounded  ${
-            displayRoles === 1 ? "bg-mainGreen text-white" : "bg-green-200 text-black"
+            displayRoles === 1 ? "bg-mainGreen text-white" : "border border-black text-black"
           }`}
         >
           Trainee
@@ -22,7 +22,7 @@ export default function OpenRoles() {
         <button
           onClick={() => setDisplayRoles(2)}
           className={`lg:px-6 px-2 text-sm py-2 rounded ${
-            displayRoles === 2 ? "bg-mainGreen text-white" : "bg-green-200 text-black"
+            displayRoles === 2 ? "bg-mainGreen text-white" : "border border-black text-black"
           }`}
         >
           Financial Evaluator
@@ -30,7 +30,7 @@ export default function OpenRoles() {
         <button
           onClick={() => setDisplayRoles(3)}
           className={`lg:px-6 px-2 py-2 text-sm rounded  ${
-            displayRoles === 3 ? "bg-mainGreen text-white" : "bg-green-200 text-black"
+            displayRoles === 3 ? "bg-mainGreen text-white" : "border border-black text-black"
           }`}
         >
           Business Accelerator
@@ -47,15 +47,15 @@ export default function OpenRoles() {
             }
           />
           <BlackCard
-            heading={"Trainee"}
+            heading={"Financial Evaluator"}
             body={
-              "Are you a talented undergrad seeking a transformative internship? Apply now to join our firm. Gain hands-on experience, develop professional skills, and network with industry leaders and kickstart your career."
+              "If you’re a seasoned financial professional looking to leverage your expertise to drive business growth. "
             }
           />
           <BlackCard
-            heading={"Trainee"}
+            heading={"Business Accelerator"}
             body={
-              "Are you a talented undergrad seeking a transformative internship? Apply now to join our firm. Gain hands-on experience, develop professional skills, and network with industry leaders and kickstart your career."
+              "Join our team of business accelerators! We're looking for partners to help support small businesses and startups. Collaborating, leveraging resources and expertise to drive entrepreneurship and economic development."
             }
           />
         </div>

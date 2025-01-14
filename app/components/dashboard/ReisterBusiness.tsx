@@ -11,11 +11,12 @@ import Modal from "./Modal";
 import { FaCheckDouble } from "react-icons/fa";
 import Link from "next/link";
 import Loading from "@/app/loading";
+import DocumentUpload from "./DocumentUpload";
 
 export default function RegisterBusiness() {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
-   const [errorModal, showErrorModal] = useState(false);
+  const [errorModal, showErrorModal] = useState(false);
   const [modal, showModal] = useState(false);
   const [modalErrors, setModalErrors] = useState<string[]>([]);
 
@@ -39,6 +40,13 @@ export default function RegisterBusiness() {
       .required("Year Established is required"),
     location: Yup.string().required("Location is required"),
     assets: Yup.string().required("Assets description is required"),
+    logo: Yup.mixed()
+      .nullable()
+      .test("fileType", "Unsupported file format", (value) => {
+        if (!value) return true; // Allow null if no file
+        const file = value as File;
+        return ["image/jpeg", "image/png", "image/jpg"].includes(file.type);
+      }),
   });
 
   const initialValues = {
@@ -55,6 +63,7 @@ export default function RegisterBusiness() {
     yearEstablished: 0,
     location: "",
     assets: "",
+    logo: null as File | null,
   };
   const handleRefreshRedirect = () => {
     window.location.href = "/dashboard"; // Replace with the desired path
@@ -69,30 +78,27 @@ export default function RegisterBusiness() {
     if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
 
- 
   const handleSubmit = async (values: RegisterBusinessPayload) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await registerBusiness(values, token ?? "");
 
-      if (!response.ok) {
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        showModal(true);
+      } else {
         const errorData = await response.json();
         alert(errorData.message);
-        return;
       }
-      if(response.ok){
-        const data = await response.json();
-        showModal(true)
-        alert(data.message);
-      }
-     
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
+
   const renderStepContent = (
     formikProps: FormikProps<RegisterBusinessPayload>
   ) => {
@@ -297,6 +303,15 @@ export default function RegisterBusiness() {
                 error={formikProps.errors.reportedSales}
                 touched={formikProps.touched.reportedSales}
               />
+              <DocumentUpload
+                label="Logo"
+                name="logo"
+                onChange={(file) => formikProps.setFieldValue("logo", file)}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.logo}
+                touched={formikProps.touched.logo}
+                accept="application/pdf, image/*"
+              />
             </div>
           </div>
         );
@@ -359,18 +374,9 @@ export default function RegisterBusiness() {
                       currentStep === 2 && "opacity-50 cursor-not-allowed"
                     }`}
                     onClick={(e) => {
-                      if (currentStep === 1) {
-                        if (Object.keys(formikProps.errors).length > 0) {
-                          setModalErrors(
-                            Object.values(formikProps.errors) as string[]
-                          );
-                          showErrorModal(true);
-                        } else {
-                          formikProps.handleSubmit(); // Ensure Formik handles the submit process
-                        }
-                      } else {
-                        e.preventDefault(); // Prevent default only for non-submit actions
-                        handleNext(); // Call handleNext for non-final steps
+                      if (currentStep < 1) {
+                        e.preventDefault(); // Prevent form submission
+                        handleNext();
                       }
                     }}
                     type={currentStep === 1 ? "submit" : "button"}
@@ -414,7 +420,9 @@ export default function RegisterBusiness() {
             </div>
             <div className="flex mt-8 gap-6">
               <button className="bg-mainGreen py-2 px-4 rounded">
-                <Link href="/dashboard/fundability-test/test-page">Take Fundability test</Link>
+                <Link href="/dashboard/fundability-test/test-page">
+                  Take Fundability test
+                </Link>
               </button>
               <button
                 className="bg-black py-1 px-3 rounded"
@@ -427,67 +435,63 @@ export default function RegisterBusiness() {
         </Modal>
       )}
       {errorModal && (
-      <Modal>
-      <div className="p-6 flex flex-col rounded-lg shadow-lg">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-red-600 flex items-center gap-2">
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6 text-red-600"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v3.75m0 3.75h.007M21.25 12A9.25 9.25 0 1 1 3.75 12a9.25 9.25 0 0 1 17.5 0z"
-                />
-              </svg>
-            </span>
-            Missing Required Fields
-          </h2>
-          <button
-            
-            onClick={() => showErrorModal(false)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
+        <Modal>
+          <div className="p-6 flex flex-col rounded-lg shadow-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-red-600 flex items-center gap-2">
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6 text-red-600"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v3.75m0 3.75h.007M21.25 12A9.25 9.25 0 1 1 3.75 12a9.25 9.25 0 0 1 17.5 0z"
+                    />
+                  </svg>
+                </span>
+                Missing Required Fields
+              </h2>
+              <button onClick={() => showErrorModal(false)}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <p className="text-gray-400 mb-3">
+              Please ensure the following fields are filled correctly:
+            </p>
+            <ul className="list-disc list-inside text-sm text-gray-400">
+              {modalErrors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+
+            <button
+              className="mt-5 px-6 py-2 bg-mainGreen text-white font-medium rounded hover:bg-green-700 transition duration-300"
+              onClick={() => showErrorModal(false)}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-    
-        <p className="text-gray-400 mb-3">
-          Please ensure the following fields are filled correctly:
-        </p>
-        <ul className="list-disc list-inside text-sm text-gray-400">
-          {modalErrors.map((error, index) => (
-            <li key={index}>{error}</li>
-          ))}
-        </ul>
-    
-        <button
-          className="mt-5 px-6 py-2 bg-mainGreen text-white font-medium rounded hover:bg-green-700 transition duration-300"
-          onClick={() => showErrorModal(false)}
-        >
-          Close
-        </button>
-      </div>
-    </Modal>
-    
+              Close
+            </button>
+          </div>
+        </Modal>
       )}
       {/* <div className="hidden">{modalMessage}</div> */}
     </div>

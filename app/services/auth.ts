@@ -7,7 +7,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 export const signup = async (payload: signUpPayload) => {
   try {
     // Send POST request to the signup endpoint using fetch
-    const response = await fetch(`${apiUrl}/register`, {
+    const response = await fetch(`${apiUrl}/register/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export const confirmEmail = async (payload: emailPayload) => {
 
 export const login = async (payload: loginpayload) => {
   try {
-    const response = await fetch(`${apiUrl}/login`, {
+    const response = await fetch(`${apiUrl}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,6 +74,7 @@ export const useLogout = () => {
   const logout = () => {
     // Clear the token from localStorage
     localStorage.removeItem("token");
+    localStorage.removeItem("publicId");
 
     // Redirect to the login page
     router.push("/login");

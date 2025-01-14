@@ -37,6 +37,7 @@ export default function LoginForm() {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.token);
+        localStorage.setItem("publicId", data.user.publicId);
         setModalMessage(data.message || "Login successful!");
         setModalOpen(true);
         router.push("/dashboard");

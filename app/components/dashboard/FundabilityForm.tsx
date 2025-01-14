@@ -12,14 +12,23 @@ import { fundabilityTest } from "@/app/services/dashboard";
 import ArrayInput from "./ArrayInput";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import Loading from "@/app/loading";
+import DocumentUpload from "./DocumentUpload";
+import { useUser } from "../layouts/UserContext";
 
-export default function FundabilityForm() {
+interface FundabilityFormProps {
+  id: string;
+}
+
+export default function FundabilityForm({ id }: FundabilityFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [modal, showModal] = useState(false);
   const [errorModal, showErrorModal] = useState(false);
   const [modalMessage, setModalMessage] = useState<number>(0);
   const [modalErrors, setModalErrors] = useState<string[]>([]);
+
+  const {businessDetails} = useUser();
+  const business = businessDetails.find((b) => b.publicId === id);
 
   const validationSchema = Yup.object().shape({
     registeredCompany: Yup.boolean().required("This field is required"),
@@ -189,13 +198,22 @@ export default function FundabilityForm() {
     companyHighScalibilty: "" as boolean | string,
     companyCurrentLiabilities: "" as boolean | string,
     ownerCurrentLiabilities: "" as boolean | string,
+    certificateOfIncorporation: null as File | null,
+    memorandumOfAssociation: null as File | null,
+    statusReport: null as File | null,
+    letterOfGoodStanding: null as File | null,
+    companyLiabilitySchedule: null as File | null,
+    businessPlan: null as File | null,
+    financialStatements: null as File | null,
+    relevantLicenses: null as File | null,
+    publicId: id,
   };
 
   const handleRefreshRedirect = () => {
     window.location.href = "/dashboard"; // Replace with the desired path
   };
   const handleNext = () => {
-    if (currentStep < 2) {
+    if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -208,28 +226,56 @@ export default function FundabilityForm() {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await fundabilityTest(values, token || "");
+
+      // Create a new FormData object
+      const formData = new FormData();
+      // Append each field to FormData
+      Object.entries(values).forEach(([key, value]) => {
+        if (value instanceof File || value instanceof Blob) {
+          formData.append(key, value); // Append files directly
+        } else if (Array.isArray(value)) {
+          // Append array items, e.g., for multi-select fields
+          value.forEach((item) => formData.append(key, String(item)));
+        } else if (typeof value === "boolean" || typeof value === "number") {
+          // Convert booleans and numbers to strings
+          formData.append(key, String(value));
+        } else if (value !== null && value !== undefined) {
+          // Append all other values as strings
+          formData.append(key, String(value));
+        }
+      });
+
+      // Debugging: Log FormData key-value pairs
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+
+      // Call the API
+      const response = await fundabilityTest(formData, token || "");
 
       if (!response.ok) {
         const errorData = await response.json();
         alert(errorData.message);
         return;
       }
+
       if (response.ok) {
         const data = await response.json();
         setModalMessage(data.score);
         showModal(true);
         return;
       }
+
       if (!response) {
-        alert("An Error Occured try again");
+        alert("An Error Occurred. Please try again.");
       }
     } catch (e) {
-      console.log(e);
+      console.error("Error:", e);
     } finally {
       setLoading(false);
     }
   };
+
   const renderStepContent = (formikProps: FormikProps<FundabilityPayload>) => {
     switch (currentStep) {
       case 0:
@@ -306,8 +352,7 @@ export default function FundabilityForm() {
                 touched={formikProps.touched.country}
               />
 
-           
-                <OptionInput
+              <OptionInput
                 label="Industry"
                 name="industry"
                 options={[
@@ -320,14 +365,23 @@ export default function FundabilityForm() {
                   { value: "Wholesales", label: "Wholesales" },
                   { value: "Transportation", label: "Transportation" },
                   { value: "Accomodation", label: "Accomodation" },
-                  { value: "Information Technology", label: "Information Technology" },
+                  {
+                    value: "Information Technology",
+                    label: "Information Technology",
+                  },
                   { value: "Finance", label: "Finance" },
                   { value: "Real Estate", label: "Real Estate" },
                   { value: "Legal", label: "Legal" },
                   { value: "Education", label: "Education" },
-                  { value: "Public Administration", label: "Public Administration" },
+                  {
+                    value: "Public Administration",
+                    label: "Public Administration",
+                  },
                   { value: "Health", label: "Health" },
-                  { value: "Arts and Entertainment", label: "Arts and Entertainment" },
+                  {
+                    value: "Arts and Entertainment",
+                    label: "Arts and Entertainment",
+                  },
                   { value: "Others", label: "Others" },
                 ]}
                 value={formikProps.values.industry}
@@ -833,6 +887,126 @@ export default function FundabilityForm() {
             </div>
           </div>
         );
+      case 3:
+        return (
+          <div className=" bg-mainBlack gap-5 py-8 px-5">
+            <div className="grid grid-cols-2 items-end gap-5">
+              <div className="col-span-1">
+                <DocumentUpload
+                  label="Certificate of Incorporation"
+                  name="certificateOfIncorporation"
+                  onChange={(file) =>
+                    formikProps.setFieldValue(
+                      "certificateOfIncorporation",
+                      file
+                    )
+                  }
+                  onBlur={formikProps.handleBlur}
+                  error={formikProps.errors.certificateOfIncorporation}
+                  touched={formikProps.touched.certificateOfIncorporation}
+                  accept="application/pdf, image/*"
+                />
+              </div>
+              <div className="col-span-1">
+                <DocumentUpload
+                  label="memorandumOfAssociation"
+                  name="memorandumOfAssociation"
+                  onChange={(file) =>
+                    formikProps.setFieldValue("memorandumOfAssociation", file)
+                  }
+                  onBlur={formikProps.handleBlur}
+                  error={formikProps.errors.memorandumOfAssociation}
+                  touched={formikProps.touched.memorandumOfAssociation}
+                  accept="application/pdf, image/*"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 items-end gap-5">
+              <div className="col-span-1">
+                <DocumentUpload
+                  label="Status Report"
+                  name="statusReport"
+                  onChange={(file) =>
+                    formikProps.setFieldValue("statusReport", file)
+                  }
+                  onBlur={formikProps.handleBlur}
+                  error={formikProps.errors.statusReport}
+                  touched={formikProps.touched.statusReport}
+                  accept="application/pdf, image/*"
+                />
+              </div>
+              <div className="col-span-1">
+                <DocumentUpload
+                  label="Letter of Good Standing"
+                  name="letterOfGoodStanding"
+                  onChange={(file) =>
+                    formikProps.setFieldValue("letterOfGoodStanding", file)
+                  }
+                  onBlur={formikProps.handleBlur}
+                  error={formikProps.errors.letterOfGoodStanding}
+                  touched={formikProps.touched.letterOfGoodStanding}
+                  accept="application/pdf, image/*"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 items-end gap-5">
+              <div className="col-span-1">
+                <DocumentUpload
+                  label="Company Liability Schedule"
+                  name="companyLiabilitySchedule"
+                  onChange={(file) =>
+                    formikProps.setFieldValue("companyLiabilitySchedule", file)
+                  }
+                  onBlur={formikProps.handleBlur}
+                  error={formikProps.errors.companyLiabilitySchedule}
+                  touched={formikProps.touched.companyLiabilitySchedule}
+                  accept="application/pdf, image/*"
+                />
+              </div>
+              <div className="col-span-1">
+                <DocumentUpload
+                  label="Business Plan"
+                  name="businessPlan"
+                  onChange={(file) =>
+                    formikProps.setFieldValue("businessPlan", file)
+                  }
+                  onBlur={formikProps.handleBlur}
+                  error={formikProps.errors.businessPlan}
+                  touched={formikProps.touched.businessPlan}
+                  accept="application/pdf, image/*"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 items-end gap-5">
+              <div className="col-span-1">
+                <DocumentUpload
+                  label="Financial Statements"
+                  name="financialStatements"
+                  onChange={(file) =>
+                    formikProps.setFieldValue("financialStatements", file)
+                  }
+                  onBlur={formikProps.handleBlur}
+                  error={formikProps.errors.financialStatements}
+                  touched={formikProps.touched.financialStatements}
+                  accept="application/pdf, image/*"
+                />
+              </div>
+              <div className="col-span-1">
+                <DocumentUpload
+                  label="Relevant Licenses"
+                  name="relevantLicenses"
+                  onChange={(file) =>
+                    formikProps.setFieldValue("relevantLicenses", file)
+                  }
+                  onBlur={formikProps.handleBlur}
+                  error={formikProps.errors.relevantLicenses}
+                  touched={formikProps.touched.relevantLicenses}
+                  accept="application/pdf, image/*"
+                />
+              </div>
+            </div>
+          </div>
+        );
       default:
         return null;
     }
@@ -842,11 +1016,12 @@ export default function FundabilityForm() {
     <div className="grid grid-cols-11 gap-4 font-sansSerif">
       <div className="col-span-3 map-bg pt-12 pb-36">
         <p className="text-3xl mb-4">
-          Fundability Check <br /> <span className="text-lg">(readiness assessment)</span> 
+          Fundability Check <br />{" "}
+          <span className="text-lg">(readiness assessment)</span>
         </p>
         <p className="text-sm">
           Please enter your details here. Information entered here is not
-          publicly displayed. 
+          publicly displayed. <br /> <p className="mt-3 text-base font-semibold">Business: <span className="text-mainGreen text-sm font-normal">({business?.businessName})</span> </p> 
         </p>
       </div>
       <div className="col-span-8">
@@ -874,6 +1049,14 @@ export default function FundabilityForm() {
             onClick={() => setCurrentStep(2)}
           >
             Financial Information
+          </p>
+          <p
+            className={`cursor-pointer ${
+              currentStep === 3 ? " border-b-2  border-mainGreen" : ""
+            }`}
+            onClick={() => setCurrentStep(3)}
+          >
+            Documents Upload
           </p>
         </div>
         <Formik
@@ -905,7 +1088,8 @@ export default function FundabilityForm() {
                   <button
                     className="px-4 py-2 text-white bg-mainGreen rounded"
                     onClick={(e) => {
-                      if (currentStep === 2) {
+                      e.preventDefault(); // Prevent default form submission behavior
+                      if (currentStep === 3) {
                         if (Object.keys(formikProps.errors).length > 0) {
                           setModalErrors(
                             Object.values(formikProps.errors) as string[]
@@ -915,13 +1099,12 @@ export default function FundabilityForm() {
                           formikProps.handleSubmit(); // Ensure Formik handles the submit process
                         }
                       } else {
-                        e.preventDefault(); // Prevent default only for non-submit actions
                         handleNext(); // Call handleNext for non-final steps
                       }
                     }}
-                    type={currentStep === 2 ? "submit" : "button"}
+                    type="button" // Always use type="button" to prevent default form submission
                   >
-                    {currentStep === 2 ? "Submit" : "Next"}
+                    {currentStep === 3 ? "Submit" : "Next"}
                   </button>
                 </div>
               </div>

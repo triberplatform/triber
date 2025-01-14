@@ -38,15 +38,18 @@ export default function DashboardLayout({
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const publicId = localStorage.getItem("publicId");
     setLoading(true);
     if (!token) {
       router.push("/login");
       return;
+
     }
+    console.log(publicId)
 
     const fetchUserDetails = async () => {
       try {
-        const userDetails = await getUserDetails(token);
+        const userDetails = await getUserDetails(token as string, publicId as string);
         setUser(userDetails.data);
       } catch (error) {
         console.error("Failed to fetch user details:", error);

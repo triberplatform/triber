@@ -37,6 +37,7 @@ export interface RegisterBusinessPayload  {
     yearEstablished: number;
     location: string;
     assets: string;
+    logo: File | null;
   };
 
 export interface loginpayload {
@@ -48,6 +49,8 @@ export interface loginpayload {
 
 export interface BusinessDetails {
     id: number;
+    businessLogo: string;
+    publicId: string;
     businessName: string;
     businessEmail: string;
     businessPhone: string;
@@ -116,5 +119,23 @@ export interface BusinessDetails {
     companyHighScalibilty: boolean | string;
     companyCurrentLiabilities: boolean | string;
     ownerCurrentLiabilities: boolean | string;
+
+    certificateOfIncorporation: File | null ;
+    memorandumOfAssociation: File| null;
+    statusReport: File |null;
+    letterOfGoodStanding: File | null;
+    companyLiabilitySchedule:File | null;
+    businessPlan:File | null;
+    financialStatements: File | null;
+    relevantLicenses:File | null;
+    publicId: string;
   }
   
+  export type ConnectFormValues = {
+    businessName: string;
+    businessRegistration: string;
+    annualTurnOver: number;
+    fundingRequirement: number;
+    description: string;
+    contactEmail: string;
+  };
