@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import ListBusiness from "@/app/components/dashboard/ListBusiness";
 import { useUser } from "@/app/components/layouts/UserContext";
 import React from "react";
@@ -8,8 +8,8 @@ import { IoPricetagOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 
 export default function Page() {
-
-  const { user } = useUser();
+  const { user, businessDetails } = useUser();
+  
 
   if (!user) {
     return <p>No user details available</p>;
@@ -17,7 +17,9 @@ export default function Page() {
 
   return (
     <div className="">
-      <div className=" text-2xl mb-4">Hi {user.firstname}, welcome to Triber</div>
+      <div className=" text-2xl mb-4">
+        Hi {user.firstname}, welcome to Triber
+      </div>
       <div className="grid grid-cols-10 gap-4 mb-4">
         <div className="col-span-6 bg-mainBlack p-4 rounded-xl">
           <p className="text-lg mb-4">
@@ -44,7 +46,7 @@ export default function Page() {
         <div className="col-span-2 flex flex-col gap-2">
           <div className=" bg-mainBlack flex flex-col justify-between p-4 rounded-xl">
             <p>Total Businesses</p>
-            <p>0</p>
+            <p>{businessDetails?.length || 0}</p>
           </div>
           <div className=" bg-mainBlack flex flex-col justify-between p-4 rounded-xl">
             <p>Listed Connections</p>
@@ -55,34 +57,34 @@ export default function Page() {
       <div className="grid grid-cols-9 gap-4 font-sansSerif mb-4">
         <div className="col-span-3 bg-mainGreens p-4 flex flex-col gap-5 rounded-xl">
           <div className="flex gap-2 items-center">
-          <IoPricetagOutline />
-          <p>Sell your Business Find Investors</p>
-
+            <IoPricetagOutline />
+            <p>Sell your Business Find Investors</p>
           </div>
-          <p className="w-[70%] text-sm">List, connect, and close deals with top investors today!</p>
-         
+          <p className="w-[70%] text-sm">
+            List, connect, and close deals with top investors today!
+          </p>
         </div>
         <div className="col-span-3 bg-mainBlack p-4 flex flex-col gap-5 rounded-xl">
           <div className="flex gap-2 items-center">
-          <GiProgression />
-          <p>Buy a BusinessInvest in a Business</p>
-
+            <GiProgression />
+            <p>Buy a BusinessInvest in a Business</p>
           </div>
-          <p className="w-[70%] text-sm">Find opportunities, connect with founders, and grow your portfolio.</p>
-         
+          <p className="w-[70%] text-sm">
+            Find opportunities, connect with founders, and grow your portfolio.
+          </p>
         </div>
         <div className="col-span-3 bg-mainBlack p-4 flex flex-col gap-5 rounded-xl">
           <div className="flex gap-2 items-center">
-          <BsBuildingsFill />
-          <p>Deal Room</p>
-
+            <BsBuildingsFill />
+            <p>Deal Room</p>
           </div>
-          <p className="w-[70%] text-sm">Connect, negotiate, and finalize investments all in one place.</p>
-         
+          <p className="w-[70%] text-sm">
+            Connect, negotiate, and finalize investments all in one place.
+          </p>
         </div>
       </div>
       <div>
-          <ListBusiness/>
+        <ListBusiness />
       </div>
     </div>
   );

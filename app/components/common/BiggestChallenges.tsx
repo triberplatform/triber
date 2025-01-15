@@ -10,13 +10,13 @@ export default function BiggestChallenges() {
         <h1 className="font-serif text-3xl lg:w-[50%] lg:text-left text-center lg:text-4xl font-semibold">
           Biggest challenges faced by  Businesses and founders today
         </h1>
-        <Image
+        {/* <Image
           src={"/assets/arrow.png"}
           width={80}
           height={50}
           alt="chat box"
           className="mb-1 hidden lg:block"
-        />
+        /> */}
       </div>
       <div className=" lg:block hidden">
       <div className="grid lg:grid-cols-9 mt-8 gap-8 ">

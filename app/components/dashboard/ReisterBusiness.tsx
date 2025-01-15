@@ -19,6 +19,7 @@ export default function RegisterBusiness() {
   const [errorModal, showErrorModal] = useState(false);
   const [modal, showModal] = useState(false);
   const [modalErrors, setModalErrors] = useState<string[]>([]);
+  const [id, setId] = useState(null);
 
   const validationSchema = Yup.object().shape({
     businessName: Yup.string().required("Business Name is required"),
@@ -86,8 +87,9 @@ export default function RegisterBusiness() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
-        showModal(true);
+        setId(data.data.publicId);
+        setTimeout(() => {
+        showModal(true);},1000)
       } else {
         const errorData = await response.json();
         alert(errorData.message);
@@ -433,7 +435,7 @@ export default function RegisterBusiness() {
             </div>
             <div className="flex mt-8 gap-6">
               <button className="bg-mainGreen py-2 px-4 rounded">
-                <Link href="/dashboard/fundability-test/test-page">
+                <Link href={`/dashboard/fundability-test/${id}`}>
                   Take Fundability test
                 </Link>
               </button>

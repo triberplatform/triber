@@ -13,9 +13,10 @@ import Loading from "@/app/loading";
 import DocumentUpload from "./DocumentUpload";
 import { useUser } from "../layouts/UserContext";
 
+
 export default function EditBusiness({ id }: { id: string }) {
-    const { businessDetails } = useUser();
-    const business = businessDetails.find((b) => b.publicId === id);
+  const { businessDetails } = useUser();
+  const business = businessDetails.find((b) => b.publicId === id);
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [modal, showModal] = useState(false);

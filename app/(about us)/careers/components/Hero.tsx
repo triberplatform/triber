@@ -47,7 +47,7 @@ export default function Hero() {
     initialValues: {
       fullName: "",
       email: "",
-      phone: 0,
+      phone: +234,
       yearsOfExperience: 0,
       resume: null as File | null,
       coverLetter: "",
