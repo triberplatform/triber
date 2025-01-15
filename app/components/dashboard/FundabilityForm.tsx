@@ -477,10 +477,10 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                     label: "Mid Level Management",
                   },
                   {
-                    value: "entry",
+                    value: "mid",
                     label: "Lower Level Management",
                   },
-                  { value: "Other", label: "Other" },
+                  { value: "mid", label: "Other" },
                 ]}
                 value={formikProps.values.position}
                 onChange={formikProps.handleChange}
