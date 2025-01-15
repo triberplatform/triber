@@ -18,7 +18,6 @@ export default function EditBusiness({ id }: { id: string }) {
     const business = businessDetails.find((b) => b.publicId === id);
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [errorModal, showErrorModal] = useState(false);
   const [modal, showModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 //   const [modalErrors, setModalErrors] = useState<string[]>([]);

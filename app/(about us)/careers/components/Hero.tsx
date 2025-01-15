@@ -2,7 +2,7 @@
 import Modal from "@/app/components/common/Modal";
 import Loading from "@/app/loading";
 import Image from "next/image";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { JobConnectForm, JobListing } from "@/app/type";
 import * as Yup from "yup";
@@ -79,7 +79,7 @@ export default function Hero() {
         setModalMessage(data.message || "Form submitted successfully.");
         setOpen(true);
         resetForm();
-      } catch (error) {
+      } catch  {
         setModalMessage("An error occurred. Please try again.");
       } finally {
         setLoading(false);

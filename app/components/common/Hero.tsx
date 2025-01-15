@@ -61,7 +61,7 @@ export default function Hero() {
         setModalMessage(data.message || "Form submitted successfully.");
         setOpen(true);
         resetForm();
-      } catch (error) {
+      } catch {
         setModalMessage("An error occurred. Please try again.");
       } finally {
         setLoading(false);
