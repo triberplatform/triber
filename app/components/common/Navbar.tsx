@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import Button from "./Button";
 import { LiaAngleDownSolid } from "react-icons/lia";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { AiOutlineProfile } from "react-icons/ai";
 
 export default function Navbar() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);

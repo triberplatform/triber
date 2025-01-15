@@ -7,7 +7,7 @@ interface DocumentUploadProps {
   name: string;
   accept?: string;
   onChange: (file: File | null) => void;
-  onBlur: (e: React.FocusEvent<any>) => void;
+  onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   error?: string;
   touched?: boolean;
 }

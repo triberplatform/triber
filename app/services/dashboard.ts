@@ -1,8 +1,8 @@
-import { ConnectFormValues, FundabilityPayload, JobConnectForm, RegisterBusinessPayload } from "../type";
+import { ConnectFormValues, JobConnectForm, RegisterBusinessPayload } from "../type";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const getUserDetails = async (token: string,publicId:string) => {
+export const getUserDetails = async (token: string, publicId: string) => {
   try {
     const response = await fetch(`${apiUrl}/users/${publicId}`, {
       headers: {
@@ -61,7 +61,7 @@ export const registerBusiness = async (payload: RegisterBusinessPayload, token: 
 };
 
 
-export const editBusiness = async (payload: RegisterBusinessPayload, token: string, id :string) => {
+export const editBusiness = async (payload: RegisterBusinessPayload, token: string, id: string) => {
   try {
     const formData = new FormData();
 
@@ -90,7 +90,7 @@ export const editBusiness = async (payload: RegisterBusinessPayload, token: stri
 
 
 
-export const fundabilityTest = async (payload:FormData, token: string) => {
+export const fundabilityTest = async (payload: FormData, token: string) => {
   try {
     const response = await fetch(`${apiUrl}/fundability/test`, {
       method: "POST",
@@ -103,7 +103,7 @@ export const fundabilityTest = async (payload:FormData, token: string) => {
 
     return response;
 
-  } catch  {
+  } catch {
     console.error("Error:");
     throw new Error(" Please try again.");
   }
@@ -121,7 +121,7 @@ export const connectionRequest = async (payload: ConnectFormValues) => {
 
     return response;
 
-  } catch  {
+  } catch {
     console.error("Error:");
     throw new Error("Request failed. Please try again.");
   }
@@ -142,13 +142,13 @@ export const jobRequest = async (payload: JobConnectForm) => {
   try {
     const response = await fetch(`${apiUrl}/jobs/apply`, {
       method: "POST",
-     
+
       body: formData,
     });
 
     return response;
 
-  } catch  {
+  } catch {
     console.error("Error:");
     throw new Error("Request failed. Please try again.");
   }

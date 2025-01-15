@@ -21,7 +21,7 @@ export default function EditBusiness({ id }: { id: string }) {
   const [errorModal, showErrorModal] = useState(false);
   const [modal, showModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [modalErrors, setModalErrors] = useState<string[]>([]);
+//   const [modalErrors, setModalErrors] = useState<string[]>([]);
 
   const validationSchema = Yup.object().shape({
     businessName: Yup.string().required("Business Name is required"),
@@ -68,9 +68,7 @@ export default function EditBusiness({ id }: { id: string }) {
       assets: business?.assets ?? "",
       logo: null,
     };
-  const handleRefreshRedirect = () => {
-    window.location.href = "/dashboard"; // Replace with the desired path
-  };
+ 
   const handleNext = () => {
     if (currentStep < 1) {
       setCurrentStep(currentStep + 1);
@@ -421,7 +419,7 @@ export default function EditBusiness({ id }: { id: string }) {
           </div>
         </Modal>
       )}
-      {errorModal && (
+      {/* {errorModal && (
         <Modal>
           <div className="p-6 flex flex-col rounded-lg shadow-lg">
             <div className="flex items-center justify-between mb-4">
@@ -479,7 +477,7 @@ export default function EditBusiness({ id }: { id: string }) {
             </button>
           </div>
         </Modal>
-      )}
+      )} */}
       {/* <div className="hidden">{modalMessage}</div> */}
     </div>
   );
