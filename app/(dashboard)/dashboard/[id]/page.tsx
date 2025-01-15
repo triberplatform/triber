@@ -39,7 +39,7 @@ export default function BusinessDetail() {
                 />
               </div>
               <div className="col-span-5 flex flex-col">
-                <p className="text-2xl mb-4">{business.publicId}</p>
+                <p className="text-2xl mb-4">{business.businessName}</p>
                 <p className="text-xs">{business.description}</p>
               </div>
               <div className="col-span-2 flex gap-2 text-xl self-end">
@@ -47,9 +47,9 @@ export default function BusinessDetail() {
               </div>
               <div className="col-span-1"></div>
               <div className="col-span-2 ">
-                <button className="bg-black shadow shadow-white px-3 py-1 rounded text-sm">
-                  Go to Deal Room
-                </button>
+                <Link  href={`/dashboard/register-business/${business.publicId}`} className="bg-black shadow shadow-white px-3 py-1 rounded text-sm">
+                  Edit Details
+                </Link>
               </div>
             </div>
             <div className="grid grid-cols-12 py-10 text-xs">

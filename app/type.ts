@@ -128,7 +128,7 @@ export interface BusinessDetails {
     businessPlan:File | null;
     financialStatements: File | null;
     relevantLicenses:File | null;
-    publicId: string;
+    businessId: string;
   }
   
   export type ConnectFormValues = {
@@ -139,3 +139,26 @@ export interface BusinessDetails {
     description: string;
     contactEmail: string;
   };
+
+  export type JobConnectForm={
+    fullName: string;
+    email: string;
+    phone: number;
+    yearsOfExperience: number;
+    resume: File | null;
+    coverLetter: string;
+    jobId:string
+  }
+
+  export type JobListing = {
+    id: number;
+    publicId: string;
+    title: string;
+    description: string;
+    location: string;
+    type: "FULL_TIME" | "PART_TIME" | "CONTRACT" | "INTERN"; // Add other job types as needed
+    salary: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  

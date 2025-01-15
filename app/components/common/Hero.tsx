@@ -110,7 +110,7 @@ export default function Hero() {
               >
                 &times;
               </button>
-              <p className="lg:text-2xl text-xl font-semibold mb-2 font-serif text-white">
+              <p className="lg:text-2xl text-left text-xl font-semibold mb-2 font-serif text-white">
                 Welcome to Triber{" "}
                 <span className="text-mainGreen">Connect</span> Directly <br />{" "}
                 with our Partners

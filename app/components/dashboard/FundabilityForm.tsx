@@ -206,7 +206,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
     businessPlan: null as File | null,
     financialStatements: null as File | null,
     relevantLicenses: null as File | null,
-    publicId: id,
+    businessId: id,
   };
 
   const handleRefreshRedirect = () => {
@@ -232,10 +232,11 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
       // Append each field to FormData
       Object.entries(values).forEach(([key, value]) => {
         if (value instanceof File || value instanceof Blob) {
-          formData.append(key, value); // Append files directly
+          // Append files directly
+          formData.append(key, value);
         } else if (Array.isArray(value)) {
-          // Append array items, e.g., for multi-select fields
-          value.forEach((item) => formData.append(key, String(item)));
+          // Convert array to JSON string and append
+          formData.append(key, JSON.stringify(value));
         } else if (typeof value === "boolean" || typeof value === "number") {
           // Convert booleans and numbers to strings
           formData.append(key, String(value));
@@ -244,6 +245,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
           formData.append(key, String(value));
         }
       });
+      
 
       // Debugging: Log FormData key-value pairs
       for (const [key, value] of formData.entries()) {
@@ -469,13 +471,13 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 label="Position"
                 name="position"
                 options={[
-                  { value: "Executive", label: "Executive" },
+                  { value: "exec", label: "Executive" },
                   {
-                    value: "Mid Level Management",
+                    value: "mid",
                     label: "Mid Level Management",
                   },
                   {
-                    value: "Lower Level Management",
+                    value: "entry",
                     label: "Lower Level Management",
                   },
                   { value: "Other", label: "Other" },

@@ -2,12 +2,13 @@
 import Modal from "@/app/components/common/Modal";
 import Loading from "@/app/loading";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { ConnectFormValues } from "@/app/type";
+import { JobConnectForm, JobListing } from "@/app/type";
 import * as Yup from "yup";
-import { connectionRequest } from "@/app/services/dashboard";
+import { getJobs, jobRequest } from "@/app/services/dashboard";
 import { AiOutlineClose, AiOutlineInfoCircle } from "react-icons/ai";
+import DocumentUpload from "@/app/components/dashboard/DocumentUpload";
 
 export default function Hero() {
   const [isModalOpen1, setIsModalOpen1] = useState(true);
@@ -15,45 +16,57 @@ export default function Hero() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [jobs, setJobs] = useState<JobListing[]>([]);
+
+  useEffect(() => {
+    const jobDetails = async () => {
+      try {
+        const jobs = await getJobs();
+        setJobs(jobs.data);
+        console.log(jobs);
+      } catch (error) {
+        console.error("Failed to fetch user details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    jobDetails();
+  }, []);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+
   const applyJob = () => {
     setIsModalOpen1(!isModalOpen1);
     setIsModalOpen(true);
   };
 
-  const formik = useFormik<ConnectFormValues>({
+  const formik = useFormik<JobConnectForm>({
     initialValues: {
-      businessName: "",
-      businessRegistration: "",
-      annualTurnOver: 0,
-      fundingRequirement: 0,
-      description: "",
-      contactEmail: "",
+      fullName: "",
+      email: "",
+      phone: 0,
+      yearsOfExperience: 0,
+      resume: null as File | null,
+      coverLetter: "",
+      jobId: "",
     },
     validationSchema: Yup.object({
-      businessName: Yup.string().required("Business Name is required"),
-      businessRegistration: Yup.string().required(
-        "Business Registration is required"
-      ),
-      annualTurnOver: Yup.number()
-        .typeError("Annual Turnover must be a number")
-        .required("Annual Turnover is required"),
-      fundingRequirement: Yup.number()
-        .typeError("Funding Requirement must be a number")
-        .required("Funding Requirement is required"),
-      description: Yup.string().required("Description is required"),
-      contactEmail: Yup.string()
-        .email("Invalid email address")
-        .required("Contact Email is required"),
+      fullName: Yup.string().required("Full Name is required"),
+      email: Yup.string().email("Invalid email address").required("Email is required"),
+      phone: Yup.number().typeError("Phone must be a number").required("Phone is required"),
+      yearsOfExperience: Yup.number().typeError("Years of Experience must be a number").required("Years of Experience is required"),
+      resume: Yup.mixed().required("Resume is required"),
+      coverLetter: Yup.string().required("Cover Letter is required"),
+      jobId: Yup.string().required("Job Role is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
       setIsModalOpen(false);
       try {
-        const response = await connectionRequest(values);
+        const response = await jobRequest(values);
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -186,10 +199,10 @@ export default function Hero() {
               >
                 &times;
               </button>
-              <p className="lg:text-2xl text-xl font-semibold mb-2 font-serif text-white">
-                Welcome to Triber{" "}
-                <span className="text-mainGreen">Connect</span> Directly <br />{" "}
-                with our Partners
+              <p className="lg:text-2xl text-xl text-left font-semibold mb-2 font-serif text-white">
+                Join our Tribe as a
+                <span className="text-mainGreen"> Business</span> Directly{" "}
+                <br /> Development and Strategy Lead
               </p>
               <form
                 onSubmit={formik.handleSubmit}
@@ -205,173 +218,155 @@ export default function Hero() {
                     </label>
                     <input
                       type="text"
-                      name="businessName"
-                      placeholder="Enter Registered Business Name"
+                      name="fullName"
+                      placeholder="Enter your Full Name"
                       className="lg:w-full text-[0.8rem] bg-mainBlacks py-2 rounded border-gray-500 px-5 focus:outline-none border focus:ring-0"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.businessName}
+                      value={formik.values.fullName}
                     />
-                    {formik.touched.businessName &&
-                      formik.errors.businessName && (
-                        <div className="text-red-500 text-xs">
-                          {formik.errors.businessName}
-                        </div>
-                      )}
+                    {formik.touched.fullName && formik.errors.fullName && (
+                      <div className="text-red-500 text-xs">
+                        {formik.errors.fullName}
+                      </div>
+                    )}
                   </div>
                   <div className="col-span-1 flex lg:gap-2 flex-col">
                     <label
                       htmlFor="businessRegistration"
                       className="font-sansSerif text-xs"
                     >
-                      Tell us Why you want to work with us
+                      Job Role
                     </label>
                     <select
                       id="businessRegistration"
-                      name="businessRegistration"
+                      name="jobId"
                       className="lg:w-full text-[0.8rem] bg-mainBlacks border-gray-500 border py-[0.58rem] rounded px-5 focus:outline-none focus:ring-0"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.businessRegistration}
+                      value={formik.values.jobId}
                     >
-                      <option value="">Select Company Type</option>
-                      <option value="unregistered">
-                        Unregistered Business
-                      </option>
-                      <option value="llc">Limited Liability Company</option>
-                      <option value="soleProprietorship">
-                        Sole Proprietorship
-                      </option>
+                      <option value="">Select Job Type</option>
+                      {jobs?.map((job) => (
+                        <option key={job.id} value={job.publicId}>
+                          {job.title}
+                        </option>
+                      ))}
                     </select>
-                    {formik.touched.businessRegistration &&
-                      formik.errors.businessRegistration && (
-                        <div className="text-red-500 text-xs">
-                          {formik.errors.businessRegistration}
-                        </div>
-                      )}
+
+                    {formik.touched.jobId && formik.errors.jobId && (
+                      <div className="text-red-500 text-xs">
+                        {formik.errors.jobId}
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 <div className="lg:grid grid-cols-2 space-y-5 lg:space-y-0 gap-5">
-                  <div className="col-span1 flex gap-1 flex-col">
-                    <label
-                      htmlFor="annualTurnOver"
-                      className="font-sansSerif text-xs"
-                    >
-                      Phone Number
-                    </label>
-                    <input
-                      type="text" // Use text to allow formatted input
-                      name="annualTurnOver"
-                      placeholder="e.g., 1,000,000"
-                      className="lg:w-full text-[0.8rem] bg-mainBlacks border-gray-500 border py-2 rounded px-5 focus:outline-none focus:ring-0"
-                      value={
-                        formik.values.annualTurnOver !== undefined &&
-                        formik.values.annualTurnOver !== null
-                          ? formik.values.annualTurnOver
-                              .toString()
-                              .replace(/\B(?=(\d{3})+(?!\d))/g, ",") // Format with commas
-                          : ""
-                      }
-                      onChange={(e) => {
-                        const rawValue = e.target.value.replace(/,/g, ""); // Remove commas
-                        const numericValue = Number(rawValue); // Convert to number
-                        if (!isNaN(numericValue)) {
-                          formik.setFieldValue("annualTurnOver", numericValue); // Store numeric value
-                        }
-                      }}
-                      onBlur={formik.handleBlur}
-                    />
-                    {formik.touched.annualTurnOver &&
-                      formik.errors.annualTurnOver && (
-                        <div className="text-red-500 text-xs">
-                          {formik.errors.annualTurnOver}
-                        </div>
-                      )}
-                  </div>
                   <div className="col-span-1 flex gap-1 flex-col">
                     <label
-                      htmlFor="fundingRequirement"
+                      htmlFor="yearsOfExperience"
                       className="font-sansSerif text-xs"
                     >
                       Years of Experience
                     </label>
                     <input
-                      type="text"
-                      name="fundingRequirement"
-                      placeholder="e.g., 1,000,000"
+                      type="number"
+                      name="yearsOfExperience"
+                      placeholder="e.g., 5"
                       className="lg:w-full text-[0.8rem] bg-mainBlacks border-gray-500 border py-2 rounded px-5 focus:outline-none focus:ring-0"
-                      value={
-                        formik.values.fundingRequirement !== undefined &&
-                        formik.values.fundingRequirement !== null
-                          ? formik.values.fundingRequirement
-                              .toString()
-                              .replace(/\B(?=(\d{3})+(?!\d))/g, ",") // Format with commas
-                          : ""
-                      }
+                      value={formik.values.yearsOfExperience || ""}
                       onChange={(e) => {
-                        const rawValue = e.target.value.replace(/,/g, ""); // Remove commas
-                        const numericValue = Number(rawValue); // Convert to number
+                        const numericValue = Number(e.target.value);
                         if (!isNaN(numericValue)) {
-                          formik.setFieldValue(
-                            "fundingRequirement",
-                            numericValue
-                          ); // Store numeric value
+                          formik.setFieldValue("yearsOfExperience", numericValue);
                         }
                       }}
                       onBlur={formik.handleBlur}
                     />
-                    {formik.touched.fundingRequirement &&
-                      formik.errors.fundingRequirement && (
+                    {formik.touched.yearsOfExperience &&
+                      formik.errors.yearsOfExperience && (
                         <div className="text-red-500 text-xs">
-                          {formik.errors.fundingRequirement}
+                          {formik.errors.yearsOfExperience}
                         </div>
                       )}
                   </div>
+                  <div className="col-span-1 flex gap-1 flex-col">
+                    <label htmlFor="phone" className="font-sansSerif text-xs">
+                      Phone
+                    </label>
+                    <input
+                      type="number"
+                      name="phone"
+                      placeholder="e.g., +234 813 095 4077"
+                      className="lg:w-full text-[0.8rem] bg-mainBlacks border-gray-500 border py-2 rounded px-5 focus:outline-none focus:ring-0"
+                      value={formik.values.phone || ""}
+                      onChange={(e) => {
+                        const numericValue = Number(e.target.value);
+                        if (!isNaN(numericValue)) {
+                          formik.setFieldValue(
+                            "phone",
+                            numericValue
+                          );
+                        }
+                      }}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.touched.phone && formik.errors.phone && (
+                      <div className="text-red-500 text-xs">
+                        {formik.errors.phone}
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="col-span-1 flex gap-1 flex-col">
-                  <label
-                    htmlFor="contactEmail"
-                    className="font-sansSerif text-xs"
-                  >
-                    Contact Email
-                  </label>
-                  <input
-                    type="email"
-                    name="contactEmail"
-                    placeholder="Contact Email"
-                    className="bg-mainBlacks text-[0.8rem] border-gray-500 border py-3 rounded px-5 focus:outline-none focus:ring-0"
-                    onChange={formik.handleChange}
+                <div className="lg:grid grid-cols-2 mt-5 lg:mt-0 gap-5">
+                  <div className="col-span-1 flex gap-1 flex-col">
+                    <label htmlFor="email" className="font-sansSerif text-xs">
+                      Contact Email
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Contact Email"
+                      className="bg-mainBlacks text-[0.8rem] border-gray-500 border py-3 rounded px-5 focus:outline-none focus:ring-0"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.email}
+                    />
+                    {formik.touched.email && formik.errors.email ? (
+                      <div className="text-red-500 text-xs">
+                        {formik.errors.email}
+                      </div>
+                    ) : null}
+                  </div>
+                  <DocumentUpload
+                    label="Upload Resume/cv"
+                    name="resume"
+                    onChange={(file) => formik.setFieldValue("resume", file)}
                     onBlur={formik.handleBlur}
-                    value={formik.values.contactEmail}
                   />
-                  {formik.touched.contactEmail && formik.errors.contactEmail ? (
-                    <div className="text-red-500 text-xs">
-                      {formik.errors.contactEmail}
-                    </div>
-                  ) : null}
                 </div>
                 <div className="lg:grid grid-cols-2 mt-5 lg:mt-0 gap-5">
                   <div className="col-span-2 flex gap-1 flex-col">
                     <label
-                      htmlFor="description"
+                      htmlFor="coverLetter"
                       className="font-sansSerif text-xs"
                     >
-                      Brief Business Description
+                      Tell us Why you want to work with us
                     </label>
                     <textarea
-                      name="description"
+                      name="coverLetter"
                       rows={4}
-                      placeholder="Business Description"
+                      placeholder="Cover Letter"
                       className="lg:w-full bg-mainBlacks text-[0.8rem] border-gray-500 border py-3 rounded px-5 focus:outline-none focus:ring-0"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.description}
+                      value={formik.values.coverLetter}
                     />
-                    {formik.touched.description &&
-                      formik.errors.description && (
+                    {formik.touched.coverLetter &&
+                      formik.errors.coverLetter && (
                         <div className="text-red-500 text-xs">
-                          {formik.errors.description}
+                          {formik.errors.coverLetter}
                         </div>
                       )}
                   </div>

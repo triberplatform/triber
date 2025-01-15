@@ -5,19 +5,22 @@ import { Formik, Form, FormikProps } from "formik";
 import * as Yup from "yup";
 import FormInput from "./FormInput";
 import OptionInput from "./OptionInput";
-import { registerBusiness } from "@/app/services/dashboard";
+import { editBusiness } from "@/app/services/dashboard";
 import { RegisterBusinessPayload } from "@/app/type";
 import Modal from "./Modal";
-import { FaCheckDouble } from "react-icons/fa";
 import Link from "next/link";
 import Loading from "@/app/loading";
 import DocumentUpload from "./DocumentUpload";
+import { useUser } from "../layouts/UserContext";
 
-export default function RegisterBusiness() {
+export default function EditBusiness({ id }: { id: string }) {
+    const { businessDetails } = useUser();
+    const business = businessDetails.find((b) => b.publicId === id);
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errorModal, showErrorModal] = useState(false);
   const [modal, showModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const [modalErrors, setModalErrors] = useState<string[]>([]);
 
   const validationSchema = Yup.object().shape({
@@ -49,22 +52,22 @@ export default function RegisterBusiness() {
       }),
   });
 
-  const initialValues = {
-    businessName: "",
-    businessPhone: "",
-    businessEmail: "",
-    businessStatus: "",
-    interestedIn: "",
-    industry: "",
-    businessLegalEntity: "",
-    description: "",
-    reportedSales: "",
-    numOfEmployees: "",
-    yearEstablished: 0,
-    location: "",
-    assets: "",
-    logo: null as File | null,
-  };
+  const initialValues: RegisterBusinessPayload = {
+      businessName: business?.businessName ?? "",
+      businessPhone: business?.businessPhone ?? "",
+      businessEmail: business?.businessEmail ?? "",
+      businessStatus: business?.businessStatus ?? "",
+      interestedIn: business?.interestedIn ?? "",
+      industry: business?.industry ?? "",
+      businessLegalEntity: business?.businessLegalEntity ?? "",
+      description: business?.description ?? "",
+      reportedSales: business?.reportedSales ?? "",
+      numOfEmployees: business?.numOfEmployees ?? "",
+      yearEstablished: business?.yearEstablished ?? 0,
+      location: business?.location ?? "",
+      assets: business?.assets ?? "",
+      logo: null,
+    };
   const handleRefreshRedirect = () => {
     window.location.href = "/dashboard"; // Replace with the desired path
   };
@@ -82,11 +85,14 @@ export default function RegisterBusiness() {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await registerBusiness(values, token ?? "");
+      if (!business?.publicId) {
+        throw new Error("Business ID is required");
+      }
+      const response = await editBusiness(values, token ?? "", business.publicId);
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        setModalMessage(data.message);
         showModal(true);
       } else {
         const errorData = await response.json();
@@ -328,12 +334,12 @@ export default function RegisterBusiness() {
   return (
     <div className="grid grid-cols-11 gap-4 font-sansSerif">
       <div className="col-span-3 map-bg pt-12 pb-36">
-        <p className="text-3xl mb-4">Register a Business</p>
-        <p className="text-sm">
+        <p className="text-3xl mb-4">Edit Business Details</p>
+        {/* <p className="text-sm">
           Information entered here is displayed publicly to match you with the
           right set of investors and buyers. Do not mention business
           name/information which can identify the business.
-        </p>
+        </p> */}
       </div>
       <div className="col-span-8">
         <div className="flex gap-7">
@@ -378,18 +384,9 @@ export default function RegisterBusiness() {
                       currentStep === 2 && "opacity-50 cursor-not-allowed"
                     }`}
                     onClick={(e) => {
-                      e.preventDefault(); // Prevent default form submission behavior
-                      if (currentStep === 1) {
-                        if (Object.keys(formikProps.errors).length > 0) {
-                          setModalErrors(
-                            Object.values(formikProps.errors) as string[]
-                          );
-                          showErrorModal(true);
-                        } else {
-                          formikProps.handleSubmit(); // Ensure Formik handles the submit process
-                        }
-                      } else {
-                        handleNext(); // Call handleNext for non-final steps
+                      if (currentStep < 1) {
+                        e.preventDefault(); // Prevent form submission
+                        handleNext();
                       }
                     }}
                     type={currentStep === 1 ? "submit" : "button"}
@@ -404,7 +401,7 @@ export default function RegisterBusiness() {
       </div>
       {loading && <Loading text="Registering" />}
 
-      {modal && (
+      {/* {modal && (
         <Modal>
           <h2 className="text-xl font-bold mb-4">Validation Errors</h2>
           <ul className="list-disc ml-5">
@@ -413,37 +410,14 @@ export default function RegisterBusiness() {
             ))}
           </ul>
         </Modal>
-      )}
+      )} */}
       {modal && (
         <Modal>
           {" "}
           <div className="bg-mainBlack p-6">
-            <div className="grid grid-cols-10">
-              <div className="col-span-7">
-                <p className="text-xl mb-3 font-bold">Profile Submitted!</p>
-                <p>
-                  Your business profile has been successfully submitted. We’re
-                  now reviewing your information and verifying your financial
-                  records. This process may take up to 48 hours.
-                </p>
-              </div>
-              <div className="col-span-3 flex justify-center item-center mt-6">
-                <FaCheckDouble className="text-mainGreen text-6xl" />
-              </div>
-            </div>
-            <div className="flex mt-8 gap-6">
-              <button className="bg-mainGreen py-2 px-4 rounded">
-                <Link href="/dashboard/fundability-test/test-page">
-                  Take Fundability test
-                </Link>
-              </button>
-              <button
-                className="bg-black py-1 px-3 rounded"
-                onClick={handleRefreshRedirect}
-              >
-                View Dashboard
-              </button>
-            </div>
+           {modalMessage}
+           <Link href="/dashboard">
+            <button className="bg-mainGreen text-white px-4 py-2 rounded mt-4">Go to Dashboard</button></Link>
           </div>
         </Modal>
       )}
