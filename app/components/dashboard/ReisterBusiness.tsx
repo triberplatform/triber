@@ -69,6 +69,10 @@ export default function RegisterBusiness() {
   const handleRefreshRedirect = () => {
     window.location.href = "/dashboard"; // Replace with the desired path
   };
+
+  const handleRefreshRedirectFund = (id:string) => {
+    window.location.href = `/dashboard/fundability-test/${id}`; // Replace with the desired path
+  };
   const handleNext = () => {
     if (currentStep < 1) {
       setCurrentStep(currentStep + 1);
@@ -434,10 +438,10 @@ export default function RegisterBusiness() {
               </div>
             </div>
             <div className="flex mt-8 gap-6">
-              <button className="bg-mainGreen py-2 px-4 rounded">
-                <Link href={`/dashboard/fundability-test/${id}`}>
+              <button onClick={() => id && handleRefreshRedirectFund(id)} className="bg-mainGreen py-2 px-4 rounded">
+            
                   Take Fundability test
-                </Link>
+            
               </button>
               <button
                 className="bg-black py-1 px-3 rounded"
