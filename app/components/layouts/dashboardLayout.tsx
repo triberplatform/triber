@@ -45,12 +45,13 @@ export default function DashboardLayout({
       return;
 
     }
-    console.log(publicId)
+  
 
     const fetchUserDetails = async () => {
       try {
         const userDetails = await getUserDetails(token as string, publicId as string);
         setUser(userDetails.data);
+        console.log(userDetails.data);
       } catch (error) {
         console.error("Failed to fetch user details:", error);
         router.push("/login");
@@ -58,6 +59,7 @@ export default function DashboardLayout({
         setLoading(false);
       }
     };
+
 
     fetchUserDetails();
   }, [router]);

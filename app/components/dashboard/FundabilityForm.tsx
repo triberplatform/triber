@@ -10,10 +10,10 @@ import Modal from "./Modal";
 import { FaRegThumbsUp } from "react-icons/fa";
 import { fundabilityTest } from "@/app/services/dashboard";
 import ArrayInput from "./ArrayInput";
-import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import Loading from "@/app/loading";
 import DocumentUpload from "./DocumentUpload";
 import { useUser } from "../layouts/UserContext";
+import CircularProgress from "./Circular";
 
 interface FundabilityFormProps {
   id: string;
@@ -22,7 +22,7 @@ interface FundabilityFormProps {
 export default function FundabilityForm({ id }: FundabilityFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [modal, showModal] = useState(false);
+  const [modal, showModal] = useState(true);
   const [errorModal, showErrorModal] = useState(false);
   const [modalMessage, setModalMessage] = useState<number>(0);
   const [modalErrors, setModalErrors] = useState<string[]>([]);
@@ -1137,18 +1137,9 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
               </div>
 
               {/* Right Section */}
-              <div className="col-span-4 flex justify-center items-center">
-                <div className="w-32 h-32">
-                  <CircularProgressbar
-                    value={modalMessage}
-                    text={`${modalMessage}%`}
-                    styles={buildStyles({
-                      textColor: "#42B27C", // Adjusted for "mainGreen"
-                      pathColor: "#42B27C",
-                      trailColor: "#2D2D2D",
-                      // textSize: "25px",
-                    })}
-                  />
+              <div className="col-span-4 flex ml-3">
+                <div className="w-24 h-24">
+                    <CircularProgress value={modalMessage}/>
                 </div>
               </div>
             </div>
