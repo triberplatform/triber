@@ -31,7 +31,7 @@ export default function BusinessDetail() {
             <div className="grid grid-cols-12">
               <div className="col-span-2">
                 <Image
-                  src={business.businessLogo}
+                  src={business.businessLogoUrl}
                   width={130}
                   height={100}
                   alt="test"

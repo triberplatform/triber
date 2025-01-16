@@ -49,11 +49,11 @@ export interface loginpayload {
 
 export interface BusinessDetails {
     id: number;
-    businessLogo: string;
     publicId: string;
     businessName: string;
     businessEmail: string;
     businessPhone: string;
+    businessLogoUrl: string;
     businessStatus: "OWNER" | "MEMBER" | "BROKER"; // Enum values
     interestedIn: "FULL_SALE_OF_BUSINESS" | "PARTIAL_STAKE" | "LOAN" | "SELL_OR_LEASE_OF_BUSINESS_ASSETS"; // Enum values
     industry: "IT" | "FINANCE" | "HEALTH" | "EDUCATION" | "MEDIA" | "OTHER"; // Enum values
