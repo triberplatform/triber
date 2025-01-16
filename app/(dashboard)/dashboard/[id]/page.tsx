@@ -21,7 +21,7 @@ export default function BusinessDetail() {
   if (!business) {
     return <p className="text-center text-white">Business not found</p>;
   }
-  console.log(business);
+
 
   const renderContent = () => {
     switch (currentStep) {
