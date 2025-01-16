@@ -9,7 +9,6 @@ import { registerBusiness } from "@/app/services/dashboard";
 import { RegisterBusinessPayload } from "@/app/type";
 import Modal from "./Modal";
 import { FaCheckDouble } from "react-icons/fa";
-import Link from "next/link";
 import Loading from "@/app/loading";
 import DocumentUpload from "./DocumentUpload";
 
