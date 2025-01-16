@@ -32,7 +32,7 @@ export default function BusinessDetail() {
               <div className="col-span-2">
                 <Image
                   src={business.businessLogoUrl}
-                  width={130}
+                  width={100}
                   height={100}
                   alt="test"
                   className="rounded-full object-cover w-[100px] h-[100px]"

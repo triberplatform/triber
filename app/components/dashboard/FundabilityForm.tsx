@@ -22,7 +22,7 @@ interface FundabilityFormProps {
 export default function FundabilityForm({ id }: FundabilityFormProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [modal, showModal] = useState(true);
+  const [modal, showModal] = useState(false);
   const [errorModal, showErrorModal] = useState(false);
   const [modalMessage, setModalMessage] = useState<number>(0);
   const [modalErrors, setModalErrors] = useState<string[]>([]);
