@@ -5,9 +5,10 @@ interface CounterProps {
   targetNumber: number;
   duration?: number; // Optional duration for counting animation in seconds
   text: string;
+  Amt?:string
 }
 
-const Counter: React.FC<CounterProps> = ({ targetNumber, duration = 2, text }) => {
+const Counter: React.FC<CounterProps> = ({ targetNumber, duration = 2, text,Amt }) => {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement | null>(null);
   const hasAnimated = useRef(false);
@@ -55,7 +56,7 @@ const Counter: React.FC<CounterProps> = ({ targetNumber, duration = 2, text }) =
 
   return (
     <div ref={ref} className="counter">
-      <h1 className="font-bold font-serif">{count}+</h1>
+      <h1 className="font-bold font-serif">{count}{Amt}+</h1>
       <p className="mt-3 text-sm">{text}</p>
     </div>
   );
