@@ -412,10 +412,10 @@ export default function EditBusiness({ id }: { id: string }) {
       {modal && (
         <Modal>
           {" "}
-          <div className="bg-mainBlack p-6">
+          <div className="bg-mainBlack flex flex-col gap-5 p-6">
            {modalMessage}
            <Link href="/dashboard">
-            <button className="bg-mainGreen text-white px-4 py-2 rounded mt-4">Go to Dashboard</button></Link>
+            <button className="bg-mainGreen text-white text-sm px-4 py-2 rounded mt-4">Go to Dashboard</button></Link>
           </div>
         </Modal>
       )}
