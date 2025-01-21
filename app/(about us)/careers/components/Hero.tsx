@@ -102,8 +102,8 @@ export default function Hero() {
       <Image src={"/assets/careers.png"} width={2000} height={20} alt="chat" />
       {isModalOpen1 && (
         <Modal>
-          <div className="max-h-[90vh] lg:h-[90vh] gap-3 bg-mainBlacks  grid grid-cols-10  modal-scroll w-full">
-            <div className="col-span-3 relative h-full">
+          <div className="max-h-[90vh] lg:h-[90vh] gap-3 bg-mainBlacks  lg:grid grid-cols-10  modal-scroll w-full">
+            <div className="lg:col-span-3 lg:block hidden relative h-full">
               <Image
                 src="/assets/valuation3.png"
                 width={500}
@@ -112,7 +112,7 @@ export default function Hero() {
                 className="object-cover absolute inset-0 w-full h-full"
               />
             </div>
-            <div className="col-span-7 text-left py-5 px-10">
+            <div className="col-span-7 text-left py-5 px-3 lg:px-10">
               <button
                 onClick={() => setIsModalOpen1(!isModalOpen1)}
                 className=" text-3xl text-mainGreen  float-right"
@@ -182,8 +182,8 @@ export default function Hero() {
       ;
       {isModalOpen && (
         <Modal>
-          <div className="max-h-[85vh] lg:h-[90vh] gap-3 bg-mainBlacks  grid grid-cols-10  modal-scroll w-full">
-            <div className="col-span-3 relative h-full">
+          <div className="max-h-[85vh] lg:h-[90vh] gap-3 bg-mainBlacks   lg:grid grid-cols-10  modal-scroll w-full">
+            <div className="col-span-3 relative hidden lg:block h-full">
               <Image
                 src="/assets/valuation3.png"
                 width={500}
@@ -209,7 +209,7 @@ export default function Hero() {
                 className="flex-col flex mt-7 lg:space-y-5 text-left text-white font-serif"
               >
                 <div className="lg:grid grid-cols-2 space-y-5 lg:space-y-0 gap-5">
-                  <div className="col-span-1 flex lg:gap-2 flex-col">
+                  <div className="col-span-1 flex lg:gap-2 gap-1 flex-col">
                     <label
                       htmlFor="businessName"
                       className="font-sansSerif text-xs"
@@ -231,7 +231,7 @@ export default function Hero() {
                       </div>
                     )}
                   </div>
-                  <div className="col-span-1 flex lg:gap-2 flex-col">
+                  <div className="col-span-1 flex lg:gap-2 gap-1 flex-col">
                     <label
                       htmlFor="businessRegistration"
                       className="font-sansSerif text-xs"
@@ -262,7 +262,7 @@ export default function Hero() {
                   </div>
                 </div>
 
-                <div className="lg:grid grid-cols-2 space-y-5 lg:space-y-0 gap-5">
+                <div className="lg:grid grid-cols-2 mt-5 lg:mt-0 space-y-5 lg:space-y-0 gap-5">
                   <div className="col-span-1 flex gap-1 flex-col">
                     <label
                       htmlFor="yearsOfExperience"
@@ -320,7 +320,7 @@ export default function Hero() {
                   </div>
                 </div>
                 <div className="lg:grid grid-cols-2 mt-5 lg:mt-0 gap-5">
-                  <div className="col-span-1 flex gap-1 flex-col">
+                  <div className="col-span-1 mb-5 lg:mb-0 flex gap-1 flex-col">
                     <label htmlFor="email" className="font-sansSerif text-xs">
                       Contact Email
                     </label>

@@ -11,7 +11,7 @@ const Modal = ({ children }: Readonly<{ children: React.ReactNode }>) => {
       transition={{ duration: 0.3 }}
     >
       <motion.div
-        className="bg-black shadow-sm shadow-white rounded-lg w-11/12 max-w-[75%]"
+        className="bg-black shadow-sm shadow-white rounded-lg w-11/12 max-w-[90%] lg:max-w-[75%]"
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0.9 }}
