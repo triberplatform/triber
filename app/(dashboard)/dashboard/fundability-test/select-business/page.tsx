@@ -22,14 +22,24 @@ export default function ListBusiness() {
       {businessDetails.length > 0 ? (
         businessDetails.map((business) => (
           <Link href={`/dashboard/fundability-test/${business.publicId}`} key={business.publicId}>
-            <div className="grid grid-cols-10 bg-black my-6 justify-between rounded-xl items-center px-8 py-4 cursor-pointer hover:bg-gray-900 transition">
+            <div className="grid grid-cols-10 bg-black my-6 justify-between rounded-xl items-center px-8 py-4 cursor-pointer hover:bg-gray-900 hover:bg-opacity-20 transition">
               <div className="grid grid-cols-11 gap-2 col-span-8 items-end">
-                <div className="col-span-7">
-                  <div className="flex items-end gap-7 mb-4">
-                    <p className="text-lg flex items-center gap-2">
-                      <FaBusinessTime className="text-mainGreen" />
-                      {business.businessName}
-                    </p>
+                <div className="col-span-9">
+                  <div className="flex items-center gap-7 mb-4">
+                    <div className="flex items-center gap-4">
+                      {business.businessLogoUrl ? (
+                        <img 
+                          src={business.businessLogoUrl} 
+                          alt={`${business.businessName} logo`}
+                          className="w-10 h-10 rounded-full object-cover bg-gray-800"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center">
+                          <FaBusinessTime className="text-mainGreen text-lg" />
+                        </div>
+                      )}
+                      <p className="text-lg">{business.businessName}</p>
+                    </div>
                     <p className="text-xs text-mainGreen">
                       Registration Date: {formattedDate(business.createdAt)}
                     </p>

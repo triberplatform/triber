@@ -142,3 +142,27 @@ input{
   scrollbar-width: thin; /* Thin scrollbar */
   scrollbar-color: #444 #222; /* Thumb and track colors */
 }
+
+.slide1{
+  background-image: url('/assets/slide1.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.slide2{
+  background-image: url('/assets/slide2.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.slide3{
+  background-image: url('/assets/slide3.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.slide4{
+  background-image: url('/assets/slide4.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}

@@ -2,7 +2,6 @@
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Image from "next/image";
 import Slider from "react-slick";
 import React, { useState } from "react";
 
@@ -17,7 +16,7 @@ export default function Carousel() {
     arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1,
-    fade: true,
+  
     beforeChange: (current: number, next: number) => {
       setActiveIndex(next);
     },
@@ -42,32 +41,63 @@ export default function Carousel() {
   };
 
   return (
-    <div className="lg:px-[5%] px-5 pt-5 pb-16 lg:py-16">
+    <div className="lg:px-[10%] px-5 pt-5 pb-16 lg:py-16">
       <Slider {...settings}>
-        <Image
-          src={"/assets/slide1.png"}
-          width={1000}
-          height={500}
-          alt="slide-1"
-        />
-        <Image
-          src={"/assets/slide2.png"}
-          width={1000}
-          height={500}
-          alt="slide-2"
-        />
-        <Image
-          src={"/assets/slide3.png"}
-          width={1000}
-          height={500}
-          alt="slide-3"
-        />
-        <Image
-          src={"/assets/slide4.png"}
-          width={1000}
-          height={500}
-          alt="slide-4"
-        />
+        <div className="slide1 flex flex-col justify-center relative z-30 items-center ">
+          <div className="flex justify-center items-center h-[80vh]">
+            <div className="absolute inset-0 z-40 bg-black bg-opacity-30"></div>
+            <div className="z-50">
+              <p className="text-5xl  font-serif font-bold">
+                Grow a Stronger, Smarter <br /> Business at Every Stage.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="slide2 flex flex-col justify-center relative z-30 items-center">
+          <div className="flex relative flex-col font-serif px-[20%] gap-6 text-center justify-center items-center h-[80vh]">
+            <div className="absolute inset-0 z-40 bg-black bg-opacity-30"></div>
+
+            <div className="z-50">
+              <p className="text-5xl font-serif font-bold text-white">
+                Connect
+              </p>
+              <p className="text-2xl mt-5 text-white">
+                We empower SMEs and startups by enabling them to become
+                fundable, evaluate their company with precision, and generate
+                actionable insights that drive success.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="slide3 flex flex-col justify-center relative z-30 items-center ">
+          <div className="flex flex-col font-serif px-[20%] gap-6  text-center justify-center items-center h-[80vh]">
+            <div className="absolute inset-0 z-40 bg-black bg-opacity-30"></div>
+
+            <div className="z-50">
+              <p className="text-5xl font-serif font-bold text-white">Grow</p>
+              <p className="text-2xl mt-5 text-white">
+                We empower SMEs and startups by enabling them to become
+                fundable, evaluate their company with precision, and generate
+                actionable insights that drive success.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="slide4 flex flex-col justify-center relative z-30 items-center ">
+          <div className="flex flex-col font-serif px-[20%] gap-6  text-center justify-center items-center h-[80vh]">
+            <div className="absolute inset-0 z-40 bg-black bg-opacity-30"></div>
+
+            <div className="z-50">
+              <p className="text-5xl font-serif font-bold text-white">Suceed</p>
+              <p className="text-2xl mt-5 text-white">
+                We empower SMEs and startups by enabling them to become
+                fundable, evaluate their company with precision, and generate
+                actionable insights that drive success.
+              </p>
+            </div>
+          </div>
+        </div>
       </Slider>
     </div>
   );
