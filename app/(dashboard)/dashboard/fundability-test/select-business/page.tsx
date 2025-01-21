@@ -5,6 +5,7 @@ import Link from "next/link";
 import { GoArrowUpRight } from "react-icons/go";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaBusinessTime, FaLayerGroup } from "react-icons/fa";
+import Image from "next/image";
 
 export default function ListBusiness() {
   const formattedDate = (date: string) =>
@@ -28,7 +29,7 @@ export default function ListBusiness() {
                   <div className="flex items-center gap-7 mb-4">
                     <div className="flex items-center gap-4">
                       {business.businessLogoUrl ? (
-                        <img 
+                        <Image
                           src={business.businessLogoUrl} 
                           alt={`${business.businessName} logo`}
                           className="w-10 h-10 rounded-full object-cover bg-gray-800"
