@@ -47,7 +47,7 @@ export default function Carousel() {
           <div className="flex justify-center items-center h-[80vh]">
             <div className="absolute inset-0 z-40 bg-black bg-opacity-30"></div>
             <div className="z-50">
-              <p className="text-5xl  font-serif font-bold">
+              <p className="lg:text-5xl text-center text-3xl  font-serif font-bold">
                 Grow a Stronger, Smarter <br /> Business at Every Stage.
               </p>
             </div>
@@ -55,14 +55,14 @@ export default function Carousel() {
         </div>
 
         <div className="slide2 flex flex-col justify-center relative z-30 items-center">
-          <div className="flex relative flex-col font-serif px-[20%] gap-6 text-center justify-center items-center h-[80vh]">
+          <div className="flex relative flex-col font-serif px-5 lg:px-[20%] gap-6 text-center justify-center items-center h-[80vh]">
             <div className="absolute inset-0 z-40 bg-black bg-opacity-30"></div>
 
             <div className="z-50">
-              <p className="text-5xl font-serif font-bold text-white">
+              <p className="lg:text-5xl text-4xl font-serif font-bold text-white">
                 Connect
               </p>
-              <p className="text-2xl mt-5 text-white">
+              <p className="lg:text-2xl text-lg lg:mt-5 mt-3 text-white">
                 We empower SMEs and startups by enabling them to become
                 fundable, evaluate their company with precision, and generate
                 actionable insights that drive success.
@@ -71,12 +71,12 @@ export default function Carousel() {
           </div>
         </div>
         <div className="slide3 flex flex-col justify-center relative z-30 items-center ">
-          <div className="flex flex-col font-serif px-[20%] gap-6  text-center justify-center items-center h-[80vh]">
+          <div className="flex flex-col font-serif px-5 lg:px-[20%] gap-6  text-center justify-center items-center h-[80vh]">
             <div className="absolute inset-0 z-40 bg-black bg-opacity-30"></div>
 
             <div className="z-50">
-              <p className="text-5xl font-serif font-bold text-white">Grow</p>
-              <p className="text-2xl mt-5 text-white">
+              <p className="lg:text-5xl text-4xl font-serif font-bold text-white">Grow</p>
+              <p className="lg:text-2xl text-lg lg:mt-5 mt-3 text-white">
                 We empower SMEs and startups by enabling them to become
                 fundable, evaluate their company with precision, and generate
                 actionable insights that drive success.
@@ -85,12 +85,12 @@ export default function Carousel() {
           </div>
         </div>
         <div className="slide4 flex flex-col justify-center relative z-30 items-center ">
-          <div className="flex flex-col font-serif px-[20%] gap-6  text-center justify-center items-center h-[80vh]">
+          <div className="flex flex-col font-serif px-5 lg:px-[20%] gap-6  text-center justify-center items-center h-[80vh]">
             <div className="absolute inset-0 z-40 bg-black bg-opacity-30"></div>
 
             <div className="z-50">
-              <p className="text-5xl font-serif font-bold text-white">Suceed</p>
-              <p className="text-2xl mt-5 text-white">
+              <p className="lg:text-5xl text-4xl font-serif font-bold text-white">Suceed</p>
+              <p className="lg:text-2xl text-lg lg:mt-5 mt-3 text-white">
                 We empower SMEs and startups by enabling them to become
                 fundable, evaluate their company with precision, and generate
                 actionable insights that drive success.

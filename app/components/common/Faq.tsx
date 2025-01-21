@@ -26,8 +26,8 @@ const faqData: FaqItem[] = [
     answer: "Create your business profile,complete the fundability checkprocess, get verified and onboard your business on the the Triber 'Deal Room' to begin connections with Investors. This process only takes One (1) week to complete"
   },
   {
-    question: "How quickly can deals get closed thriugh Triber?",
-    answer: "Triber allows Startups and SME close funding deals within a Four (4) weeks time frame post due diligence and fundability check"
+    question: "How quickly can deals get closed through Triber?",
+    answer: "Triber allows Startups and SME close funding deals within a Four(4)-week time frame post due diligence and fundability check"
   }
 ];
 

@@ -93,14 +93,14 @@ export default function Hero() {
       />
       {isModalOpen && (
         <Modal>
-          <div className="max-h-[85vh] lg:h-[90vh] gap-3 bg-mainBlacks  grid grid-cols-10  modal-scroll w-full">
-            <div className="col-span-3 relative h-full">
+          <div className="max-h-[85vh] lg:h-[90vh] gap-3 bg-mainBlacks  lg:grid grid-cols-10  modal-scroll w-full">
+            <div className="col-span-3 lg:block hidden relative h-full">
               <Image
                 src="/assets/valuation3.png"
                 width={500}
                 height={500}
                 alt="hero map"
-                className="object-cover absolute inset-0 w-full h-full"
+                className="object-cover absolute  inset-0 w-full h-full"
               />
             </div>
             <div className="col-span-7 py-6 px-3">
@@ -110,9 +110,14 @@ export default function Hero() {
               >
                 &times;
               </button>
-              <p className="lg:text-2xl text-left text-xl font-semibold mb-2 font-serif text-white">
+              <p className="lg:text-2xl lg:block hidden text-left text-lg font-semibold mb-2 font-serif text-white">
                 Welcome to Triber{" "}
                 <span className="text-mainGreen">Connect</span> Directly <br />{" "}
+                with our Partners
+              </p>
+              <p className="lg:text-2xl lg:hidden text-left text-lg font-semibold mb-2 font-serif text-white">
+                Welcome to Triber{" "}
+                <span className="text-mainGreen">Connect</span> Directly {" "}
                 with our Partners
               </p>
               <form
@@ -120,7 +125,7 @@ export default function Hero() {
                 className="flex-col flex mt-7 lg:space-y-5 text-left text-white font-serif"
               >
                 <div className="lg:grid grid-cols-2 space-y-5 lg:space-y-0 gap-5">
-                  <div className="col-span-1 flex lg:gap-2 flex-col">
+                  <div className="col-span-1 flex lg:gap-2 gap-1 flex-col">
                     <label
                       htmlFor="businessName"
                       className="font-sansSerif text-xs"
@@ -143,7 +148,7 @@ export default function Hero() {
                         </div>
                       )}
                   </div>
-                  <div className="col-span-1 flex lg:gap-2 flex-col">
+                  <div className="col-span-1 flex lg:gap-2 gap-1 flex-col">
                     <label
                       htmlFor="businessRegistration"
                       className="font-sansSerif text-xs"
@@ -176,7 +181,7 @@ export default function Hero() {
                   </div>
                 </div>
 
-                <div className="lg:grid grid-cols-2 space-y-5 lg:space-y-0 gap-5">
+                <div className="lg:grid grid-cols-2 mt-5 lg:mt-0 space-y-5 lg:space-y-0 gap-5">
                   <div className="col-span1 flex gap-1 flex-col">
                     <label
                       htmlFor="annualTurnOver"
@@ -256,7 +261,7 @@ export default function Hero() {
                       )}
                   </div>
                 </div>
-                <div className="col-span-1 flex gap-1 flex-col">
+                <div className="col-span-1 mt-5 lg:mt-0 flex gap-1 flex-col">
                   <label
                     htmlFor="contactEmail"
                     className="font-sansSerif text-xs"
