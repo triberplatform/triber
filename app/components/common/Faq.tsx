@@ -19,19 +19,15 @@ const faqData: FaqItem[] = [
   },
   {
     question: "What if my startup isn’t ready for investment?",
-    answer: "Once your startup profile is complete, you can browse potential investors and connect with them directly through the platform’s messaging and scheduling tools."
+    answer: "Triber connects you with experts that will help to provide the needed tools and structure to accelerate your business and its potential to raise needed funds from smart investors and Institutions. Once your startup/SME profile is complete, you can browse search for potential invesors and connect with them directly through the platform"
   },
   {
     question: "How do I connect with investors through Triber?",
-    answer: "Once your startup profile is complete, you can browse potential investors and connect with them directly through the platform’s messaging and scheduling tools."
+    answer: "Create your business profile,complete the fundability checkprocess, get verified and onboard your business on the the Triber 'Deal Room' to begin connections with Investors. This process only takes One (1) week to complete"
   },
   {
-    question: "How do I connect with investors through Triber?",
-    answer: "Once your startup profile is complete, you can browse potential investors and connect with them directly through the platform’s messaging and scheduling tools."
-  },
-  {
-    question: "How do I connect with investors through Triber?",
-    answer: "Once your startup profile is complete, you can browse potential investors and connect with them directly through the platform’s messaging and scheduling tools."
+    question: "How quickly can deals get closed thriugh Triber?",
+    answer: "Triber allows Startups and SME close funding deals within a Four (4) weeks time frame post due diligence and fundability check"
   }
 ];
 

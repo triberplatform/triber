@@ -6,6 +6,7 @@ import { GoArrowUpRight } from "react-icons/go";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaBusinessTime, FaLayerGroup } from "react-icons/fa";
 import Image from "next/image";
+import { BusinessDetails } from "@/app/type";
 
 export default function ListBusiness() {
   const [showAll, setShowAll] = useState(false);
@@ -23,7 +24,7 @@ export default function ListBusiness() {
     ? businessDetails 
     : businessDetails.slice(0, 2);
 
-  const BusinessCard = ({ business }: { business: any }) => (
+  const BusinessCard = ({ business }: { business: BusinessDetails }) => (
     <Link href={`/dashboard/${business.publicId}`} key={business.publicId}>
       <div className="grid grid-cols-10 bg-black my-6 justify-between rounded-xl items-center px-8 py-4 cursor-pointer hover:bg-gray-900 hover:bg-opacity-20  transition">
         <div className="grid grid-cols-9 gap-2 col-span-8 items-end">
