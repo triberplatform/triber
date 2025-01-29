@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useUser } from "@/app/components/layouts/UserContext";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import { FaCalendarAlt, FaFacebook, FaInstagram } from "react-icons/fa";
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
@@ -9,13 +9,11 @@ import { IoCallOutline, IoLocation } from "react-icons/io5";
 import { MdEmail, MdOutlinePermIdentity } from "react-icons/md";
 import { LiaIndustrySolid } from "react-icons/lia";
 import Link from "next/link";
-import { getFundabilityResults } from "@/app/services/dashboard";
+
 import CircularProgress from "@/app/components/dashboard/Circular";
 
 export default function BusinessDetail() {
   const [currentStep, setCurrentStep] = useState(0);
-  // const router = useRouter();
-  // const [score, setScore] = useState<number>(0);
 
   const { id } = useParams(); // Extract the dynamic ID from the route
   const { businessDetails } = useUser();
