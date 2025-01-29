@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUser } from "@/app/components/layouts/UserContext";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaCalendarAlt, FaFacebook, FaInstagram } from "react-icons/fa";
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
@@ -9,19 +9,43 @@ import { IoCallOutline, IoLocation } from "react-icons/io5";
 import { MdEmail, MdOutlinePermIdentity } from "react-icons/md";
 import { LiaIndustrySolid } from "react-icons/lia";
 import Link from "next/link";
+import { getFundabilityResults } from "@/app/services/dashboard";
+import CircularProgress from "@/app/components/dashboard/Circular";
 
 export default function BusinessDetail() {
   const [currentStep, setCurrentStep] = useState(0);
+  // const router = useRouter();
+  // const [score, setScore] = useState<number>(0);
 
   const { id } = useParams(); // Extract the dynamic ID from the route
   const { businessDetails } = useUser();
+
+
+  
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+
+  //   const fetchFundabilityDetails = async () => {
+  //     try {
+  //       const fundabilityDetails = await getFundabilityResults(
+  //         token as string,
+  //         id as string
+  //       );
+  //       setScore(fundabilityDetails.data.score);
+  //     } catch (error) {
+  //       console.error("Failed to fetch dunability details:", error);
+  //     }
+  //   };
+
+  //   fetchFundabilityDetails();
+  // }, [router]);
 
   const business = businessDetails.find((b) => b.publicId === id);
 
   if (!business) {
     return <p className="text-center text-white">Business not found</p>;
   }
-
 
   const renderContent = () => {
     switch (currentStep) {
@@ -47,7 +71,10 @@ export default function BusinessDetail() {
               </div>
               <div className="col-span-1"></div>
               <div className="col-span-2 ">
-                <Link  href={`/dashboard/register-business/${business.publicId}`} className="bg-black shadow shadow-white px-3 py-1 rounded text-sm">
+                <Link
+                  href={`/dashboard/register-business/${business.publicId}`}
+                  className="bg-black shadow shadow-white px-3 py-1 rounded text-sm"
+                >
                   Edit Details
                 </Link>
               </div>
@@ -84,31 +111,36 @@ export default function BusinessDetail() {
               <div className="col-span-4 flex flex-col gap-4">
                 <div className="flex items-center gap-1">
                   <IoLocation className="text-mainGreen text-lg" /> Location:{" "}
-                  {business.location}
+                  {business.location} {business.businessStage}
                 </div>
               </div>
             </div>
           </div>
         );
-      case 1:
-        return (
-          <div className="flex justify-center items-center h-[80vh] bg-mainBlack">
-            <div className="text-sm text-center">
-              <p>
-                {" "}
-                Your fundability test will appear here. Check how ready your
-                business is for funding
-              </p>
-
-              <Link href={`/dashboard/fundability-test/${id}`}>
-                {" "}
-                <button className="bg-black shadow mt-3 shadow-white text-center px-3 py-1 rounded text-sm">
-                  Fundability Check
-                </button>
-              </Link>
+        case 1:
+          return (
+            <div className="flex justify-center items-center h-[80vh] bg-mainBlack">
+              {business?.fundabilityTestDetails?.score !== undefined ? (
+                <div className="text-center">
+                  <p className="mb-5 font-semibold text-2xl">Fundability Score</p>
+                  <CircularProgress value={business.fundabilityTestDetails.score} />
+                  <p className="mt-4 text-sm">Your current fundability score</p>
+                </div>
+              ) : (
+                <div className="text-sm text-center">
+                  <p>
+                    Your fundability test will appear here. Check how ready your
+                    business is for funding
+                  </p>
+                  <Link href={`/dashboard/fundability-test/${id}`}>
+                    <button className="bg-black shadow mt-3 shadow-white text-center px-3 py-1 rounded text-sm">
+                      Fundability Check
+                    </button>
+                  </Link>
+                </div>
+              )}
             </div>
-          </div>
-        );
+          );
       case 2:
         return <div>Work in Progress...</div>;
       default:

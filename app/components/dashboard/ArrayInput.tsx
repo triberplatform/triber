@@ -44,7 +44,7 @@ const ArrayInput: React.FC<ArrayInputProps> = ({
     <div className="mb-4">
       <label className="block text-left text-sm font-medium">{label}</label>
       {values.map((value, index) => (
-        <div key={index} className="flex items-center space-x-2 mt-2">
+        <div key={index} className="flex items-center space-x-2 ">
           <div className="w-full">
             <input
               type="text"

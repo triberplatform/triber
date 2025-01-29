@@ -7,7 +7,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FaBusinessTime, FaLayerGroup } from "react-icons/fa";
 import Image from "next/image";
 
-export default function ListBusiness() {
+export default function ListStartupBusiness() {
   const formattedDate = (date: string) =>
     new Date(date).toLocaleDateString(undefined, {
       year: "numeric",
@@ -16,13 +16,14 @@ export default function ListBusiness() {
     });
 
   const { businessDetails } = useUser();
-  const SME = businessDetails.filter(business => business.businessStage === 'SME')
+
+  const startup= businessDetails.filter(business => business.businessStage === 'Startup')
 
   return (
     <div className="bg-mainBlack p-4 rounded-xl font-sansSerif">
-      <p className="text-xl">Please select an SME to take a test</p>
-      {SME.length > 0 ? (
-        SME.map((business) => (
+      <p className="text-xl">Please select a Startup to take a test</p>
+      {startup.length > 0 ? (
+        startup.map((business) => (
           <Link href={`/dashboard/fundability-test/select-startup/${business.publicId}`} key={business.publicId}>
             <div className="grid grid-cols-10 bg-black my-6 justify-between rounded-xl items-center px-8 py-4 cursor-pointer hover:bg-gray-900 hover:bg-opacity-20 transition">
               <div className="grid grid-cols-11 gap-2 col-span-8 items-end">
@@ -72,7 +73,7 @@ export default function ListBusiness() {
       ) : (
         <div className="flex flex-col justify-center items-center text-center py-12">
           <p className="w-52 text-sm mb-5">
-            Your SMEs will appear here. Create a business to get started and run fundability test
+            Your Startups will appear here. Create a business to get started and run fundability test
           </p>
           <button className="bg-black text-white rounded py-3 px-4">
             <Link href="/dashboard/register-business">Add Business</Link>

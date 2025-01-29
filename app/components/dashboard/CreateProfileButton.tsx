@@ -29,7 +29,7 @@ const CreateProfileButton = () => {
           </Link>
 
           <Link
-            href={""}
+            href={"/dashboard/investor-register"}
             className="hover:bg-mainGreen px-3 py-3 w-full mb-3"
             onClick={toggleDropdown}
           >

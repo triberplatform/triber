@@ -29,6 +29,7 @@ export default function RegisterBusiness() {
       .email("Invalid email address")
       .required("Business Email is required"),
     businessStatus: Yup.string().required("Business Status is required"),
+    businessStage: Yup.string().required("Business Stage is required"),
     interestedIn: Yup.string().required("This field is required"),
     industry: Yup.string().required("Industry is required"),
     businessLegalEntity: Yup.string().required("Legal Entity Type is required"),
@@ -56,6 +57,7 @@ export default function RegisterBusiness() {
     businessStatus: "",
     interestedIn: "",
     industry: "",
+    businessStage:"",
     businessLegalEntity: "",
     description: "",
     reportedSales: "",
@@ -154,6 +156,19 @@ export default function RegisterBusiness() {
               onChange={formikProps.handleChange}
               error={formikProps.errors.businessStatus}
               touched={formikProps.touched.businessStatus}
+            />
+                 <OptionInput
+              label="Business Stage"
+              name="businessStage"
+              options={[
+                { value: "SME", label: "SME" },
+                { value: "Startup", label: "Start up" },
+              ]}
+              value={formikProps.values.businessStage}
+              onBlur={formikProps.handleBlur}
+              onChange={formikProps.handleChange}
+              error={formikProps.errors.businessStage}
+              touched={formikProps.touched.businessStage}
             />
           </div>
         );

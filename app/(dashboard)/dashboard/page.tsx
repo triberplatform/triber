@@ -14,7 +14,6 @@ export default function Page() {
   if (!user) {
     return <p>No user details available</p>;
   }
-
   return (
     <div className="">
       <div className=" text-2xl mb-4">

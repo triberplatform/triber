@@ -1,4 +1,4 @@
-import { ConnectFormValues, JobConnectForm, RegisterBusinessPayload } from "../type";
+import { ConnectFormValues, InvestorProfilePayload, JobConnectForm, RegisterBusinessPayload } from "../type";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -11,6 +11,22 @@ export const getUserDetails = async (token: string, publicId: string) => {
     });
     const userDetails = await response.json();
     return userDetails;
+  }
+  catch {
+    console.error('unable to fetch')
+  }
+
+}
+
+export const getFundabilityResults = async (token: string, publicId: string) => {
+  try {
+    const response = await fetch(`${apiUrl}/fundability/${publicId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const fundabilityDetails = await response.json();
+    return fundabilityDetails;
   }
   catch {
     console.error('unable to fetch')
@@ -60,6 +76,39 @@ export const registerBusiness = async (payload: RegisterBusinessPayload, token: 
   }
 };
 
+export const registerInvestor = async (payload: InvestorProfilePayload, token: string) => {
+  try {
+    const formData = new FormData();
+
+    // Append payload properties to FormData
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value === null || value === undefined) {
+        return; // Skip null/undefined values
+      }
+      
+      if (Array.isArray(value)) {
+        // Convert arrays and objects to JSON string and append
+        formData.append(key, JSON.stringify(value));
+      } else {
+        formData.append(key, value as Blob | string);
+      }
+    });
+
+    const response = await fetch(`${apiUrl}/investor/create`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error during API call:", error);
+    throw new Error("Please try again.");
+  }
+};
+
 
 export const editBusiness = async (payload: RegisterBusinessPayload, token: string, id: string) => {
   try {
@@ -93,6 +142,25 @@ export const editBusiness = async (payload: RegisterBusinessPayload, token: stri
 export const fundabilityTest = async (payload: FormData, token: string) => {
   try {
     const response = await fetch(`${apiUrl}/fundability/test`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+
+      },
+      body: payload,
+    });
+
+    return response;
+
+  } catch {
+    console.error("Error:");
+    throw new Error(" Please try again.");
+  }
+}
+
+export const startupFundabilityTest = async (payload: FormData, token: string) => {
+  try {
+    const response = await fetch(`${apiUrl}/fundability/test/startup`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
