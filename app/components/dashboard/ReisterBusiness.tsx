@@ -19,6 +19,7 @@ export default function RegisterBusiness() {
   const [modal, showModal] = useState(false);
   const [modalErrors, setModalErrors] = useState<string[]>([]);
   const [id, setId] = useState(null);
+  const [stage, setStage] = useState(null);
 
   const validationSchema = Yup.object().shape({
     businessName: Yup.string().required("Business Name is required"),
@@ -72,7 +73,10 @@ export default function RegisterBusiness() {
   };
 
   const handleRefreshRedirectFund = (id:string) => {
-    window.location.href = `/dashboard/fundability-test/${id}`; // Replace with the desired path
+    if (stage === "SME") {
+      window.location.href = `/dashboard/fundability-test/${id}`; // Replace with the desired path
+    }
+    window.location.href = `/dashboard/fundability-test/select-startup/${id}`; // Replace with the desired path
   };
   const handleNext = () => {
     if (currentStep < 1) {
@@ -93,6 +97,7 @@ export default function RegisterBusiness() {
       if (response.ok) {
         const data = await response.json();
         setId(data.data.publicId);
+        setStage(data.data.businessStage)
         setTimeout(() => {
         showModal(true);},1000)
       } else {

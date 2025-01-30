@@ -1018,7 +1018,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
     <div className="grid grid-cols-11 gap-4 font-sansSerif">
       <div className="col-span-3 map-bg pt-12 pb-36">
         <p className="text-3xl mb-4">
-          Fundability Check <br />{" "}
+          Fundability Check for SME <br />{" "}
           <span className="text-lg">(readiness assessment)</span>
         </p>
         <p className="text-sm">
