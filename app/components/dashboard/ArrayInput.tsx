@@ -52,7 +52,7 @@ const ArrayInput: React.FC<ArrayInputProps> = ({
               value={value}
               onChange={(e) => handleValueChange(index, e.target.value)}
               onBlur={onBlur} // Call the onBlur prop for Formik tracking
-              className={`mt-1 block bg-mainBlack placeholder:text-gray-500 text-white p-2 w-full border rounded ${
+              className={`mt-1 block lg:bg-mainBlack placeholder:text-gray-500 text-white p-2 w-full border rounded ${
                 errors[index] && touched[index] ? "border-red-500" : "border-gray-300"
               }`}
               placeholder={`Enter ${label} ${index + 1}`}

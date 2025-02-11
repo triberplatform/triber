@@ -282,8 +282,8 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
     switch (currentStep) {
       case 0:
         return (
-          <div className=" bg-mainBlack gap-5 pb-12 py-8 px-5">
-            <div className="grid grid-cols-2 gap-5 items-end">
+          <div className=" lg:bg-mainBlack gap-5 pb-12 py-8 lg:px-5">
+            <div className="grid lg:grid-cols-2 gap-5 items-end">
               <OptionInput
                 label="Are you a registered Company?"
                 name="registeredCompany"
@@ -312,7 +312,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.legalName}
               />
             </div>
-            <div className="grid grid-cols-2 gap-3 items-end">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 gap-3 items-end">
               <OptionInput
                 label="Type of Company Registration"
                 name="companyRegistration"
@@ -342,7 +342,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.city}
               />
             </div>
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 gap-5 items-end">
               <FormInput
                 label="Country"
                 name="country"
@@ -394,7 +394,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 gap-5 items-end">
               <FormInput
                 label="Registered Address"
                 name="registeredAddress"
@@ -418,7 +418,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 gap-5 items-end">
               <FormInput
                 label="Contact Number"
                 name="contactNumber"
@@ -444,7 +444,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 gap-5 items-end">
               <FormInput
                 label="Principal address of the business"
                 name="principalAddress"
@@ -466,7 +466,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.applicantsAddress}
               />
             </div>
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid  mt-5 lg:mt-0 lg:grid-cols-2 gap-5 items-end">
               <OptionInput
                 label="Position"
                 name="position"
@@ -500,7 +500,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 gap-5 items-end">
               <FormInput
                 label="Years of Operation"
                 name="yearsOfOperation"
@@ -525,7 +525,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 gap-5 items-end">
               <OptionInput
                 label="Have your company been involved in a legal case?"
                 name="companyLegalCases"
@@ -549,9 +549,9 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
 
       case 1:
         return (
-          <div className=" bg-mainBlack gap-5 py-8 px-5">
+          <div className=" lg:bg-mainBlack gap-5 py-8 lg:px-5">
             {/* Left Column */}
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid lg:grid-cols-2 lg:gap-5 items-end">
               <ArrayInput
                 label="Ownership (who owns the business)"
                 name="ownership"
@@ -569,7 +569,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 }
               />
             </div>
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid lg:grid-cols-2 lg:gap-5 items-end">
               <ArrayInput
                 label="Legal Advisors "
                 name="legalAdvisors"
@@ -589,7 +589,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
             </div>
 
             {/* Right Column */}
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid lg:grid-cols-2 gap-5 items-end">
               <OptionInput
                 label="ISIC Industry (do you belong to any industry Association)"
                 name="isicIndustry"
@@ -622,8 +622,8 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
         );
       case 2:
         return (
-          <div className=" bg-mainBlack gap-5 py-8 px-5">
-            <div className="grid grid-cols-2 items-end gap-5">
+          <div className=" lg:bg-mainBlack gap-5 py-8 lg:*:px-5">
+            <div className="grid lg:grid-cols-2 items-end gap-5">
               <FormInput
                 label="Company ARR/TTM (Average Annual Revenue)"
                 name="averageAnnualRevenue"
@@ -678,7 +678,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.revenueGrowthRate}
               />
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 items-end gap-5">
               <OptionInput
                 label="Do you have an audited financial statement?"
                 name="auditedFinancialStatement"
@@ -717,7 +717,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.companyPitchDeck}
               />
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 items-end gap-5">
               <OptionInput
                 label="Does your company have a business Plan?"
                 name="companyBusinessPlan"
@@ -760,7 +760,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 items-end gap-5">
               <OptionInput
                 label="Does your company possess significant SOLID asset holding?(Asset Base)"
                 name="companySolidAssetHolding"
@@ -802,7 +802,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.companyLargeInventory}
               />
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 items-end gap-5">
               <OptionInput
                 label="Has the company been 3 years profitable"
                 name="company3YearProfitable"
@@ -845,7 +845,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.companyHighScalibilty}
               />
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 items-end gap-5">
               <OptionInput
                 label="Does the company possess any current Liabilities/Debt"
                 name="companyCurrentLiabilities"
@@ -891,8 +891,8 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
         );
       case 3:
         return (
-          <div className=" bg-mainBlack gap-5 py-8 px-5">
-            <div className="grid grid-cols-2 items-end gap-5">
+          <div className=" lg:bg-mainBlack gap-5 py-8 lg:px-5">
+            <div className="grid lg:grid-cols-2 items-end gap-5">
               <div className="col-span-1">
                 <DocumentUpload
                   label="Certificate of Incorporation"
@@ -923,7 +923,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 items-end gap-5">
               <div className="col-span-1">
                 <DocumentUpload
                   label="Status Report"
@@ -951,7 +951,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 items-end gap-5">
               <div className="col-span-1">
                 <DocumentUpload
                   label="Company Liability Schedule"
@@ -979,7 +979,7 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 items-end gap-5">
               <div className="col-span-1">
                 <DocumentUpload
                   label="Financial Statements"
@@ -1015,9 +1015,9 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
   };
 
   return (
-    <div className="grid grid-cols-11 gap-4 font-sansSerif">
-      <div className="col-span-3 map-bg pt-12 pb-36">
-        <p className="text-3xl mb-4">
+    <div className="lg:grid lg:grid-cols-11 gap-4 font-sansSerif">
+      <div className="col-span-3 lg:map-bg pt-12 lg:pb-36">
+        <p className="lg:text-3xl text-2xl font-serif mb-4">
           Fundability Check for SME <br />{" "}
           <span className="text-lg">(readiness assessment)</span>
         </p>
@@ -1026,8 +1026,8 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
           publicly displayed. <br /> <p className="mt-3 text-base font-semibold">Business: <span className="text-mainGreen text-sm font-normal">({business?.businessName})</span> </p> 
         </p>
       </div>
-      <div className="col-span-8">
-        <div className="flex gap-7">
+      <div className="col-span-8 ">
+        <div className="flex lg:gap-7 text-sm lg:text-base my-8 lg:my-0">
           <p
             className={`cursor-pointer ${
               currentStep === 0 ? "border-b-2  border-mainGreen" : ""
@@ -1117,50 +1117,55 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
       {loading && <Loading text="Calculating" />}
 
       {modal && (
-        <Modal>
-          <div className="bg-mainBlack p-8 rounded-lg text-white">
-            <div className="grid grid-cols-10 gap-4">
-              {/* Left Section */}
-              <div className="col-span-6">
-                <p className="text-2xl mb-4 font-bold">
-                  Your Fundability Score is Ready!
-                </p>
-                <p className="text-sm mb-4">
-                  Your business profile has been successfully submitted. We’re
-                  now reviewing your information and verifying your financial
-                  records. This process may take up to 48 hours.
-                </p>
-                <p className="text-sm flex items-center gap-2">
-                  <FaRegThumbsUp className="text-mainGreen" />
-                  <span>Well done!</span>
-                </p>
-              </div>
+         <Modal>
+         <div className="bg-mainBlack h-[80vh] lg:h-auto p-8 rounded-lg text-white">
+           <div className="grid lg:grid-cols-10 gap-4">
+             {/* Left Section */}
+             <div className="col-span-6">
+               <p className="text-2xl mb-4 font-bold">
+                 Your Fundability Score is Ready!
+               </p>
+               <p className="text-sm hidden lg:block mb-4">
+                 Your business profile has been successfully submitted. We’re
+                 now reviewing your information and verifying your financial
+                 records. This process may take up to 48 hours.
+               </p>
+               <p className="text-sm flex items-center gap-2">
+                 <FaRegThumbsUp className="text-mainGreen" />
+                 <span>Well done!</span>
+               </p>
+             </div>
 
-              {/* Right Section */}
-              <div className="col-span-4 flex ml-3">
-                <div className="w-24 h-24">
-                    <CircularProgress value={modalMessage}/>
-                </div>
-              </div>
-            </div>
+             {/* Right Section */}
+             <div className="col-span-4 flex  lg:justify-normal mt-4 lg:mt-0  lg:ml-3">
+               <div className="w-24 h-24 ">
+                 <CircularProgress value={modalMessage} />
+               </div>
+             </div>
+           </div>
+           <p className="text-sm lg:hidden mt-32  mb-4">
+                 Your business profile has been successfully submitted. We’re
+                 now reviewing your information and verifying your financial
+                 records. This process may take up to 48 hours.
+               </p>
 
-            {/* Buttons */}
-            <div className="flex justify-center gap-6 mt-8">
-              <button
-                className="bg-black text-white py-2 px-6 rounded text-sm hover:bg-gray-800"
-                onClick={handleRefreshRedirect}
-              >
-                View Dashboard
-              </button>
-              <button
-                className="bg-mainGreen text-white py-2 px-6 rounded text-sm hover:bg-green-600"
-                onClick={() => showModal(false)}
-              >
-                Retake Test
-              </button>
-            </div>
-          </div>
-        </Modal>
+           {/* Buttons */}
+           <div className="flex lg:justify-center justify-between gap-3 lg:gap-6 mt-8  lg:mt-8">
+             <button
+               className="bg-black text-white py-2 w-full lg:max-w-full lg:px-6 rounded text-sm hover:bg-gray-800"
+               onClick={handleRefreshRedirect}
+             >
+               View Dashboard
+             </button>
+             <button
+               className="bg-mainGreen text-white w-full lg:max-w-full py-2 px-3 lg:px-6 rounded text-sm hover:bg-green-600"
+               onClick={() => showModal(false)}
+             >
+               Retake Test
+             </button>
+           </div>
+         </div>
+       </Modal>
       )}
 
       {errorModal && (

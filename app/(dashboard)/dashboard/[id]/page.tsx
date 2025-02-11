@@ -1,5 +1,5 @@
 "use client";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { useUser } from "@/app/components/layouts/UserContext";
 import { useParams } from "next/navigation";
 import Image from "next/image";
@@ -9,35 +9,12 @@ import { IoCallOutline, IoLocation } from "react-icons/io5";
 import { MdEmail, MdOutlinePermIdentity } from "react-icons/md";
 import { LiaIndustrySolid } from "react-icons/lia";
 import Link from "next/link";
-
 import CircularProgress from "@/app/components/dashboard/Circular";
 
 export default function BusinessDetail() {
   const [currentStep, setCurrentStep] = useState(0);
-
-  const { id } = useParams(); // Extract the dynamic ID from the route
+  const { id } = useParams();
   const { businessDetails } = useUser();
-
-
-  
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-
-  //   const fetchFundabilityDetails = async () => {
-  //     try {
-  //       const fundabilityDetails = await getFundabilityResults(
-  //         token as string,
-  //         id as string
-  //       );
-  //       setScore(fundabilityDetails.data.score);
-  //     } catch (error) {
-  //       console.error("Failed to fetch dunability details:", error);
-  //     }
-  //   };
-
-  //   fetchFundabilityDetails();
-  // }, [router]);
 
   const business = businessDetails.find((b) => b.publicId === id);
 
@@ -49,98 +26,121 @@ export default function BusinessDetail() {
     switch (currentStep) {
       case 0:
         return (
-          <div className="bg-mainBlack gap-5 pb-12 py-8 px-5">
-            <div className="grid grid-cols-12">
-              <div className="col-span-2">
-                <Image
-                  src={business.businessLogoUrl}
-                  width={100}
-                  height={100}
-                  alt="test"
-                  className="rounded-full object-cover w-[100px] h-[100px]"
-                />
+          <div className="lg:bg-mainBlack gap-5 pb-8 lg:pb-12 py-4 lg:py-8 px-4 lg:px-5">
+            {/* Header Section */}
+            <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-0">
+              {/* Logo and Business Name Section - Combined for mobile */}
+              <div className="flex items-center lg:col-span-7 gap-4">
+                <div className="flex justify-center lg:justify-start">
+                  <Image
+                    src={business.businessLogoUrl}
+                    width={100}
+                    height={100}
+                    alt="business logo"
+                    className="rounded-full object-cover w-[50px] h-[50px] lg:w-[100px] lg:h-[100px]"
+                  />
+                </div>
+                <div className="flex flex-col lg:ml-4">
+                  <p className="text-xl lg:text-2xl mb-2 lg:mb-4">{business.businessName}</p>
+                 
+                </div>
               </div>
-              <div className="col-span-5 flex flex-col">
-                <p className="text-2xl mb-4">{business.businessName}</p>
-                <p className="text-xs">{business.description}</p>
+              <div> <p className="text-xs">{business.description}</p></div>
+
+              {/* Social Icons */}
+              <div className="lg:col-span-2 flex  lg:justify-start gap-4 lg:gap-2 text-xl lg:self-end order-last lg:order-none">
+                <FaInstagram className="cursor-pointer hover:text-mainGreen" />
+                <FaLinkedin className="cursor-pointer hover:text-mainGreen" />
+                <FaXTwitter className="cursor-pointer hover:text-mainGreen" />
+                <FaFacebook className="cursor-pointer hover:text-mainGreen" />
               </div>
-              <div className="col-span-2 flex gap-2 text-xl self-end">
-                <FaInstagram /> <FaLinkedin /> <FaXTwitter /> <FaFacebook />
-              </div>
-              <div className="col-span-1"></div>
-              <div className="col-span-2 ">
+
+              <div className="lg:col-span-1"></div>
+
+              {/* Edit Button */}
+              <div className="lg:col-span-2 flex  lg:justify-start">
                 <Link
                   href={`/dashboard/register-business/${business.publicId}`}
-                  className="bg-black shadow shadow-white px-3 py-1 rounded text-sm"
+                  className="bg-black shadow shadow-white px-3 py-1.5 rounded text-sm hover:bg-gray-900 transition"
                 >
                   Edit Details
                 </Link>
               </div>
             </div>
-            <div className="grid grid-cols-12 py-10 text-xs">
-              <div className="col-span-4 flex flex-col gap-4">
-                <div className="flex items-center gap-1">
-                  <IoCallOutline className="text-mainGreen text-lg" /> Contact
-                  Number: {business.businessPhone}
+
+            {/* Details Grid */}
+            <div className="flex flex-col lg:grid lg:grid-cols-12 py-6 lg:py-10 text-xs gap-6 lg:gap-0">
+              {/* Contact Details */}
+              <div className="lg:col-span-4 flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <IoCallOutline className="text-mainGreen text-lg" />
+                  <span className="break-all">Contact: {business.businessPhone}</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <MdEmail className="text-mainGreen text-lg" /> Address:{" "}
-                  {business.businessEmail}
+                <div className="flex items-center gap-2">
+                  <MdEmail className="text-mainGreen text-lg" />
+                  <span className="break-all">Email: {business.businessEmail}</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <MdOutlinePermIdentity className="text-mainGreen text-lg" />{" "}
-                  Number of Employees: {business.numOfEmployees}
-                </div>
-              </div>
-              <div className="col-span-4 flex flex-col gap-4">
-                <div className="flex items-center gap-1">
-                  <FaCalendarAlt className="text-mainGreen text-lg" />{" "}
-                  Established: {business.yearEstablished}
-                </div>
-                <div className="flex items-center gap-1">
-                  <MdOutlinePermIdentity className="text-mainGreen text-lg" />{" "}
-                  Legal Entity: {business.businessLegalEntity}
-                </div>
-                <div className="flex items-center gap-1">
-                  <LiaIndustrySolid className="text-mainGreen text-lg" />{" "}
-                  Industry: {business.industry}
+                <div className="flex items-center gap-2">
+                  <MdOutlinePermIdentity className="text-mainGreen text-lg" />
+                  <span>Employees: {business.numOfEmployees}</span>
                 </div>
               </div>
-              <div className="col-span-4 flex flex-col gap-4">
-                <div className="flex items-center gap-1">
-                  <IoLocation className="text-mainGreen text-lg" /> Location:{" "}
-                  {business.location} {business.businessStage}
+
+              {/* Business Details */}
+              <div className="lg:col-span-4 flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <FaCalendarAlt className="text-mainGreen text-lg" />
+                  <span>Established: {business.yearEstablished}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MdOutlinePermIdentity className="text-mainGreen text-lg" />
+                  <span>Legal Entity: {business.businessLegalEntity}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <LiaIndustrySolid className="text-mainGreen text-lg" />
+                  <span>Industry: {business.industry}</span>
+                </div>
+              </div>
+
+              {/* Location Details */}
+              <div className="lg:col-span-4 flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <IoLocation className="text-mainGreen text-lg" />
+                  <span>Location: {business.location} {business.businessStage}</span>
                 </div>
               </div>
             </div>
           </div>
         );
-        case 1:
-          return (
-            <div className="flex justify-center items-center h-[80vh] bg-mainBlack">
-              {business?.fundabilityTestDetails?.score !== undefined ? (
-                <div className="text-center">
-                  <p className="mb-5 font-semibold text-2xl">Fundability Score</p>
-                  <CircularProgress value={business.fundabilityTestDetails.score} />
-                  <p className="mt-4 text-sm">Your current fundability score</p>
-                </div>
-              ) : (
-                <div className="text-sm text-center">
-                  <p>
-                    Your fundability test will appear here. Check how ready your
-                    business is for funding
-                  </p>
-                  <Link href={`/dashboard/fundability-test/${id}`}>
-                    <button className="bg-black shadow mt-3 shadow-white text-center px-3 py-1 rounded text-sm">
-                      Fundability Check
-                    </button>
-                  </Link>
-                </div>
-              )}
-            </div>
-          );
+
+      case 1:
+        return (
+          <div className="flex justify-center items-center h-[80vh] lg:h-[80vh] lg:bg-mainBlack p-4">
+            {business?.fundabilityTestDetails?.score !== undefined ? (
+              <div className="text-center">
+                <p className="mb-5 font-semibold text-xl lg:text-2xl">Fundability Score</p>
+                <CircularProgress value={business.fundabilityTestDetails.score} />
+                <p className="mt-4 text-xs lg:text-sm">Your current fundability score</p>
+              </div>
+            ) : (
+              <div className="text-xs lg:text-sm text-center px-4">
+                <p>
+                  Your fundability test will appear here. Check how ready your
+                  business is for funding
+                </p>
+                <Link href={`/dashboard/fundability-test/${id}`}>
+                  <button className="bg-black shadow mt-3 shadow-white text-center px-3 py-1.5 rounded text-sm hover:bg-gray-900 transition">
+                    Fundability Check
+                  </button>
+                </Link>
+              </div>
+            )}
+          </div>
+        );
+
       case 2:
-        return <div>Work in Progress...</div>;
+        return <div className="p-4">Work in Progress...</div>;
+
       default:
         return <div>Invalid Step</div>;
     }
@@ -148,9 +148,10 @@ export default function BusinessDetail() {
 
   return (
     <div className="font-sansSerif">
-      <div className="flex gap-7">
+      {/* Navigation Tabs */}
+      <div className="flex flex-wrap gap-4 lg:gap-7 text-sm lg:text-base px-2 lg:px-0">
         <p
-          className={`cursor-pointer ${
+          className={`cursor-pointer pb-1 ${
             currentStep === 0 ? "border-b-2 border-mainGreen" : ""
           }`}
           onClick={() => setCurrentStep(0)}
@@ -158,22 +159,23 @@ export default function BusinessDetail() {
           Business Overview
         </p>
         <p
-          className={`cursor-pointer ${
-            currentStep === 1 ? "border-b-2 font-bold border-mainGreen" : ""
+          className={`cursor-pointer pb-1 ${
+            currentStep === 1 ? "border-b-2 border-mainGreen" : ""
           }`}
           onClick={() => setCurrentStep(1)}
         >
           Fundability Check
         </p>
-        <p
-          className={`cursor-pointer ${
-            currentStep === 2 ? "border-b-2 font-bold border-mainGreen" : ""
+        {/* <p
+          className={`cursor-pointer pb-1 ${
+            currentStep === 2 ? "border-b-2 border-mainGreen" : ""
           }`}
           onClick={() => setCurrentStep(2)}
         >
           Investment Proposals
-        </p>
+        </p> */}
       </div>
+
       <div className="mt-4">{renderContent()}</div>
     </div>
   );

@@ -32,7 +32,7 @@ const FormInput: React.FC<TextInputProps> = ({
         {label}
       </label>
       <input
-        className={`mt-1 block bg-mainBlack placeholder:text-gray-500 text-white p-2 w-full border ${
+        className={`mt-1 block  lg:bg-mainBlack placeholder:text-gray-500 text-white p-2 w-full  border-gray-500 border  ${
           touched && error ? "border-red-500" : "border-gray-300"
         } rounded-md focus:ring-indigo-500 focus:border-indigo-500`}
         id={name}

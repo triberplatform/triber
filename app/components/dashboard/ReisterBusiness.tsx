@@ -16,7 +16,7 @@ export default function RegisterBusiness() {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errorModal, showErrorModal] = useState(false);
-  const [modal, showModal] = useState(false);
+  const [modal, showModal] = useState(true)
   const [modalErrors, setModalErrors] = useState<string[]>([]);
   const [id, setId] = useState(null);
   const [stage, setStage] = useState(null);
@@ -117,7 +117,7 @@ export default function RegisterBusiness() {
     switch (currentStep) {
       case 0:
         return (
-          <div className="grid grid-cols-2 bg-mainBlack gap-5 pb-32 py-8 px-5">
+          <div className="grid lg:grid-cols-2 lg:bg-mainBlack lg:gap-5 lg:pb-32 lg:py-8 py-8 gap-5 lg:px-5">
             <FormInput
               label="Business Name"
               name="businessName"
@@ -180,9 +180,9 @@ export default function RegisterBusiness() {
 
       case 1:
         return (
-          <div className="grid grid-cols-2 bg-mainBlack gap-5 py-8 px-5">
+          <div className="grid lg:grid-cols-2 lg:bg-mainBlack lg:gap-5 py-8   lg:py-8 lg:px-5">
             {/* Left Column */}
-            <div>
+            <div className="space-y-5 lg:space-y-0">
               <OptionInput
                 label="You are interested in"
                 name="interestedIn"
@@ -276,7 +276,7 @@ export default function RegisterBusiness() {
             </div>
 
             {/* Right Column */}
-            <div>
+            <div className="space-y-5 mt-5 lg:space-y-0">
               <OptionInput
                 label="How many employees does the business have?"
                 name="numOfEmployees"
@@ -351,17 +351,17 @@ export default function RegisterBusiness() {
   };
 
   return (
-    <div className="grid grid-cols-11 gap-4 font-sansSerif">
-      <div className="col-span-3 map-bg pt-12 pb-36">
-        <p className="text-3xl mb-4">Register a Business</p>
-        <p className="text-sm">
+    <div className="lg:grid lg:grid-cols-11 gap-4 font-sansSerif">
+      <div className="col-span-3 lg:map-bg lg:pt-12 py-5 lg:pb-36">
+        <p className="lg:text-3xl font-serif text-2xl mb-4">Register a Business</p>
+        <p className="lg:text-sm text-xs">
           Information entered here is displayed publicly to match you with the
           right set of investors and buyers. Do not mention business
           name/information which can identify the business.
         </p>
       </div>
       <div className="col-span-8">
-        <div className="flex gap-7">
+        <div className="flex gap-5 justify-between text-sm lg:text-base lg:gap-7">
           <p
             className={`cursor-pointer ${
               currentStep === 0 ? "border-b-2  border-mainGreen" : ""
@@ -388,7 +388,7 @@ export default function RegisterBusiness() {
             <Form>
               <div>
                 {renderStepContent(formikProps)}
-                <div className="flex justify-between mt-4">
+                <div className="flex justify-between lg:mt-4">
                   <button
                     className={`px-4 py-2 text-white bg-gray-500 rounded ${
                       currentStep === 0 && "opacity-50 cursor-not-allowed"
@@ -443,10 +443,10 @@ export default function RegisterBusiness() {
         <Modal>
           {" "}
           <div className="bg-mainBlack p-6">
-            <div className="grid grid-cols-10">
+            <div className="grid items-center grid-cols-10">
               <div className="col-span-7">
                 <p className="text-xl mb-3 font-bold">Profile Submitted!</p>
-                <p>
+                <p className="lg:text-base text-sm">
                   Your business profile has been successfully submitted. We’re
                   now reviewing your information and verifying your financial
                   records. This process may take up to 48 hours.
@@ -456,8 +456,8 @@ export default function RegisterBusiness() {
                 <FaCheckDouble className="text-mainGreen text-6xl" />
               </div>
             </div>
-            <div className="flex mt-8 gap-6">
-              <button onClick={() => id && handleRefreshRedirectFund(id)} className="bg-mainGreen py-2 px-4 rounded">
+            <div className="flex mt-5 justify-between lg:justify-normal lg:mt-8 gap-3 lg:gap-6">
+              <button onClick={() => id && handleRefreshRedirectFund(id)} className="bg-mainGreen lg:text-base text-xs py-2 px-2 lg:px-4 rounded">
             
                   Take Fundability test
             

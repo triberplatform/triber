@@ -32,7 +32,7 @@ const OptionInput: React.FC<OptionInputProps> = ({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        className={`mt-1 block bg-mainBlack placeholder:text-white text-white p-[0.65rem] w-full border ${
+        className={`mt-1 block bg-black lg:bg-mainBlack placeholder:text-white text-white p-[0.65rem] w-full border ${
           touched && error ? "border-red-500" : "border-gray-300"
         } rounded-md focus:ring-mainGreen focus:border-mainGreen`}
       >

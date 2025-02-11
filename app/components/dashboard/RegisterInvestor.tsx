@@ -112,7 +112,7 @@ export default function RegisterInvestor() {
     switch (currentStep) {
       case 0:
         return (
-          <div className="grid grid-cols-2 bg-mainBlack gap-5 pb-32 py-8 px-5">
+          <div className="grid lg:grid-cols-2 lg:bg-mainBlack gap-5 pb-12 lg:pb-32 py-8 lg:px-5">
             <FormInput
               label="Email"
               name="email"
@@ -158,9 +158,9 @@ export default function RegisterInvestor() {
 
       case 1:
         return (
-          <div className="grid grid-cols-2 bg-mainBlack gap-5 py-8 px-5">
+          <div className="grid lg:grid-cols-2 lg:bg-mainBlack gap-5 py-8 lg:px-5">
             {/* Left Column */}
-            <div>
+            <div className="space-y-5 lg:space-y-0">
             <OptionInput
                 label="Company Type"
                 name="companyType"
@@ -245,7 +245,7 @@ export default function RegisterInvestor() {
             </div>
 
             {/* Right Column */}
-            <div>
+            <div className="space-y-5 lg:space-y-0">
               <ArrayInput
                 label="Interested Factors"
                 name="interestedFactors"
@@ -304,8 +304,8 @@ export default function RegisterInvestor() {
   };
 
   return (
-    <div className="grid grid-cols-11 gap-4 font-sansSerif">
-      <div className="col-span-3 map-bg pt-12 pb-36">
+    <div className="grid lg:grid-cols-11 gap-4 font-sansSerif">
+      <div className="col-span-3 lg:map-bg pt-12 pb-8 lg:pb-36">
         <p className="text-3xl mb-4">Register Investor Profile</p>
         <p className="text-sm">
           Information entered here is displayed publicly to match you with the
@@ -314,7 +314,7 @@ export default function RegisterInvestor() {
         </p>
       </div>
       <div className="col-span-8">
-        <div className="flex gap-7">
+        <div className="flex lg:gap-7 justify-between lg:justify-normal">
           <p
             className={`cursor-pointer ${
               currentStep === 0 ? "border-b-2  border-mainGreen" : ""
@@ -386,10 +386,10 @@ export default function RegisterInvestor() {
         <Modal>
           {" "}
           <div className="bg-mainBlack p-6">
-            <div className="grid grid-cols-10">
+            <div className="grid items-center grid-cols-10">
               <div className="col-span-7">
                 <p className="text-xl mb-3 font-bold">Profile Submitted!</p>
-                <p>
+                <p className="text-sm lg:text-base">
                   Your Investor profile has been successfully submitted. We’re
                   now reviewing your information and verifying your financial
                   records. This process may take up to 48 hours.

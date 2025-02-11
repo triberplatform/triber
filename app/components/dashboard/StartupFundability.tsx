@@ -5,10 +5,10 @@ import { Formik, Form, FormikProps } from "formik";
 import * as Yup from "yup";
 import FormInput from "./FormInput";
 import OptionInput from "./OptionInput";
-import {  StartupFundabilityPayload } from "@/app/type";
+import { StartupFundabilityPayload } from "@/app/type";
 import Modal from "./Modal";
 import { FaRegThumbsUp } from "react-icons/fa";
-import {  startupFundabilityTest } from "@/app/services/dashboard";
+import { startupFundabilityTest } from "@/app/services/dashboard";
 import ArrayInput from "./ArrayInput";
 import Loading from "@/app/loading";
 import DocumentUpload from "./DocumentUpload";
@@ -27,7 +27,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
   const [modalMessage, setModalMessage] = useState<number>(0);
   const [modalErrors, setModalErrors] = useState<string[]>([]);
 
-  const {businessDetails} = useUser();
+  const { businessDetails } = useUser();
   const business = businessDetails.find((b) => b.publicId === id);
 
   const validationSchema = Yup.object().shape({
@@ -87,7 +87,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
       .typeError("Must be a number")
       .positive("Must be positive")
       .required("This field is required"),
-      customerLifetimeValue: Yup.number()
+    customerLifetimeValue: Yup.number()
       .typeError("Must be a number")
       .positive("Must be positive")
       .required("This field is required"),
@@ -95,7 +95,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
       .typeError("Must be a number")
       .min(0, "Must be 0 or higher")
       .max(100, "Must be 100 or lower"),
-      licensesToOperate: Yup.mixed()
+    licensesToOperate: Yup.mixed()
       .test(
         "is-boolean-or-empty",
         "This field is required",
@@ -194,7 +194,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
     customerAcquisitionCost: 0,
     totalAddressableMarket: "",
     licensesToOperate: "" as boolean | string,
-    customerLifetimeValue:0,
+    customerLifetimeValue: 0,
     expectedAnnualGrowthRate: 0,
     companyPitchDeck: "" as boolean | string,
     companyBusinessPlan: "" as boolean | string,
@@ -252,7 +252,6 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
           formData.append(key, String(value));
         }
       });
-      
 
       // Debugging: Log FormData key-value pairs
       for (const [key, value] of formData.entries()) {
@@ -285,12 +284,14 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
     }
   };
 
-  const renderStepContent = (formikProps: FormikProps<StartupFundabilityPayload>) => {
+  const renderStepContent = (
+    formikProps: FormikProps<StartupFundabilityPayload>
+  ) => {
     switch (currentStep) {
       case 0:
         return (
-          <div className=" bg-mainBlack gap-5 pb-12 py-8 px-5">
-            <div className="grid grid-cols-2 gap-5 items-end">
+          <div className=" lg:bg-mainBlack gap-5 lg:pb-12 py-8 lg:px-5">
+            <div className="grid lg:grid-cols-2 gap-5 items-end">
               <OptionInput
                 label="Are you a registered Company?"
                 name="registeredCompany"
@@ -319,7 +320,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.legalName}
               />
             </div>
-            <div className="grid grid-cols-2 gap-3 items-end">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 gap-3 items-end">
               <OptionInput
                 label="Type of Company Registration"
                 name="companyRegistration"
@@ -349,7 +350,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.city}
               />
             </div>
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 gap-5 items-end">
               <FormInput
                 label="Country"
                 name="country"
@@ -401,7 +402,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 gap-5 items-end">
               <FormInput
                 label="Registered Address"
                 name="registeredAddress"
@@ -425,7 +426,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 gap-5 items-end">
               <FormInput
                 label="Contact Number"
                 name="contactNumber"
@@ -451,7 +452,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 gap-5 items-end">
               <FormInput
                 label="Principal address of the business"
                 name="principalAddress"
@@ -473,7 +474,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.applicantsAddress}
               />
             </div>
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid mt-5 lg:mt-0 lg:grid-cols-2 gap-5 items-end">
               <OptionInput
                 label="Position"
                 name="position"
@@ -507,7 +508,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 gap-5 items-end">
               <FormInput
                 label="Years of Operation"
                 name="yearsOfOperation"
@@ -532,7 +533,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid lg:grid-cols-2 gap-5 mt-5 lg:mt-0 items-end">
               <OptionInput
                 label="Have your company been involved in a legal case?"
                 name="companyLegalCases"
@@ -556,9 +557,9 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
 
       case 1:
         return (
-          <div className=" bg-mainBlack gap-5 py-8 px-5">
+          <div className=" lg:bg-mainBlack gap-5 py-8 lg:px-5">
             {/* Left Column */}
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid lg:grid-cols-2 lg:gap-5 items-end">
               <ArrayInput
                 label="Ownership (who owns the business)"
                 name="ownership"
@@ -576,7 +577,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 }
               />
             </div>
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid lg:grid-cols-2 lg:mt-0 lg:gap-5 items-end">
               <ArrayInput
                 label="Legal Advisors "
                 name="legalAdvisors"
@@ -596,7 +597,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
             </div>
 
             {/* Right Column */}
-            <div className="grid grid-cols-2 gap-5 items-end">
+            <div className="grid lg:grid-cols-2 gap-5 items-end">
               <OptionInput
                 label="ISIC Industry (do you belong to any industry Association)"
                 name="isicIndustry"
@@ -625,9 +626,9 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.isicActivity}
               />
             </div>
-            <div className="grid grid-cols-2 gap-5 items-end">
-            <OptionInput
-                label="What is your Total Addressable Market Size (TAM)" 
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 gap-5 items-end">
+              <OptionInput
+                label="What is your Total Addressable Market Size (TAM)"
                 name="totalAddressableMarket"
                 options={[
                   { value: "20", label: "Post-revenue" },
@@ -639,10 +640,10 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 error={formikProps.errors.totalAddressableMarket}
                 touched={formikProps.touched.totalAddressableMarket}
               />
-          
+
               <FormInput
-              label="What is your Customer Lifetime Value"
-       name="customerLifetimeValue"
+                label="What is your Customer Lifetime Value"
+                name="customerLifetimeValue"
                 type="text" // Use text to allow formatted input
                 placeholder="e.g., 5,000,000"
                 value={
@@ -672,8 +673,8 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
         );
       case 2:
         return (
-          <div className=" bg-mainBlack gap-5 py-8 px-5">
-            <div className="grid grid-cols-2 items-end gap-5">
+          <div className=" lg:bg-mainBlack gap-5 py-8 lg:px-5">
+            <div className="grid lg:grid-cols-2 items-end gap-5">
               <FormInput
                 label="What is your Customer Acquisition Cost"
                 name="customerAcquisitionCost"
@@ -728,7 +729,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.expectedAnnualGrowthRate}
               />
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 items-end gap-5">
               <OptionInput
                 label="Do you have all necessary Licenses to Operate?"
                 name="licensesToOperate"
@@ -740,10 +741,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 value={formikProps.values.licensesToOperate.toString()}
                 onChange={(e) => {
                   const booleanValue = e.target.value === "true"; // Convert string to boolean
-                  formikProps.setFieldValue(
-                    "licensesToOperate",
-                    booleanValue
-                  );
+                  formikProps.setFieldValue("licensesToOperate", booleanValue);
                 }}
                 onBlur={formikProps.handleBlur}
                 error={formikProps.errors.licensesToOperate}
@@ -767,7 +765,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.companyPitchDeck}
               />
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 items-end gap-5">
               <OptionInput
                 label="Does your company have a business Plan?"
                 name="companyBusinessPlan"
@@ -810,7 +808,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 items-end gap-5">
               <OptionInput
                 label="Does your company possess significant SOLID asset holding?(Asset Base)"
                 name="companySolidAssetHolding"
@@ -852,10 +850,10 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.companyLargeInventory}
               />
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 items-end gap-5">
               <OptionInput
                 label="Has the company been 3 years profitable"
-                name="company3YearProfitable"
+                name="company3YearProfitable" 
                 options={[
                   { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
@@ -895,7 +893,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 touched={formikProps.touched.companyHighScalibilty}
               />
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 items-end gap-5">
               <OptionInput
                 label="Does the company possess any current Liabilities/Debt"
                 name="companyCurrentLiabilities"
@@ -941,8 +939,8 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
         );
       case 3:
         return (
-          <div className=" bg-mainBlack gap-5 py-8 px-5">
-            <div className="grid grid-cols-2 items-end gap-5">
+          <div className=" lg:bg-mainBlack gap-5 py-8 lg:px-5">
+            <div className="grid lg:grid-cols-2 items-end gap-5">
               <div className="col-span-1">
                 <DocumentUpload
                   label="Certificate of Incorporation"
@@ -973,7 +971,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 items-end gap-5">
               <div className="col-span-1">
                 <DocumentUpload
                   label="Status Report"
@@ -1001,7 +999,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 items-end gap-5">
               <div className="col-span-1">
                 <DocumentUpload
                   label="Company Liability Schedule"
@@ -1029,7 +1027,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 items-end gap-5">
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 items-end gap-5">
               <div className="col-span-1">
                 <DocumentUpload
                   label="Financial Statements"
@@ -1065,19 +1063,25 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
   };
 
   return (
-    <div className="grid grid-cols-11 gap-4 font-sansSerif">
-      <div className="col-span-3 map-bg pt-12 pb-36">
-        <p className="text-3xl mb-4">
+    <div className="lg:grid lg:grid-cols-11 gap-4 font-sansSerif">
+      <div className="col-span-3 lg:map-bg pt-12 lg:pb-36">
+        <p className="lg:text-3xl text-2xl font-serif  mb-4">
           Fundability Check for Start Up <br />{" "}
           <span className="text-lg">(readiness assessment)</span>
         </p>
         <p className="text-sm">
           Please enter your details here. Information entered here is not
-          publicly displayed. <br /> <p className="mt-3 text-base font-semibold">Business: <span className="text-mainGreen text-sm font-normal">({business?.businessName})</span> </p> 
+          publicly displayed. <br />{" "}
+          <p className="mt-3 text-base font-semibold">
+            Business:{" "}
+            <span className="text-mainGreen text-sm font-normal">
+              ({business?.businessName})
+            </span>{" "}
+          </p>
         </p>
       </div>
-      <div className="col-span-8">
-        <div className="flex gap-7">
+      <div className="col-span-8 mt-7 lg:mt-0">
+        <div className="flex lg:gap-7 text-sm">
           <p
             className={`cursor-pointer ${
               currentStep === 0 ? "border-b-2  border-mainGreen" : ""
@@ -1168,14 +1172,14 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
 
       {modal && (
         <Modal>
-          <div className="bg-mainBlack p-8 rounded-lg text-white">
-            <div className="grid grid-cols-10 gap-4">
+          <div className="bg-mainBlack h-[80vh] lg:h-auto p-8 rounded-lg text-white">
+            <div className="grid lg:grid-cols-10 gap-4">
               {/* Left Section */}
               <div className="col-span-6">
                 <p className="text-2xl mb-4 font-bold">
                   Your Fundability Score is Ready!
                 </p>
-                <p className="text-sm mb-4">
+                <p className="text-sm hidden lg:block mb-4">
                   Your business profile has been successfully submitted. We’re
                   now reviewing your information and verifying your financial
                   records. This process may take up to 48 hours.
@@ -1187,23 +1191,28 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
               </div>
 
               {/* Right Section */}
-              <div className="col-span-4 flex ml-3">
-                <div className="w-24 h-24">
-                    <CircularProgress value={modalMessage}/>
+              <div className="col-span-4 flex  lg:justify-normal mt-4 lg:mt-0  lg:ml-3">
+                <div className="w-24 h-24 ">
+                  <CircularProgress value={modalMessage} />
                 </div>
               </div>
             </div>
+            <p className="text-sm lg:hidden mt-32  mb-4">
+                  Your business profile has been successfully submitted. We’re
+                  now reviewing your information and verifying your financial
+                  records. This process may take up to 48 hours.
+                </p>
 
             {/* Buttons */}
-            <div className="flex justify-center gap-6 mt-8">
+            <div className="flex lg:justify-center justify-between gap-6 mt-5  lg:mt-8">
               <button
-                className="bg-black text-white py-2 px-6 rounded text-sm hover:bg-gray-800"
+                className="bg-black text-white py-2 px-3 lg:px-6 rounded text-sm hover:bg-gray-800"
                 onClick={handleRefreshRedirect}
               >
                 View Dashboard
               </button>
               <button
-                className="bg-mainGreen text-white py-2 px-6 rounded text-sm hover:bg-green-600"
+                className="bg-mainGreen text-white py-2 px-3 lg:px-6 rounded text-sm hover:bg-green-600"
                 onClick={() => showModal(false)}
               >
                 Retake Test

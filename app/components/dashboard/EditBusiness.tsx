@@ -8,20 +8,20 @@ import OptionInput from "./OptionInput";
 import { editBusiness } from "@/app/services/dashboard";
 import { RegisterBusinessPayload } from "@/app/type";
 import Modal from "./Modal";
-import Link from "next/link";
+import { FaCheckDouble } from "react-icons/fa";
 import Loading from "@/app/loading";
 import DocumentUpload from "./DocumentUpload";
+import Link from "next/link";
 import { useUser } from "../layouts/UserContext";
 
-
 export default function EditBusiness({ id }: { id: string }) {
-  const { businessDetails } = useUser();
-  const business = businessDetails.find((b) => b.publicId === id);
   const [currentStep, setCurrentStep] = useState(0);
+  const {businessDetails} = useUser();
+  
+const business = businessDetails.find((b) => b.publicId === id);
   const [loading, setLoading] = useState(false);
   const [modal, showModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-//   const [modalErrors, setModalErrors] = useState<string[]>([]);
 
   const validationSchema = Yup.object().shape({
     businessName: Yup.string().required("Business Name is required"),
@@ -54,23 +54,23 @@ export default function EditBusiness({ id }: { id: string }) {
   });
 
   const initialValues: RegisterBusinessPayload = {
-      businessName: business?.businessName ?? "",
-      businessPhone: business?.businessPhone ?? "",
-      businessEmail: business?.businessEmail ?? "",
-      businessStatus: business?.businessStatus ?? "",
-      interestedIn: business?.interestedIn ?? "",
-      industry: business?.industry ?? "",
-      businessLegalEntity: business?.businessLegalEntity ?? "",
-      description: business?.description ?? "",
-      businessStage: business?.businessStage ?? "",
-      reportedSales: business?.reportedSales ?? "",
-      numOfEmployees: business?.numOfEmployees ?? "",
-      yearEstablished: business?.yearEstablished ?? 0,
-      location: business?.location ?? "",
-      assets: business?.assets ?? "",
-      logo: null,
-    };
- 
+    businessName: business?.businessName ?? "",
+    businessPhone: business?.businessPhone ?? "",
+    businessEmail: business?.businessEmail ?? "",
+    businessStatus: business?.businessStatus ?? "",
+    interestedIn: business?.interestedIn ?? "",
+    industry: business?.industry ?? "",
+    businessLegalEntity: business?.businessLegalEntity ?? "",
+    description: business?.description ?? "",
+    businessStage: business?.businessStage ?? "",
+    reportedSales: business?.reportedSales ?? "",
+    numOfEmployees: business?.numOfEmployees ?? "",
+    yearEstablished: business?.yearEstablished ?? 0,
+    location: business?.location ?? "",
+    assets: business?.assets ?? "",
+    logo: null,
+  };
+
   const handleNext = () => {
     if (currentStep < 1) {
       setCurrentStep(currentStep + 1);
@@ -85,10 +85,7 @@ export default function EditBusiness({ id }: { id: string }) {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      if (!business?.publicId) {
-        throw new Error("Business ID is required");
-      }
-      const response = await editBusiness(values, token ?? "", business.publicId);
+      const response = await editBusiness(values, token ?? "", id);
 
       if (response.ok) {
         const data = await response.json();
@@ -111,7 +108,7 @@ export default function EditBusiness({ id }: { id: string }) {
     switch (currentStep) {
       case 0:
         return (
-          <div className="grid grid-cols-2 bg-mainBlack gap-5 pb-32 py-8 px-5">
+          <div className="grid lg:grid-cols-2 lg:bg-mainBlack lg:gap-5 lg:pb-32 lg:py-8 py-8 gap-5 lg:px-5">
             <FormInput
               label="Business Name"
               name="businessName"
@@ -156,7 +153,7 @@ export default function EditBusiness({ id }: { id: string }) {
               error={formikProps.errors.businessStatus}
               touched={formikProps.touched.businessStatus}
             />
-              <OptionInput
+            <OptionInput
               label="Business Stage"
               name="businessStage"
               options={[
@@ -174,9 +171,9 @@ export default function EditBusiness({ id }: { id: string }) {
 
       case 1:
         return (
-          <div className="grid grid-cols-2 bg-mainBlack gap-5 py-8 px-5">
+          <div className="grid lg:grid-cols-2 lg:bg-mainBlack lg:gap-5 py-8 lg:py-8 lg:px-5">
             {/* Left Column */}
-            <div>
+            <div className="space-y-5 lg:space-y-0">
               <OptionInput
                 label="You are interested in"
                 name="interestedIn"
@@ -256,7 +253,6 @@ export default function EditBusiness({ id }: { id: string }) {
                 error={formikProps.errors.description}
                 touched={formikProps.touched.description}
               />
-
               <FormInput
                 label="Describe your facility such as built-up area, number of floors, rental/lease details"
                 name="assets"
@@ -270,7 +266,7 @@ export default function EditBusiness({ id }: { id: string }) {
             </div>
 
             {/* Right Column */}
-            <div>
+            <div className="space-y-5 mt-5 lg:space-y-0">
               <OptionInput
                 label="How many employees does the business have?"
                 name="numOfEmployees"
@@ -345,17 +341,17 @@ export default function EditBusiness({ id }: { id: string }) {
   };
 
   return (
-    <div className="grid grid-cols-11 gap-4 font-sansSerif">
-      <div className="col-span-3 map-bg pt-12 pb-36">
-        <p className="text-3xl mb-4">Edit Business Details</p>
-        {/* <p className="text-sm">
+    <div className="lg:grid lg:grid-cols-11 gap-4 font-sansSerif">
+      <div className="col-span-3 lg:map-bg lg:pt-12 py-5 lg:pb-36">
+        <p className="lg:text-3xl font-serif text-2xl mb-4">Edit Business Details</p>
+        <p className="lg:text-sm text-xs">
           Information entered here is displayed publicly to match you with the
           right set of investors and buyers. Do not mention business
           name/information which can identify the business.
-        </p> */}
+        </p>
       </div>
       <div className="col-span-8">
-        <div className="flex gap-7">
+        <div className="flex gap-5 justify-between text-sm lg:text-base lg:gap-7">
           <p
             className={`cursor-pointer ${
               currentStep === 0 ? "border-b-2  border-mainGreen" : ""
@@ -412,88 +408,36 @@ export default function EditBusiness({ id }: { id: string }) {
           )}
         </Formik>
       </div>
-      {loading && <Loading text="Registering" />}
+      {loading && <Loading text="Editing" />}
 
-      {/* {modal && (
-        <Modal>
-          <h2 className="text-xl font-bold mb-4">Validation Errors</h2>
-          <ul className="list-disc ml-5">
-            {modalErrors.map((error, index) => (
-              <li key={index}>{error}</li>
-            ))}
-          </ul>
-        </Modal>
-      )} */}
       {modal && (
         <Modal>
-          {" "}
           <div className="bg-mainBlack flex flex-col gap-5 p-6">
-           {modalMessage}
-           <Link href="/dashboard">
-            <button className="bg-mainGreen text-white text-sm px-4 py-2 rounded mt-4">Go to Dashboard</button></Link>
+            <div className="grid items-center grid-cols-10">
+              <div className="col-span-7">
+                <p className="text-xl mb-3 font-bold">Profile Updated!</p>
+                <p className="lg:text-base text-sm">
+                  Your business profile has been successfully updated. 
+                </p>
+              </div>
+              <div className="col-span-3 flex justify-center item-center mt-6">
+                <FaCheckDouble className="text-mainGreen text-6xl" />
+              </div>
+            </div>
+            <div className="flex mt-5 justify-between lg:justify-normal lg:mt-8 gap-3 lg:gap-6">
+              <Link href="/dashboard">
+                <button className="bg-mainGreen lg:text-base text-xs py-2 px-2 lg:px-4 rounded">
+                  View Dashboard
+                </button>
+              </Link>
+            </div>
           </div>
         </Modal>
       )}
-      {/* {errorModal && (
-        <Modal>
-          <div className="p-6 flex flex-col rounded-lg shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-red-600 flex items-center gap-2">
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6 text-red-600"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 9v3.75m0 3.75h.007M21.25 12A9.25 9.25 0 1 1 3.75 12a9.25 9.25 0 0 1 17.5 0z"
-                    />
-                  </svg>
-                </span>
-                Missing Required Fields
-              </h2>
-              <button onClick={() => showErrorModal(false)}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <p className="text-gray-400 mb-3">
-              Please ensure the following fields are filled correctly:
-            </p>
-            <ul className="list-disc list-inside text-sm text-gray-400">
-              {modalErrors.map((error, index) => (
-                <li key={index}>{error}</li>
-              ))}
-            </ul>
-
-            <button
-              className="mt-5 px-6 py-2 bg-mainGreen text-white font-medium rounded hover:bg-green-700 transition duration-300"
-              onClick={() => showErrorModal(false)}
-            >
-              Close
-            </button>
-          </div>
-        </Modal>
-      )} */}
-      {/* <div className="hidden">{modalMessage}</div> */}
     </div>
   );
 }
+
+
+
+

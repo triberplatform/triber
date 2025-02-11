@@ -1,9 +1,10 @@
 "use client";
 import Image from "next/image";
 import React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaBars } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
 import SearchForm from "../dashboard/SearchForm";
 import { IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
 import { GrAnnounce } from "react-icons/gr";
@@ -25,15 +26,15 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [open, setOpen] = useState<boolean>(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [user, setUser] = useState<null | UserDetails>(null);
-  const [modal, showModal] = useState<boolean>(false)
+  const [modal, showModal] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const logout = useLogout();
 
-  const toggleDrawerHandler = () => {
-    setOpen((prevState) => !prevState);
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen((prev) => !prev);
   };
 
   useEffect(() => {
@@ -43,15 +44,12 @@ export default function DashboardLayout({
     if (!token) {
       router.push("/login");
       return;
-
     }
-  
 
     const fetchUserDetails = async () => {
       try {
         const userDetails = await getUserDetails(token as string, publicId as string);
         setUser(userDetails.data);
-        console.log(userDetails.data);
       } catch (error) {
         console.error("Failed to fetch user details:", error);
         router.push("/login");
@@ -59,7 +57,6 @@ export default function DashboardLayout({
         setLoading(false);
       }
     };
-
 
     fetchUserDetails();
   }, [router]);
@@ -69,22 +66,18 @@ export default function DashboardLayout({
   }
 
   return (
-    <UserProvider user={user} >
+    <UserProvider user={user}>
       <div className="flex">
-        {/* Drawer */}
-        <div
-          className={`bg-mainBlack text-white fixed flex py-7 items-center flex-col top-0 left-0 h-full transform ${
-            open ? "translate-x-0" : "-translate-x-full"
-          } transition-transform duration-300 ease-in-out w-44`}
-        >
+        {/* Desktop Sidebar - Hidden on mobile */}
+        <div className="hidden lg:flex bg-mainBlack text-white fixed py-7 items-center flex-col top-0 left-0 h-full w-44">
           <Image
             src={"/assets/logos.svg"}
             height={80}
             width={70}
             alt="triber-logo"
-            className=" lg:w-[70px] w-[50px]"
+            className="w-[70px]"
           />
-          <nav className="py-10 flex flex-col gap-52 text-base ">
+          <nav className="py-10 flex flex-col gap-52 text-base">
             <div className="flex flex-col gap-6">
               <Link href="/dashboard" className="items-center gap-2 hover:text-mainGreen flex">
                 <LuLayoutDashboard /> Home
@@ -111,40 +104,121 @@ export default function DashboardLayout({
           </nav>
         </div>
 
-        {/* Content */}
-        <div
-          className={`flex-1 transition-all duration-300 ease-in-out ${open ? "ml-44" : "ml-0"}`}
-        >
-          <header className="bg-mainBlack p-4 shadow-md flex items-center justify-between">
-            <div className="flex items-center gap-10">
-              <button onClick={toggleDrawerHandler} className="text-2xl">
-                <FaBars />
-              </button>
-              <SearchForm />
+        {/* Mobile Menu Overlay */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden fixed inset-0 bg-mainBlack text-white z-50 overflow-y-auto">
+            <div className="p-4">
+              {/* Mobile Menu Header */}
+              <div className="flex items-center justify-between mb-6">
+                <Image
+                  src={"/assets/logos.svg"}
+                  height={40}
+                  width={40}
+                  alt="triber-logo"
+                />
+                <button onClick={toggleMobileMenu} className="text-2xl">
+                  <IoClose />
+                </button>
+              </div>
+
+              {/* Search Bar */}
+              <div className="mb-8">
+                <SearchForm />
+              </div>
+
+              {/* Add Profile Button */}
+              <div className="mb-8">
+                <CreateProfileButton />
+              </div>
+
+              {/* Navigation Links */}
+              <nav className="flex flex-col gap-6">
+                <Link href="/dashboard" onClick={toggleMobileMenu} className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded">
+                  <LuLayoutDashboard /> Profile
+                </Link>
+                <Link href="/dashboard/fundability-test" onClick={toggleMobileMenu} className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded">
+                  <MdOutlineBusinessCenter /> Fundability test
+                </Link>
+                <Link href="#" onClick={toggleMobileMenu} className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded">
+                  <BsGraphUp /> Valuation
+                </Link>
+                <div className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded" onClick={toggleMobileMenu}>
+                  <BsGraphUp /> Deal Room
+                </div>
+              </nav>
+
+              {/* Bottom Section */}
+              <div className="mt-auto pt-8 border-t border-gray-700 flex flex-col gap-6">
+                <Link href="#" className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded">
+                  <IoSettingsOutline /> Settings
+                </Link>
+                <Link href="#" className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded">
+                  <BiSupport /> Support
+                </Link>
+                <button 
+                  onClick={()=>showModal(true)} 
+                  className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded"
+                >
+                  <IoLogOutOutline /> Log out
+                </button>
+              </div>
             </div>
-            <div className="flex items-center gap-7">
+          </div>
+        )}
+
+        {/* Main Content */}
+        <div className={`flex-1 ${!mobileMenuOpen ? "lg:ml-44" : ""}`}>
+          <header className="bg-mainBlack p-4 shadow-md flex items-center justify-between">
+            {/* Mobile Logo */}
+            <div className="lg:hidden">
+              <Link href={'/dashboard'}>       <Image
+                src={"/assets/logos.svg"}
+                height={40}
+                width={40}
+                alt="triber-logo"
+              /></Link>
+       
+            </div>
+            
+            {/* Desktop Items */}
+            <div className="hidden lg:flex items-center gap-10">
+              <div className="flex items-center gap-4">
+                <SearchForm />
+              </div>
+            </div>
+
+            {/* Desktop Actions */}
+            <div className="hidden lg:flex items-center gap-7">
               <CreateProfileButton />
               <div className="flex items-center text-2xl gap-4">
                 <IoSettingsOutline />
                 <GrAnnounce />
               </div>
             </div>
+            
+            {/* Mobile Menu Button */}
+            <button onClick={toggleMobileMenu} className="text-2xl lg:hidden">
+              <FaBars />
+            </button>
           </header>
 
           <main className="p-6">{children}</main>
         </div>
+        
         {modal && <Modal>
           <div className="flex flex-col p-4 gap-8 bg-mainBlack">
             <p>Are you sure you want to log out? You will need to sign in again to access your account.</p>
-            <div className="flex gap-4 ">
+            <div className="flex gap-4">
               <button className="px-3 py-1 shadow text-sm rounded shadow-white" onClick={logout}>
                 Logout
-                </button><button className="px-3 py-1 text-sm rounded bg-mainGreen" onClick={()=>showModal(false)}>No</button>
+              </button>
+              <button className="px-3 py-1 text-sm rounded bg-mainGreen" onClick={()=>showModal(false)}>
+                No
+              </button>
             </div>
           </div>
-          </Modal>}
+        </Modal>}
       </div>
-
     </UserProvider>
   );
 }

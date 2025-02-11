@@ -19,7 +19,7 @@ const CreateProfileButton = () => {
         <CgProfile /> Add a Profile <VscTriangleDown />
       </button>
       {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-mainBlack border-mainGreen border-t-2 flex items-center flex-col text-sm rounded-md shadow-lg z-10">
+        <div className="absolute left-0 mt-2 w-48 bg-mainBlack border-mainGreen border-t-2 flex items-center flex-col text-sm rounded-md shadow-lg z-10">
           <Link
             href={"/dashboard/register-business"}
             className="hover:bg-mainGreen px-3 py-3 w-full mt-3"

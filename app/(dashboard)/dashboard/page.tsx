@@ -16,11 +16,11 @@ export default function Page() {
   }
   return (
     <div className="">
-      <div className=" text-2xl mb-4">
-        Hi {user.firstname}, welcome to Triber
+      <div className=" lg:text-2xl mb-4 text-lg">
+        Hi {user.firstname}, Welcome to Triber
       </div>
-      <div className="grid grid-cols-10 gap-4 mb-4">
-        <div className="col-span-6 bg-mainBlack p-4 rounded-xl">
+      <div className="lg:grid lg:grid-cols-10 gap-4 mb-4">
+        <div className="col-span-6 bg-mainBlack p-4 mb-3 lg:mb-0 rounded-xl">
           <p className="text-lg mb-4">
             Ready to Take your Business to the Next Level?
           </p>
@@ -38,22 +38,22 @@ export default function Page() {
             </p>
           </div>
         </div>
-        <div className="col-span-2 bg-mainBlack flex flex-col justify-between p-4 rounded-xl">
+        <div className="col-span-2 mb-3  bg-mainBlack flex flex-col justify-between p-4 rounded-xl">
           <p>Profile Views</p>
           <p>0</p>
         </div>
-        <div className="col-span-2 flex flex-col gap-2">
-          <div className=" bg-mainBlack flex flex-col justify-between p-4 rounded-xl">
+        <div className="col-span-2 flex lg:flex-col justify-between gap-2">
+          <div className=" bg-mainBlack flex w-full flex-col justify-between p-4 rounded-xl">
             <p>Total Businesses</p>
             <p>{businessDetails?.length || 0}</p>
           </div>
-          <div className=" bg-mainBlack flex flex-col justify-between p-4 rounded-xl">
+          <div className=" bg-mainBlack w-full flex flex-col justify-between p-4 rounded-xl">
             <p>Listed Connections</p>
             <p>0</p>
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-9 gap-4 font-sansSerif mb-4">
+      <div className="grid lg:grid-cols-9 gap-4 font-sansSerif mb-4">
         <div className="col-span-3 bg-mainGreens p-4 flex flex-col gap-5 rounded-xl">
           <div className="flex gap-2 items-center">
             <IoPricetagOutline />
