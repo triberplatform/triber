@@ -16,7 +16,7 @@ export default function RegisterBusiness() {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errorModal, showErrorModal] = useState(false);
-  const [modal, showModal] = useState(true)
+  const [modal, showModal] = useState(false)
   const [modalErrors, setModalErrors] = useState<string[]>([]);
   const [id, setId] = useState(null);
   const [stage, setStage] = useState(null);

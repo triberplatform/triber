@@ -57,6 +57,12 @@ input{
   background-repeat: no-repeat;
 }
 
+.map-bgs {
+  background-image: url('/assets/bgMap.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position:bottom;
+}
 .map-bg {
   background-image: url('/assets/bgMap.png');
   background-size: cover;

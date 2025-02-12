@@ -20,6 +20,7 @@ import { getUserDetails } from "@/app/services/dashboard";
 import { UserDetails } from "@/app/type";
 import { UserProvider } from "./UserContext";
 import Modal from "../dashboard/Modal";
+import ProfileToggle from "../dashboard/ProfileToggle";
 
 export default function DashboardLayout({
   children,
@@ -106,7 +107,7 @@ export default function DashboardLayout({
 
         {/* Mobile Menu Overlay */}
         {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 bg-mainBlack text-white z-50 overflow-y-auto">
+          <div className="lg:hidden fixed inset-0 bg-black map-bgs text-white z-50 overflow-y-auto">
             <div className="p-4">
               {/* Mobile Menu Header */}
               <div className="flex items-center justify-between mb-6">
@@ -116,6 +117,7 @@ export default function DashboardLayout({
                   width={40}
                   alt="triber-logo"
                 />
+              
                 <button onClick={toggleMobileMenu} className="text-2xl">
                   <IoClose />
                 </button>
@@ -127,12 +129,13 @@ export default function DashboardLayout({
               </div>
 
               {/* Add Profile Button */}
-              <div className="mb-8">
-                <CreateProfileButton />
-              </div>
+             {/* Add Profile Button */}
+<div className="mb-8">
+  <CreateProfileButton onMobileItemClick={toggleMobileMenu} />
+</div>
 
               {/* Navigation Links */}
-              <nav className="flex flex-col gap-6">
+              <nav className="flex flex-col pb-12 gap-6">
                 <Link href="/dashboard" onClick={toggleMobileMenu} className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded">
                   <LuLayoutDashboard /> Profile
                 </Link>
@@ -148,7 +151,7 @@ export default function DashboardLayout({
               </nav>
 
               {/* Bottom Section */}
-              <div className="mt-auto pt-8 border-t border-gray-700 flex flex-col gap-6">
+              <div className="mt-auto pt-12 border-t border-gray-700 flex flex-col gap-6">
                 <Link href="#" className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded">
                   <IoSettingsOutline /> Settings
                 </Link>
@@ -189,11 +192,15 @@ export default function DashboardLayout({
 
             {/* Desktop Actions */}
             <div className="hidden lg:flex items-center gap-7">
+              <ProfileToggle/>
               <CreateProfileButton />
               <div className="flex items-center text-2xl gap-4">
                 <IoSettingsOutline />
                 <GrAnnounce />
               </div>
+            </div>
+            <div className="lg:hidden">
+            <ProfileToggle/>
             </div>
             
             {/* Mobile Menu Button */}

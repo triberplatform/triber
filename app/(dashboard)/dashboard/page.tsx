@@ -1,4 +1,5 @@
 "use client";
+import Breadcrumb from "@/app/components/dashboard/Breadcrumb";
 import ListBusiness from "@/app/components/dashboard/ListBusiness";
 import { useUser } from "@/app/components/layouts/UserContext";
 import React from "react";
@@ -16,7 +17,8 @@ export default function Page() {
   }
   return (
     <div className="">
-      <div className=" lg:text-2xl mb-4 text-lg">
+      <div className=" lg:text-2xl flex flex-col gap-2 mb-4 text-lg">
+        <Breadcrumb/>
         Hi {user.firstname}, Welcome to Triber
       </div>
       <div className="lg:grid lg:grid-cols-10 gap-4 mb-4">
