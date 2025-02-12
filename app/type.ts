@@ -106,6 +106,19 @@ export interface UserDetails {
   createdAt: string; // ISO string format
   updatedAt: string; // ISO string format
   businesses: BusinessDetails[];
+  investorProfile: InvestorProfile;
+}
+
+export interface InvestorProfile {
+  id: number;
+  email: string;
+  companyName: string;
+  companyLogoUrl: string;
+  publicId: string;
+  about: string;
+  location: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface FundabilityPayload {

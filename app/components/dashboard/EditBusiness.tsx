@@ -416,6 +416,7 @@ const business = businessDetails.find((b) => b.publicId === id);
             <div className="grid items-center grid-cols-10">
               <div className="col-span-7">
                 <p className="text-xl mb-3 font-bold">Profile Updated!</p>
+                <p className="hidden">{modalMessage}</p>
                 <p className="lg:text-base text-sm">
                   Your business profile has been successfully updated. 
                 </p>
