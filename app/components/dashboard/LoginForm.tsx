@@ -80,7 +80,7 @@ export default function LoginForm() {
               label="Enter your email address *"
               name="email"
               type="text"
-              placeholder="example@gmail.com"
+              placeholder="JohnDoe@gmail.com"
               value={values.email}
               onChange={handleChange}
               onBlur={handleBlur}

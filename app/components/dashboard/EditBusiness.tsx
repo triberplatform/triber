@@ -173,7 +173,7 @@ const business = businessDetails.find((b) => b.publicId === id);
         return (
           <div className="grid lg:grid-cols-2 lg:bg-mainBlack lg:gap-5 py-8 lg:py-8 lg:px-5">
             {/* Left Column */}
-            <div className="space-y-5 lg:space-y-0">
+            <div className="space-y-5 ">
               <OptionInput
                 label="You are interested in"
                 name="interestedIn"
@@ -266,7 +266,7 @@ const business = businessDetails.find((b) => b.publicId === id);
             </div>
 
             {/* Right Column */}
-            <div className="space-y-5 mt-5 lg:space-y-0">
+            <div className="space-y-5 mt-5 lg:mt-0">
               <OptionInput
                 label="How many employees does the business have?"
                 name="numOfEmployees"
@@ -342,7 +342,7 @@ const business = businessDetails.find((b) => b.publicId === id);
 
   return (
     <div className="lg:grid lg:grid-cols-11 gap-4 font-sansSerif">
-      <div className="col-span-3 lg:map-bg lg:pt-12 py-5 lg:pb-36">
+      <div className="col-span-3 map-bg lg:pt-12 py-5 lg:pb-36">
         <p className="lg:text-3xl font-serif text-2xl mb-4">Edit Business Details</p>
         <p className="lg:text-sm text-xs">
           Information entered here is displayed publicly to match you with the
@@ -351,7 +351,7 @@ const business = businessDetails.find((b) => b.publicId === id);
         </p>
       </div>
       <div className="col-span-8">
-        <div className="flex gap-5 justify-between text-sm lg:text-base lg:gap-7">
+        <div className="flex gap-5 justify-between lg:justify-normal text-sm lg:text-base lg:gap-7">
           <p
             className={`cursor-pointer ${
               currentStep === 0 ? "border-b-2  border-mainGreen" : ""

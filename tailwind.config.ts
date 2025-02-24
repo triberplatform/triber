@@ -15,8 +15,8 @@ const config: Config = {
         'mainGreens':'#134F32'
       },
       fontFamily: {
-        serif: ['NotoSerif-Regular', 'serif'],
-        sansSerif:['Poppins', 'sans-serif']
+        sansSerif: ['var(--font-poppins)'],
+        serif: ['var(--font-noto-serif)']
       }
     },
   },

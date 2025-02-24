@@ -1,8 +1,10 @@
-"use client";
+import React, { useState, useContext } from 'react';
 import Link from "next/link";
-import { useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { VscTriangleDown } from "react-icons/vsc";
+
+import Modal from '@/app/components/dashboard/Modal';
+import { useUser } from '../layouts/UserContext';
 
 interface CreateProfileButtonProps {
   onMobileItemClick?: () => void;
@@ -10,6 +12,8 @@ interface CreateProfileButtonProps {
 
 const CreateProfileButton = ({ onMobileItemClick }: CreateProfileButtonProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const user = useUser();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -22,10 +26,21 @@ const CreateProfileButton = ({ onMobileItemClick }: CreateProfileButtonProps) =>
     }
   };
 
+  const handleInvestorProfileClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (user?.user?.investorProfile) {
+      setShowModal(true);
+      toggleDropdown();
+    } else {
+      // Navigate to investor registration
+      window.location.href = '/dashboard/investor-register';
+    }
+  };
+
   return (
     <>
       {/* Desktop Version */}
-      <div className="relative hidden lg:inline-block text-left">
+      <div className="relative hidden text-sm lg:inline-block text-left">
         <button
           onClick={toggleDropdown}
           className="bg-mainGreen text-white px-4 py-2 text-sm rounded-md shadow-md items-center flex gap-1 hover:bg-green-600 focus:outline-none"
@@ -42,13 +57,12 @@ const CreateProfileButton = ({ onMobileItemClick }: CreateProfileButtonProps) =>
               Add Business Profile
             </Link>
             
-            <Link
-              href="/dashboard/investor-register"
-              className="hover:bg-mainGreen px-3 py-3 w-full mb-3"
-              onClick={toggleDropdown}
+            <button
+              onClick={handleInvestorProfileClick}
+              className="hover:bg-mainGreen px-3 py-3 w-full mb-3 text-left"
             >
               Add Investor Profile
-            </Link>
+            </button>
           </div>
         )}
       </div>
@@ -65,16 +79,32 @@ const CreateProfileButton = ({ onMobileItemClick }: CreateProfileButtonProps) =>
             <span>Add Business Profile</span>
           </Link>
           
-          <Link
-            href="/dashboard/investor-register"
-            className="flex items-center gap-2 px-4 py-3 hover:bg-mainGreen rounded-lg transition-colors w-full"
-            onClick={handleMobileClick}
+          <button
+            onClick={handleInvestorProfileClick}
+            className="flex items-center gap-2 px-4 py-3 hover:bg-mainGreen rounded-lg transition-colors w-full text-left"
           >
             <CgProfile />
             <span>Add Investor Profile</span>
-          </Link>
+          </button>
         </div>
       </div>
+
+      {/* Modal for existing investor profile */}
+      {showModal && (
+        <Modal>
+          <div className="flex flex-col p-4 gap-4 bg-mainBlack">
+            <p className="text-white">
+              You already have an investor profile. You cannot create multiple investor profiles.
+            </p>
+            <button
+              className="px-3 py-1 w-44 mx-auto  text-sm rounded bg-mainGreen text-white"
+              onClick={() => setShowModal(false)}
+            >
+              OK
+            </button>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };

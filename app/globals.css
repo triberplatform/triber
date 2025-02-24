@@ -11,10 +11,11 @@ body{
 
 /* styles/globals.css */
 @font-face {
-  font-family: 'NotoSerif-Regular';
+  font-family: 'NotoSerif';
   src: url('/fonts/NotoSerif-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
+  font-display: swap; /* Recommended for better performance */
 }
 
 @font-face {
@@ -22,6 +23,7 @@ body{
   src: url('/fonts/Poppins-Black.woff') format('woff');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 body {
@@ -94,10 +96,15 @@ input{
   background-repeat: no-repeat;
 }
 
-@media only screen and (max-width: 600px){
+@media only screen and (max-width: 770px){
   .bg-career-map{
     background-image: none;
   }
+  .map-bg {
+    background-image: none;
+    min-width: 300px; /* Adjust to your desired width */
+    height:0; /* Adjust to your desired height */
+  } 
 }
 
 .bg-drop{

@@ -37,9 +37,9 @@ export default function Navbar() {
           <Link className="hover:text-mainGreen" href="/login">
             Fundability test
           </Link>
-          <Link className="hover:text-mainGreen" href="/login">
+          {/* <Link className="hover:text-mainGreen" href="/login">
             Valuation
-          </Link>
+          </Link> */}
           <Link className="hover:text-mainGreen" href="/login">
             Deal Room
           </Link>
@@ -110,13 +110,13 @@ export default function Navbar() {
             >
               Fundability test
             </Link>
-            <Link
+            {/* <Link
               className="text-white text-lg py-3 hover:text-mainGreen"
               href="/login"
               onClick={() => setMobileMenuOpen(false)}
             >
               Valuation
-            </Link>
+            </Link> */}
             <Link
               className="text-white text-lg py-3 hover:text-mainGreen"
               href="/login"

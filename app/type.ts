@@ -88,9 +88,42 @@ export interface BusinessDetails {
   createdAt: string; 
   updatedAt: string; 
   assignedAt: string; 
+  dealRoomDetails: DealRoomDetails | null;
   fundabilityTestDetails: FundabilityTestDetails;
 }
 
+export interface DealRoomDetails {
+  // Identification
+  id: number;
+  publicId: string;
+  businessId: string;
+
+  // Business Description
+  topSellingProducts: string;
+  highlightsOfBusiness: string;
+  reasonForSale: string;
+
+  // Financial Information
+  averageMonthlySales: number;
+  reportedYearlySales: number;
+  profitMarginPercentage: number;
+  tentativeSellingPrice: number;
+  valueOfPhysicalAssets: number;
+
+  // Operational Details
+  facilityDetails: string;
+  fundingDetails: string;
+  assetsDetails: string;
+
+  // Documentation and Media
+  businessPhotos: string[];
+  proofOfBusiness: string;
+  businessDocuments: string[];
+
+  // Timestamps
+  createdAt: string;
+  updatedAt: string;
+}
 export interface FundabilityTestDetails {
   publicId: string;
   score: number;
@@ -109,9 +142,17 @@ export interface UserDetails {
   investorProfile: InvestorProfile;
 }
 
+export interface ProposalPayload {
+  businessId: string;
+  message: string;
+
+}
+
+
 export interface InvestorProfile {
   id: number;
   email: string;
+  phoneNumber: string;
   companyName: string;
   companyLogoUrl: string;
   publicId: string;
@@ -120,6 +161,22 @@ export interface InvestorProfile {
   createdAt: string;
   updatedAt: string;
 }
+export interface ValuationFormPayload {
+  businessId:string;
+  topSellingProducts: string;
+  highlightsOfBusiness: string;
+  facilityDetails: string;
+  fundingDetails: string;
+  averageMonthlySales: number;
+  reportedYearlySales: number;
+  profitMarginPercentage: number;
+  tentativeSellingPrice: number;
+  assetsDetails: string;
+  valueOfPhysicalAssets: number;
+  reasonForSale: string;
+  businessPhotos: File[] | null;
+  proofOfBusiness: File[] | null;
+  businessDocuments: File[] | null;}
 
 export interface FundabilityPayload {
   registeredCompany: boolean | string;
@@ -250,3 +307,113 @@ export type JobListing = {
   createdAt: string;
   updatedAt: string;
 };
+
+export interface CompanyDocs {
+  pitchDeck: string;
+  businessPlan: string;
+  statusReport: string;
+  relevantLicenses: string;
+  financialStatements: string;
+  letterOfGoodStanding: string;
+  memorandumOfAssociation: string;
+  companyLiabilitySchedule: string;
+  certificateOfIncorporation: string;
+}
+
+export interface CompanyData {
+  id: number;
+  userId: number;
+  publicId: string;
+  score: number;
+  businessId: string;
+  registeredCompany: boolean;
+  legalName: string;
+  companyRegistration: string;
+  city: string;
+  country: string;
+  industry: string;
+  registeredAddress: string;
+  companyEmail: string;
+  contactNumber: string;
+  principalAddress: string;
+  applicantsAddress: string;
+  position: string;
+  title: string;
+  yearsOfOperation: number;
+  companySize: number;
+  companyLegalCases: boolean;
+  startupStage: string;
+  ownership: string[];
+  executiveManagement: string[];
+  boardOfDirectors: string[];
+  isicIndustry: boolean;
+  isicActivity: string;
+  legalAdvisors: string[];
+  averageAnnualRevenue: number;
+  revenueGrowthRate: number;
+  auditedFinancialStatement: boolean;
+  companyPitchDeck: boolean;
+  companyBusinessPlan: boolean;
+  company5yearCashFlow: boolean;
+  companySolidAssetHolding: boolean;
+  companyLargeInventory: boolean;
+  company3YearProfitable: boolean;
+  companyHighScalibilty: boolean;
+  companyCurrentLiabilities: boolean;
+  ownerCurrentLiabilities: boolean;
+  docs: CompanyDocs;
+  createdAt: string;
+  updatedAt: string;
+}
+
+
+export interface Investor {
+  companyName: string;
+  email: string;
+  companyLogoUrl: string;
+}
+
+export interface Proposal {
+  id: number;
+  publicId: string;
+  businessId: string;
+  investorId: string;
+  buyingPrice: number | null;
+  sellingPrice: number | null;
+  fundingAmount: number | null;
+  status: "PENDING" | "ACCEPTED" | "REJECTED";
+  proposal: string;
+  createdAt: string;
+  updatedAt: string;
+  investor: Investor;
+}
+
+export interface ProposalResponse {
+  success: boolean;
+  message: string;
+  data: Proposal[];
+}
+
+
+export interface Investor {
+  id: number;
+  publicId: string;
+  userId: number;
+  email: string;
+  phoneNumber: string | null;
+  companyName: string;
+  about: string;
+  companyLogoUrl: string;
+  companyWebsiteUrl: string;
+  termsOfAgreementDocUrl: string;
+  proofOfBusinessDocUrl: string;
+  location: string;
+  interestedLocations: string; 
+  designation: string;
+  numOfExpectedDeals: string[];
+  companyType: string[];
+  interestedFactors: string; 
+  fundsUnderManagement: number;
+  createdAt: string; 
+  updatedAt: string; 
+}

@@ -1,4 +1,4 @@
-import { ConnectFormValues, InvestorProfilePayload, JobConnectForm, RegisterBusinessPayload } from "../type";
+import { ConnectFormValues, Investor, InvestorProfilePayload, JobConnectForm, ProposalPayload, ProposalResponse, RegisterBusinessPayload, ValuationFormPayload } from "../type";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,7 +18,7 @@ export const getUserDetails = async (token: string, publicId: string) => {
 
 }
 
-export const getFundabilityResults = async (token: string, publicId: string) => {
+export const getFundabilityResults = async ( publicId: string,token: string) => {
   try {
     const response = await fetch(`${apiUrl}/fundability/${publicId}`, {
       headers: {
@@ -223,3 +223,121 @@ export const jobRequest = async (payload: JobConnectForm) => {
 }
 
 
+export const getValuation = async (payload: ValuationFormPayload, token: string) => {
+  try {
+    const formData = new FormData();
+
+    // Append all non-file fields
+    Object.entries(payload).forEach(([key, value]) => {
+      if (key !== 'businessPhotos' && key !== 'proofOfBusiness' && key !== 'businessDocuments') {
+        if (value !== null && value !== undefined) {
+          formData.append(key, value.toString());
+        }
+      }
+    });
+
+    // Handle businessPhotos (multiple files)
+    if (payload.businessPhotos && Array.isArray(payload.businessPhotos)) {
+      payload.businessPhotos.forEach((photo) => {
+        formData.append('businessPhotos', photo);
+      });
+    }
+
+    // Handle proofOfBusiness (multiple files)
+    if (payload.proofOfBusiness && Array.isArray(payload.proofOfBusiness)) {
+      payload.proofOfBusiness.forEach((proof) => {
+        formData.append('proofOfBusiness', proof);
+      });
+    }
+
+    // Handle businessDocuments (multiple files)
+    if (payload.businessDocuments && Array.isArray(payload.businessDocuments)) {
+      payload.businessDocuments.forEach((doc) => {
+        formData.append('businessDocuments', doc);
+      });
+    }
+
+    const response = await fetch(`${apiUrl}/dealroom/create`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error during API call:", error);
+    throw new Error("Please try again.");
+  }
+};
+
+export const submitProposal = async (payload: ProposalPayload, token: string) => {
+  try {
+    const response = await fetch(`${apiUrl}/dealroom/investor/proposal`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    return response;
+
+  } catch {
+    console.error("Error:");
+    throw new Error(" Please try again.");
+  }
+}
+
+export const getValuatedBusiness = async (token: string) => {
+  try {
+    const response = await fetch(`${apiUrl}/dealroom/businesses`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const BusinessDetails = await response.json();
+    return BusinessDetails;
+  }
+  catch {
+    console.error('unable to fetch')
+  }
+
+}
+
+export const getBusinessProposals = async (token: string, businessId: string) => {
+  try {
+    const response = await fetch(`${apiUrl}/dealroom/business/proposals/${businessId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const data: ProposalResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Unable to fetch business proposals:', error);
+    return {
+      success: false,
+      message: 'Failed to fetch business proposals',
+      data: []
+    };
+  }
+};
+
+export const getAllInvestors = async (token: string) => {
+  try {
+    const response = await fetch(`${apiUrl}/investor/all`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const data = await response.json();
+    const investors :Investor[] = data.data;
+   return investors;
+  } catch (error) {
+    console.error('Unable to fetch business proposals:', error);
+    return 
+  }
+};

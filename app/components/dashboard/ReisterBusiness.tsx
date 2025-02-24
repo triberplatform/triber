@@ -352,7 +352,7 @@ export default function RegisterBusiness() {
 
   return (
     <div className="lg:grid lg:grid-cols-11 gap-4 font-sansSerif">
-      <div className="col-span-3 lg:map-bg lg:pt-12 py-5 lg:pb-36">
+      <div className="col-span-3 map-bg lg:pt-12 py-5 lg:pb-36">
         <p className="lg:text-3xl font-serif text-2xl mb-4">Register a Business</p>
         <p className="lg:text-sm text-xs">
           Information entered here is displayed publicly to match you with the

@@ -7,7 +7,17 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'triber-api-spaces.lon1.digitaloceanspaces.com',
+        pathname: '/investors/logo/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'triber-api-spaces.lon1.digitaloceanspaces.com',
         pathname: '/businesses/logo/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'triber-api-spaces.lon1.digitaloceanspaces.com',
+        pathname: '/fundability-docs/**',
       },
     ],
   },
