@@ -5,7 +5,6 @@ import { Formik, Form, FormikProps } from "formik";
 import { FaCheckDouble } from "react-icons/fa";
 import Loading from "@/app/loading";
 import FormInput from "@/app/components/dashboard/FormInput";
-import DocumentUpload from "@/app/components/dashboard/DocumentUpload";
 import Modal from "@/app/components/dashboard/Modal";
 import { getValuation } from "@/app/services/dashboard";
 import * as Yup from "yup";
@@ -438,7 +437,7 @@ export default function Valuation() {
               <div className="col-span-7">
                 <p className="text-xl mb-3 font-bold">Profile Submitted!</p>
                 <p className="lg:text-base text-sm">
-                  Your business profile has been successfully submitted. We're
+                  Your business profile has been successfully submitted. We&apos;re
                   now reviewing your information{" "}
                 </p>
               </div>

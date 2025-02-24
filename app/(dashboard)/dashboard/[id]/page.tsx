@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useUser } from "@/app/components/layouts/UserContext";
 import { useParams } from "next/navigation";
 import Image from "next/image";
@@ -11,7 +11,7 @@ import { LiaIndustrySolid } from "react-icons/lia";
 import Link from "next/link";
 import CircularProgress from "@/app/components/dashboard/Circular";
 import { getBusinessProposals } from "@/app/services/dashboard";
-import { Proposal, ProposalResponse } from "@/app/type";
+import { Proposal } from "@/app/type";
 
 export default function BusinessDetail() {
   const [currentStep, setCurrentStep] = useState(0);

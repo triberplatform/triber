@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from "react";
-import { UserDetails, BusinessDetails, InvestorProfile } from "@/app/type";
+import { UserDetails, BusinessDetails } from "@/app/type";
 
 type UserContextType = {
   user: UserDetails | null;

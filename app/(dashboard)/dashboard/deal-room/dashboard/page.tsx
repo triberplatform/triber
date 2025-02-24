@@ -1,3 +1,22 @@
+'use client'
+import React, { useEffect, useState } from 'react';
+import { Search, ShieldCheck, Users } from 'lucide-react';
+import { getValuatedBusiness } from '@/app/services/dashboard';
+import Image from 'next/image';
+import Link from 'next/link';
+import Loading from '@/app/loading';
+
+const filters = ['Fintech', 'Edtech', 'Law', 'eCommerce'];
+
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
+
 // Types for the API response
 type Business = {
   publicId: string;
@@ -33,25 +52,6 @@ type DealRoomProfile = {
   business: Business;
 }
 
-"use client";
-import React, { useEffect, useState } from 'react';
-import { Search, ShieldCheck, Users } from 'lucide-react';
-import Breadcrumb from '@/app/components/dashboard/Breadcrumb';
-import { getValuatedBusiness } from '@/app/services/dashboard';
-import Image from 'next/image';
-import Link from 'next/link';
-
-const filters = ['Fintech', 'Edtech', 'Law', 'eCommerce'];
-
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: 'NGN',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(amount);
-};
-
 export default function BusinessListings() {
   const [businesses, setBusinesses] = useState<DealRoomProfile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,6 +75,9 @@ export default function BusinessListings() {
     fetchBusinesses();
   }, []);
 
+  if(loading){
+    return <Loading text="Loading" />
+  }
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}

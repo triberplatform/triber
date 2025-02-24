@@ -2,11 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/app/components/layouts/UserContext";
 import Image from "next/image";
-import { FaCalendarAlt, FaFacebook, FaInstagram } from "react-icons/fa";
-import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
-import { IoCallOutline, IoLocation } from "react-icons/io5";
-import { MdEmail, MdOutlinePermIdentity } from "react-icons/md";
-import { LiaIndustrySolid } from "react-icons/lia";
 import Link from "next/link";
 import CircularProgress from "@/app/components/dashboard/Circular";
 import { useSearchParams } from "next/navigation";
@@ -14,6 +9,7 @@ import {
   getFundabilityResults,
   getValuatedBusiness,
 } from "@/app/services/dashboard";
+import Loading from "@/app/loading";
 
 // Types for the API response
 type Business = {
@@ -96,7 +92,6 @@ export default function BusinessDetail() {
   const [currentStep, setCurrentStep] = useState(0);
   const id = SearchParams.get("id");
   const businessId = SearchParams.get("businessId");
-  const { businessDetails } = useUser();
   const [loading, setLoading] = useState(true);
   const [fundabilityResults, setFundabilityResults] = useState<
     FundabilityTest[]
@@ -136,10 +131,13 @@ export default function BusinessDetail() {
     };
     fetchBusinesses();
     fetchFundability();
-  }, []);
+  }, [businessId, token]);
 
   if (!business) {
     return <p className="text-center text-white">Business not found</p>;
+  }
+  if(loading){
+    return <Loading text="Loading" />
   }
 
   const renderContent = () => {
@@ -334,8 +332,8 @@ export default function BusinessDetail() {
                   Fundability Check Not Started
                 </p>
                 <p className="text-sm lg:text-base mb-8 max-w-lg">
-                  Your business hasn't undergone a fundability assessment yet.
-                  Complete the fundability check to understand your business's
+                  Your business hasn&apos;t undergone a fundability assessment yet.
+                  Complete the fundability check to understand your business&apos;s
                   funding readiness.
                 </p>
               </div>
@@ -364,9 +362,9 @@ export default function BusinessDetail() {
                   Complete Your Fundability Check
                 </p>
                 <p className="text-sm lg:text-base mb-8 max-w-lg">
-                  You've started the fundability assessment but haven't
+                  You&apos;ve started the fundability assessment but haven&apos;t
                   completed it yet. Continue your assessment to get your
-                  business's funding readiness score.
+                  business&apos;s funding readiness score.
                 </p>
               </div>
             )}

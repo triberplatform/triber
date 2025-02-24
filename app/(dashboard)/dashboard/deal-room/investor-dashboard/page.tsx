@@ -4,7 +4,7 @@ import { Investor } from '@/app/type';
 import { ShieldCheck, Users } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
-import { FaSearch, FaMapMarkerAlt, FaUsers, FaShieldAlt } from 'react-icons/fa';
+import { FaSearch, FaMapMarkerAlt } from 'react-icons/fa';
 import { MdBusinessCenter } from 'react-icons/md';
 
 

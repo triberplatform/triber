@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import Link from "next/link";
 import { CgProfile } from "react-icons/cg";
 import { VscTriangleDown } from "react-icons/vsc";

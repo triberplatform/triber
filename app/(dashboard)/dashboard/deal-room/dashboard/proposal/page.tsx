@@ -21,7 +21,7 @@ export default function Valuation() {
   const searchParams= useSearchParams();
   const id = searchParams.get("id");
   const { user } = useUser();
-  const investor = user?.investorProfile;
+ 
 
 
 

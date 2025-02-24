@@ -3,10 +3,9 @@
 import React, { useState } from 'react';
 import Modal from '@/app/components/dashboard/Modal';
 import { useUser } from '@/app/components/layouts/UserContext';
-import Link from 'next/link';
 import { FaAngleDown } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
-import { BusinessDetails, DealRoomDetails } from '@/app/type';
+import { BusinessDetails } from '@/app/type';
 
 const BusinessValuationPage = () => {
   const router = useRouter();

@@ -2,9 +2,7 @@
 import { useUser } from "@/app/components/layouts/UserContext";
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { BsArrowUpRight } from "react-icons/bs";
-import Breadcrumb from "@/app/components/dashboard/Breadcrumb";
 import { CgProfile } from "react-icons/cg";
 
 export default function InvestorProfile() {
