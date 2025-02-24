@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Loading from '@/app/loading';
 
-const filters = ['Fintech', 'Edtech', 'Law', 'eCommerce'];
+const filters = ['Finance', 'Health', 'Education', 'Media','Other'];
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-NG', {

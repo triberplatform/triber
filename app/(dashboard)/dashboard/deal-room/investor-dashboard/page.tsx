@@ -6,17 +6,20 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { FaSearch, FaMapMarkerAlt } from 'react-icons/fa';
 import { MdBusinessCenter } from 'react-icons/md';
-
-
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const filterOptions = ["AI/ML", "SaaS", "Fintech", "Edtech"];
 
 const InvestorsList = () => {
+  const router = useRouter();
   const [investors, setInvestors] = useState<Investor[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+
+  const searchParams = useSearchParams();
+  const businessId = searchParams.get('id');
 
   useEffect(() => {
     const fetchInvestors = async () => {
@@ -37,6 +40,11 @@ const InvestorsList = () => {
 
     fetchInvestors();
   }, []);
+
+  // Navigate to investor details page
+  const navigateToInvestorDetails = (publicId: string) => {
+    router.push(`/dashboard/deal-room/investor-dashboard/investor-details?id=${publicId}&businessId=${businessId}`);
+  };
 
   // Filter investors based on search term and active filters
   const filteredInvestors = investors.filter(investor => {
@@ -131,7 +139,11 @@ const InvestorsList = () => {
           <div>Loading...</div>
         ) : (
           filteredInvestors.map((investor) => (
-            <div key={investor.id} className="bg-mainBlack rounded-xl p-4 sm:p-6">
+            <div 
+              key={investor.id} 
+              className="bg-mainBlack rounded-xl p-4 sm:p-6 cursor-pointer hover:bg-opacity-80 transition-all duration-300"
+              onClick={() => navigateToInvestorDetails(investor.publicId)}
+            >
               <div className="flex items-start gap-3 sm:gap-4 mb-4">
                 <Image
                   src={investor.companyLogoUrl || '/assets/invest.png'}

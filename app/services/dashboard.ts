@@ -291,6 +291,26 @@ export const submitProposal = async (payload: ProposalPayload, token: string) =>
   }
 }
 
+export const submitProposalBusiness = async (payload: ProposalPayload, token: string) => {
+  try {
+    const response = await fetch(`${apiUrl}/dealroom/business/proposal`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    return response;
+
+  } catch {
+    console.error("Error:");
+    throw new Error(" Please try again.");
+  }
+}
+
+
 export const getValuatedBusiness = async (token: string) => {
   try {
     const response = await fetch(`${apiUrl}/dealroom/businesses`, {

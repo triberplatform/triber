@@ -53,6 +53,7 @@ export interface loginpayload {
 export interface InvestorProfilePayload {
   email: string;
   companyName: string;
+  phoneNumber:string;
   about: string;
   companyWebsiteUrl: string;
   companyType: string;
@@ -146,6 +147,12 @@ export interface ProposalPayload {
   businessId: string;
   message: string;
 
+}
+
+export interface ProposalPayloadBusiness {
+  businessId: string;
+  message: string;
+  investorId: string;
 }
 
 
@@ -253,7 +260,7 @@ export interface StartupFundabilityPayload {
   isicActivity: string;
   legalAdvisors: string[];
   customerAcquisitionCost: number;
-  totalAddressableMarket: string;
+  totalAddressableMarket: number;
   licensesToOperate: boolean | string;
   customerLifetimeValue: number;
   expectedAnnualGrowthRate: number;
@@ -274,6 +281,7 @@ export interface StartupFundabilityPayload {
   businessPlan: File | null;
   financialStatements: File | null;
   relevantLicenses: File | null;
+  pitchDeck:File | null;
   businessId: string;
 }
 

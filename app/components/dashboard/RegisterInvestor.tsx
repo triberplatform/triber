@@ -22,6 +22,9 @@ export default function RegisterInvestor() {
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
+    phoneNumber: Yup.string()
+      .required("Business Phone is required")
+      .matches(/^\+234\d{10}$/, "Must be a valid phone number"),
     companyName: Yup.string().required("Company name is required"),
     about: Yup.string().required("About is required"),
     companyWebsiteUrl: Yup.string().required("Website URL is required"),
@@ -55,6 +58,7 @@ export default function RegisterInvestor() {
   const initialValues = {
     email: "",
     companyName: "",
+    phoneNumber: "+234",
     about: "",
     companyWebsiteUrl: "",
     companyType: "",
@@ -72,7 +76,6 @@ export default function RegisterInvestor() {
     window.location.href = "/dashboard"; // Replace with the desired path
   };
 
- 
   const handleNext = () => {
     if (currentStep < 1) {
       setCurrentStep(currentStep + 1);
@@ -92,9 +95,8 @@ export default function RegisterInvestor() {
       if (response.ok) {
         const data = await response.json();
         console.log(data);
-        setTimeout(() => {
-          showModal(true);
-        }, 1000);
+
+        showModal(true);
       } else {
         const errorData = await response.json();
         alert(errorData.message);
@@ -153,6 +155,16 @@ export default function RegisterInvestor() {
               error={formikProps.errors.companyWebsiteUrl}
               touched={formikProps.touched.companyWebsiteUrl}
             />
+            <FormInput
+              label="Phone Number"
+              name="phoneNumber"
+              placeholder="+2348000000000"
+              value={formikProps.values.phoneNumber}
+              onChange={formikProps.handleChange}
+              onBlur={formikProps.handleBlur}
+              error={formikProps.errors.phoneNumber}
+              touched={formikProps.touched.phoneNumber}
+            />
           </div>
         );
 
@@ -160,15 +172,18 @@ export default function RegisterInvestor() {
         return (
           <div className="grid lg:grid-cols-2 lg:bg-mainBlack gap-5 py-8 lg:px-5">
             {/* Left Column */}
-            <div className="space-y-5 lg:space-y-0">
-            <OptionInput
+            <div className="space-y-5 ">
+              <OptionInput
                 label="Company Type"
                 name="companyType"
                 options={[
                   { value: "PRIVATE_EQUITY", label: "Private Equity" },
                   { value: "VENTURE_CAPITAL", label: "Venture Capital" },
                   { value: "BANK", label: "Bank" },
-                  { value: "INSTITUTIONAL_INVESTOR", label: "Institutional Investor" },
+                  {
+                    value: "INSTITUTIONAL_INVESTOR",
+                    label: "Institutional Investor",
+                  },
                   { value: "PRIVATE_INVESTOR", label: "Private Investor" },
                   { value: "OTHER", label: "Others" },
                 ]}
@@ -196,23 +211,23 @@ export default function RegisterInvestor() {
                 type="text"
                 placeholder="e.g., 50,000,000"
                 value={
-                    formikProps.values.fundsUnderManagement !== undefined &&
-                    formikProps.values.fundsUnderManagement !== null
-                      ? formikProps.values.fundsUnderManagement
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",") // Format with commas
-                      : ""
+                  formikProps.values.fundsUnderManagement !== undefined &&
+                  formikProps.values.fundsUnderManagement !== null
+                    ? formikProps.values.fundsUnderManagement
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",") // Format with commas
+                    : ""
+                }
+                onChange={(e) => {
+                  const rawValue = e.target.value.replace(/,/g, ""); // Remove commas
+                  const numericValue = Number(rawValue); // Convert to number
+                  if (!isNaN(numericValue)) {
+                    formikProps.setFieldValue(
+                      "fundsUnderManagement",
+                      numericValue
+                    ); // Store numeric value
                   }
-                  onChange={(e) => {
-                    const rawValue = e.target.value.replace(/,/g, ""); // Remove commas
-                    const numericValue = Number(rawValue); // Convert to number
-                    if (!isNaN(numericValue)) {
-                      formikProps.setFieldValue(
-                        "fundsUnderManagement",
-                        numericValue
-                      ); // Store numeric value
-                    }
-                  }}
+                }}
                 onBlur={formikProps.handleBlur}
                 error={formikProps.errors.fundsUnderManagement}
                 touched={formikProps.touched.fundsUnderManagement}
@@ -245,7 +260,7 @@ export default function RegisterInvestor() {
             </div>
 
             {/* Right Column */}
-            <div className="space-y-5 lg:space-y-0">
+            <div className="space-y-5 ">
               <ArrayInput
                 label="Interested Factors"
                 name="interestedFactors"
@@ -305,7 +320,7 @@ export default function RegisterInvestor() {
 
   return (
     <div className="grid lg:grid-cols-11 gap-4 font-sansSerif">
-      <div className="col-span-3 lg:map-bg pt-12 pb-8 lg:pb-36">
+      <div className="col-span-3 map-bg pt-12 pb-8 lg:pb-36">
         <p className="text-3xl mb-4">Register Investor Profile</p>
         <p className="text-sm">
           Information entered here is displayed publicly to match you with the

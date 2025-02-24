@@ -15,13 +15,32 @@ import Modal from '../dashboard/Modal'
 import { BsBuildingsFill } from "react-icons/bs"
 import { MdBusinessCenter } from "react-icons/md"
 
+// Type definitions
+interface MobileProfileButtonProps {
+  type: string;
+  icon: React.ComponentType<{ className?: string }>;
+  isActive: boolean;
+}
+
+// Define the CustomEvent interface
+interface ProfileChangeEvent extends CustomEvent {
+  detail: {
+    profile: string;
+  };
+}
+
 const ProfileToggle = () => {
   // Hooks and state
   const { user } = useUser()
   const router = useRouter()
-  const [isBusinessProfile, setIsBusinessProfile] = useState(() => 
-    localStorage.getItem('currentProfile') !== 'investor'
-  )
+  const [isBusinessProfile, setIsBusinessProfile] = useState(() => {
+    // Fix: Check if running in browser environment before accessing localStorage
+    if (typeof window !== 'undefined') {
+      const currentProfile = localStorage.getItem('currentProfile')
+      return currentProfile !== 'investor'
+    }
+    return true // Default to business profile if not in browser
+  })
   const [showModal, setShowModal] = useState(false)
 
   // Profile checks
@@ -30,7 +49,9 @@ const ProfileToggle = () => {
 
   // Profile toggle handler
   const toggleProfile = () => {
-    if (!isBusinessProfile && !hasInvestorProfile) {
+    // Check if user is trying to switch FROM business TO investor profile but doesn't have one
+    // isBusinessProfile === true means we're currently on business and trying to switch to investor
+    if (isBusinessProfile && !hasInvestorProfile) {
       setShowModal(true)
       return
     }
@@ -38,24 +59,51 @@ const ProfileToggle = () => {
     const newValue = !isBusinessProfile
     setIsBusinessProfile(newValue)
     
-    localStorage.setItem('currentProfile', newValue ? 'business' : 'investor')
-    window.dispatchEvent(new Event('storage'))
+    // Set correct profile value in localStorage
+    const newProfile = newValue ? 'business' : 'investor'
+    localStorage.setItem('currentProfile', newProfile)
+    
+    // Create and dispatch a custom event with profile data
+    const event = new CustomEvent('profileChange', { 
+      detail: { profile: newProfile } 
+    }) as ProfileChangeEvent
+    window.dispatchEvent(event)
+    
+    // Force-redirect to the appropriate dashboard
     router.push(newValue ? '/dashboard' : '/dashboard/investor')
   }
 
   // localStorage sync effect
   useEffect(() => {
-    const handleStorageChange = () => {
+    const handleProfileChange = (e: Event | ProfileChangeEvent) => {
+      // Check if this is our custom event
+      if ('detail' in e && e.type === 'profileChange' && e.detail && e.detail.profile) {
+        setIsBusinessProfile(e.detail.profile === 'business')
+      } else {
+        // This is a standard storage event
+        const currentProfile = localStorage.getItem('currentProfile')
+        setIsBusinessProfile(currentProfile !== 'investor')
+      }
+    }
+
+    // Add event listeners for both standard storage and custom events
+    window.addEventListener('storage', handleProfileChange as EventListener)
+    window.addEventListener('profileChange', handleProfileChange as EventListener)
+    
+    // Initialize state on component mount
+    if (typeof window !== 'undefined') {
       const currentProfile = localStorage.getItem('currentProfile')
       setIsBusinessProfile(currentProfile !== 'investor')
     }
-
-    window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
+    
+    return () => {
+      window.removeEventListener('storage', handleProfileChange as EventListener)
+      window.removeEventListener('profileChange', handleProfileChange as EventListener)
+    }
   }, [])
 
   // Mobile Profile Button Component
-  const MobileProfileButton = ({ type, icon: Icon, isActive }: { type: string, icon: React.ComponentType<{ className?: string }>, isActive: boolean }) => (
+  const MobileProfileButton: React.FC<MobileProfileButtonProps> = ({ type, icon: Icon, isActive }) => (
     <button
       onClick={toggleProfile}
       className={`flex items-center justify-center w-full gap-2 p-3 rounded-lg transition-all duration-300
@@ -118,7 +166,7 @@ const ProfileToggle = () => {
       {/* Create Profile Modal */}
       {showModal && (
         <Modal>
-          <div className="flex flex-col p-4 md:p-6 gap-4 md:gap-6 bg-mainBlack rounded-lg w-[90vw] max-w-md mx-4 md:mx-0">
+          <div className="flex flex-col p-4 md:p-6 gap-4 md:gap-6 bg-mainBlack rounded-lg mx-4 md:mx-0">
             <h3 className="text-lg md:text-xl font-medium">Create Investor Profile</h3>
             <p className="text-gray-400 text-sm md:text-base">
               You need to create an investor profile before accessing the investor dashboard.
@@ -133,7 +181,8 @@ const ProfileToggle = () => {
                 Cancel
               </button>
               <Link
-                href="/dashboard/create-investor-profile"
+                href="/dashboard/investor-register"
+                onClick={() => setShowModal(false)}
                 className="px-3 md:px-4 py-2 text-sm rounded-lg bg-mainGreen text-white 
                   hover:bg-mainGreen/90 transition-colors duration-200"
               >

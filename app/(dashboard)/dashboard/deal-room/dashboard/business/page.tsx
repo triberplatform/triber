@@ -224,13 +224,13 @@ export default function BusinessDetail() {
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Email Address</p>
                     <p className="text-white">
-                      {business.business.businessEmail}
+                    Available after connection
                     </p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Phone Number</p>
                     <p className="text-white">
-                      {business.business.businessPhone}
+                    Available after connection
                     </p>
                   </div>
                 </div>

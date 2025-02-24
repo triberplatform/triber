@@ -446,7 +446,7 @@ export default function Valuation() {
               </div>
             </div>
             <button className="w-full text-white bg-mainGreen px-4 py-2 mt-5">
-            <Link href={'investor-dashboard'} className="  rounded mt-5">
+            <Link href={`investor-dashboard?id=${id}`} className="  rounded mt-5">
               Go to Deal Room
             </Link>
             </button>

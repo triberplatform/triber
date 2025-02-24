@@ -5,13 +5,12 @@ import { Formik, Form, FormikProps } from "formik";
 import { FaCheckDouble } from "react-icons/fa";
 import Loading from "@/app/loading";
 import Modal from "@/app/components/dashboard/Modal";
-import { submitProposal } from "@/app/services/dashboard";
+import {  submitProposalBusiness } from "@/app/services/dashboard";
 import * as Yup from "yup";
-import { ProposalPayload } from "@/app/type";
+import {  ProposalPayloadBusiness } from "@/app/type";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import TextArea from "@/app/components/dashboard/TextArea";
-import { useUser } from "@/app/components/layouts/UserContext";
 
 export default function Valuation() {
   const [loading, setLoading] = useState(false);
@@ -20,32 +19,26 @@ export default function Valuation() {
   const [modalErrors, setModalErrors] = useState<string[]>([]);
   const searchParams= useSearchParams();
   const id = searchParams.get("id");
- const {user}= useUser();
-
- const businesses = user?.businesses
-
- const business =  businesses?.find(business => business.publicId === id);
-
-
+  const businessId = searchParams.get('businessId');
+ 
 
   const validationSchema = Yup.object().shape({
     message: Yup.string().required("Please write a message"),
   });
 
-  const initialValues: ProposalPayload = {
-    businessId: id || "",
+  const initialValues: ProposalPayloadBusiness = {
+    businessId: businessId  || "",
     message: "",
+    investorId:id || "",
   };
 
-  const handleSubmit = async (values: ProposalPayload) => {
+  const handleSubmit = async (values: ProposalPayloadBusiness) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      const response = await submitProposal(values, token ?? "");
-
-
+      const response = await submitProposalBusiness(values, token ?? "");
       if (response.ok) {
-        showModal(true)
+        showModal(true);
       } else {
         const errorData = await response.json();
         alert(errorData.message);
@@ -73,11 +66,11 @@ export default function Valuation() {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {(formikProps: FormikProps<ProposalPayload>) => (
+          {(formikProps: FormikProps<ProposalPayloadBusiness>) => (
             <Form>
               <div className="lg:bg-mainBlack flex flex-col h-[50vh] justify-center  py-8 lg:gap-0 gap-5 lg:px-5">
                 <TextArea
-                  label="Send a message to the business owner"
+                  label="Send a message to the Investor"
                   name="message"
                   placeholder="Write a message"
                   value={formikProps.values.message}
@@ -86,7 +79,6 @@ export default function Valuation() {
                   error={formikProps.errors.message}
                 />
 
-    
                 <div className="lg:col-span-2 mt-5">
                   <button
                     className="px-4 py-2 w-full text-white bg-mainGreen rounded"
@@ -121,7 +113,7 @@ export default function Valuation() {
               <div className="col-span-7">
                 <p className="text-xl mb-3 font-bold">Proposal Submitted!</p>
                 <p className="lg:text-base text-sm">
-                Thank you for showing interest in {business?.businessName}. Your proposal has been sent to the business owner. We will review your offer and reach out via email to discuss the next steps..
+                Thank you for showing interest in this Investor. Your proposal has been sent. We will review your offer and reach out via email to discuss the next steps..
                 </p>
               </div>
               <div className="col-span-3 flex justify-center item-center mt-6">
@@ -129,7 +121,7 @@ export default function Valuation() {
               </div>
             </div>
             <button className="mt-5 px-6 py-2 bg-mainGreen text-white font-medium rounded hover:bg-green-700 transition duration-300">
-                <Link href="/dashboard/deal-room/dashboard">
+                <Link href={`/dashboard/deal-room/investor-dashboard?id=${businessId}`}>
                     Go to Deal Room
                 </Link>
             </button>

@@ -32,7 +32,7 @@ const TextArea: React.FC<TextInputProps> = ({
         {label}
       </label>
       <textarea
-        className={`mt-1 block w-full bg-black placeholder:text-gray-500 text-white p-2 border ${
+        className={`mt-1 block w-full bg-mainBlack placeholder:text-gray-500 text-white p-2 border ${
           error && touched ? "border-red-500" : "border-gray-300"
         } rounded-md focus:ring-indigo-500 focus:border-indigo-500 min-h-[100px] resize-y`}
         id={name}

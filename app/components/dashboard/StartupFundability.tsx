@@ -49,7 +49,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
     principalAddress: Yup.string().required("Principal Address is required"),
     applicantsAddress: Yup.string().required("Applicant's Address is required"),
     position: Yup.string().required("Position is required"),
-    totalAddressableMarket: Yup.string().required("Position is required"),
+    totalAddressableMarket: Yup.string().required("TAM is required"),
     title: Yup.string().required("Title is required"),
     yearsOfOperation: Yup.number()
       .min(0, "Years of Operation cannot be negative")
@@ -192,7 +192,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
     isicActivity: "",
     legalAdvisors: [""],
     customerAcquisitionCost: 0,
-    totalAddressableMarket: "",
+    totalAddressableMarket: 0,
     licensesToOperate: "" as boolean | string,
     customerLifetimeValue: 0,
     expectedAnnualGrowthRate: 0,
@@ -213,6 +213,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
     businessPlan: null as File | null,
     financialStatements: null as File | null,
     relevantLicenses: null as File | null,
+    pitchDeck: null as File | null,
     businessId: id,
   };
 
@@ -627,13 +628,12 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
               />
             </div>
             <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 gap-5 items-end">
-              <OptionInput
-                label="What is your Total Addressable Market Size (TAM)"
+                 
+                <FormInput
+               label="What is your Total Addressable Market Size (TAM)"
                 name="totalAddressableMarket"
-                options={[
-                  { value: "20", label: "Post-revenue" },
-                  { value: "20", label: "Pre-revenue" },
-                ]}
+                type="number"
+                placeholder="Total Addressable Market"
                 value={formikProps.values.totalAddressableMarket}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
@@ -1054,6 +1054,22 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                   accept="application/pdf, image/*"
                 />
               </div>
+            </div>
+            <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 items-end gap-5">
+              <div className="col-span-1">
+                <DocumentUpload
+                  label="Pitch Deck"
+                  name="pitchDeck"
+                  onChange={(file) =>
+                    formikProps.setFieldValue("pitchDeck", file)
+                  }
+                  onBlur={formikProps.handleBlur}
+                  error={formikProps.errors.pitchDeck}
+                  touched={formikProps.touched.pitchDeck}
+                  accept="application/pdf, image/*"
+                />
+              </div>
+            
             </div>
           </div>
         );

@@ -21,6 +21,13 @@ import SearchForm from '@/app/components/dashboard/SearchForm'
 import { UserProvider } from '@/app/components/layouts/UserContext'
 import type { UserDetails } from '@/app/type'
 
+// Define the CustomEvent interface
+interface ProfileChangeEvent extends CustomEvent {
+  detail: {
+    profile: string;
+  };
+}
+
 // Separate navigation components into their own client components
 const BusinessNavLinks = () => (
   <div className="flex flex-col gap-6">
@@ -35,6 +42,7 @@ const BusinessNavLinks = () => (
     </Link>
   </div>
 )
+
 const InvestorNavLinks = () => (
   <div className="flex flex-col gap-6">
     <Link href="/dashboard/investor" className="items-center gap-2 hover:text-mainGreen flex">
@@ -58,28 +66,51 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isBusinessProfile, setIsBusinessProfile] = useState(true)
   const router = useRouter()
   const logout = useLogout()
+  
+  // Force component re-render when profile changes
+  const [forceRender, setForceRender] = useState(0)
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen((prev) => !prev)
   }
 
-  // Listen to localStorage changes for profile switches
+  // Listen to both localStorage changes and custom profileChange event
   useEffect(() => {
-    const handleStorageChange = () => {
-      const currentProfile = localStorage.getItem('currentProfile') || 'business'
-      setIsBusinessProfile(currentProfile === 'business')
+    const handleProfileChange = (e: Event | ProfileChangeEvent) => {
+      // Check if this is our custom event
+      if ('detail' in e && e.type === 'profileChange' && e.detail && e.detail.profile) {
+        setIsBusinessProfile(e.detail.profile === 'business')
+        // Force re-render to update links
+        setForceRender(prev => prev + 1)
+      } else {
+        // This is a standard storage event
+        const currentProfile = localStorage.getItem('currentProfile') || 'business'
+        setIsBusinessProfile(currentProfile === 'business')
+        // Force re-render to update links
+        setForceRender(prev => prev + 1)
+      }
     }
 
-    // Add event listener for storage changes
-    window.addEventListener('storage', handleStorageChange)
-    
-    // Initialize profile state
-    handleStorageChange()
+    // Check for initial profile value
+    const currentProfile = localStorage.getItem('currentProfile') || 'business'
+    setIsBusinessProfile(currentProfile === 'business')
 
+    // Add event listeners for both standard storage and custom events
+    window.addEventListener('storage', handleProfileChange as EventListener)
+    window.addEventListener('profileChange', handleProfileChange as EventListener)
+    
     return () => {
-      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('storage', handleProfileChange as EventListener)
+      window.removeEventListener('profileChange', handleProfileChange as EventListener)
     }
   }, [])
+
+  // This useEffect reruns when forceRender changes
+  useEffect(() => {
+    console.log("Re-rendering navigation links due to profile change");
+    // This is a side effect to ensure the component re-renders
+    // when the profile changes
+  }, [forceRender]);
 
   // Handle user authentication and data fetching
   useEffect(() => {
@@ -95,7 +126,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       try {
         const userDetails = await getUserDetails(token, publicId)
         setUser(userDetails.data)
-        console.log(userDetails.data)
       } catch (error) {
         console.error('Failed to fetch user details:', error)
         router.push('/login')
@@ -111,11 +141,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return <Loading text="Loading" />
   }
 
+  // NavLinks are now determined by the current state of isBusinessProfile
+  // and will update whenever that state changes
+  const NavLinks = isBusinessProfile ? BusinessNavLinks : InvestorNavLinks;
+  
   return (
     <UserProvider user={user}>
       <div className="flex">
         {/* Desktop Sidebar */}
-        <div className="hidden lg:flex bg-mainBlack text-white text-sm fixed py-7  flex-col top-0 left-0 h-full w-44">
+        <div className="hidden lg:flex bg-mainBlack text-white text-sm fixed py-7 flex-col top-0 left-0 h-full w-44">
           <Image
             src="/assets/logos.svg"
             height={80}
@@ -124,13 +158,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             className="w-16 self-center"
             priority
           />
-          <nav className="py-10 flex flex-col relative ml-2 h-screen items-start  text-base">
+          <nav className="py-10 flex flex-col relative ml-2 h-screen items-start text-base">
             <div className='text-sm'>
-            {isBusinessProfile ? <BusinessNavLinks /> : <InvestorNavLinks />}
+              {/* Use the NavLinks component determined by state */}
+              <NavLinks />
             </div>
            
-
-            <div className="flex flex-col absolute bottom-0 text-sm left-0  gap-6">
+            <div className="flex flex-col absolute bottom-0 text-sm left-0 gap-6">
               <Link href="#" className="items-center gap-2 hover:text-mainGreen flex">
                 <IoSettingsOutline /> Settings
               </Link>
@@ -170,7 +204,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
 
               <nav className="flex flex-col pb-16 gap-6" onClick={toggleMobileMenu}>
-                {isBusinessProfile ? <BusinessNavLinks /> : <InvestorNavLinks />}
+                {/* Use the NavLinks component determined by state */}
+                <NavLinks />
               </nav>
 
               <div className="mt-auto pt-16 border-t text-sm border-gray-700 flex flex-col gap-6">
@@ -195,7 +230,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className={`flex-1 ${!mobileMenuOpen ? "lg:ml-44" : ""}`}>
           <header className="bg-mainBlack p-4 shadow-md flex items-center justify-between">
             <div className="lg:hidden">
-              <Link href="/dashboard">
+              <Link href={isBusinessProfile ? "/dashboard" : "/dashboard/investor"}>
                 <Image 
                   src="/assets/logos.svg" 
                   height={40} 

@@ -203,80 +203,96 @@ export default function BusinessDetail() {
                   <div className="flex justify-center items-center h-full">
                     <p>Loading proposals...</p>
                   </div>
-                ) : proposal?.length > 0 ? (
-                  <table className="w-full text-sm">
-                    <thead className="bg-mainGreen/20">
-                      <tr>
-                        <th className="px-4 py-3 text-left">Sl. No</th>
-                        <th className="px-4 py-3 text-left">Proposal Date</th>
-                        <th className="px-4 py-3 text-left">Investor Name</th>
-                        <th className="px-4 py-3 text-left">Status</th>
-                        <th className="px-4 py-3 text-left">Proposal</th>
-                    
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {proposal.map((item, index) => (
-                        <tr key={item.publicId} className="border-b border-gray-800">
-                          <td className="px-4 py-3">{index + 1}</td>
-                          <td className="px-4 py-3 text-mainGreen">
-                            {new Date(item.createdAt).toLocaleDateString()}
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-2">
-                              {item.investor?.companyLogoUrl && (
-                                <Image
-                                  src={item.investor.companyLogoUrl}
-                                  width={30}
-                                  height={30}
-                                  alt="company logo"
-                                  className="rounded-full"
-                                />
-                              )}
-                              <span>{item.investor?.companyName}</span>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <span 
-                              className={`px-2 py-1 text-xs rounded-full ${
-                                item.status === 'PENDING' 
-                                  ? 'bg-yellow-500/20 text-yellow-500'
-                                  : item.status === 'ACCEPTED'
-                                  ? 'bg-mainGreen/20 text-mainGreen'
-                                  : 'bg-red-500/20 text-red-500'
-                              }`}
-                            >
-                              {item.status}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 max-w-xs">
-                            <p className="truncate">{item.proposal}</p>
-                          </td>
-                         
+                ) : business?.dealRoomDetails ? (
+                  proposal?.length > 0 ? (
+                    <table className="w-full text-sm">
+                      <thead className="bg-mainGreen/20">
+                        <tr>
+                          <th className="px-4 py-3 text-left">Sl. No</th>
+                          <th className="px-4 py-3 text-left">Proposal Date</th>
+                          <th className="px-4 py-3 text-left">Investor Name</th>
+                          <th className="px-4 py-3 text-left">Status</th>
+                          <th className="px-4 py-3 text-left">Proposal</th>
+                      
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {proposal.map((item, index) => (
+                          <tr key={item.publicId} className="border-b border-gray-800">
+                            <td className="px-4 py-3">{index + 1}</td>
+                            <td className="px-4 py-3 text-mainGreen">
+                              {new Date(item.createdAt).toLocaleDateString()}
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-2">
+                                {item.investor?.companyLogoUrl && (
+                                  <Image
+                                    src={item.investor.companyLogoUrl}
+                                    width={30}
+                                    height={30}
+                                    alt="company logo"
+                                    className="rounded-full"
+                                  />
+                                )}
+                                <span>{item.investor?.companyName}</span>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3">
+                              <span 
+                                className={`px-2 py-1 text-xs rounded-full ${
+                                  item.status === 'PENDING' 
+                                    ? 'bg-yellow-500/20 text-yellow-500'
+                                    : item.status === 'ACCEPTED'
+                                    ? 'bg-mainGreen/20 text-mainGreen'
+                                    : 'bg-red-500/20 text-red-500'
+                                }`}
+                              >
+                                {item.status}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 max-w-xs">
+                              <p className="truncate">{item.proposal}</p>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <div className="flex flex-col justify-center items-center h-[70vh] px-4 py-8 text-center">
+                      <div>
+                        <h3 className="text-lg font-semibold mb-2">No Investment Proposals Yet</h3>
+                        <p className="text-gray-400 text-sm max-w-md mb-6">
+                          When investors show interest in your business, their proposals will appear here. Keep your business profile updated to attract potential investors.
+                        </p>
+                        <Link 
+                          href={`/dashboard/deal-room/investor-dashboard?id=${id}`}
+                          className="bg-mainGreen text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-mainGreen/90 transition-colors"
+                        >
+                          See Investors
+                        </Link>
+                      </div>
+                    </div>
+                  )
                 ) : (
                   <div className="flex flex-col justify-center items-center h-[70vh] px-4 py-8 text-center">
-                <div>
-                <h3 className="text-lg font-semibold mb-2">No Investment Proposals Yet</h3>
-                    <p className="text-gray-400 text-sm max-w-md mb-6">
-                      When investors show interest in your business, their proposals will appear here. Keep your business profile updated to attract potential investors.
-                    </p>
-                    <Link 
-                      href="/dashboard/business-profile"
-                      className="bg-mainGreen text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-mainGreen/90 transition-colors"
-                    >
-                      Create Deal Room Profile
-                    </Link>
-                </div>
-                
+                    <div>
+                      <h3 className="text-lg font-semibold mb-2">No Deal Room Profile</h3>
+                      <p className="text-gray-400 text-sm max-w-md mb-6">
+                        Create a Deal Room profile to showcase your business to potential investors and receive investment proposals.
+                      </p>
+                      <Link 
+                        href={`/dashboard/deal-room/valuation?id=${id}`}
+                        className="bg-mainGreen text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-mainGreen/90 transition-colors"
+                      >
+                        Create Deal Room Profile
+                      </Link>
+                    </div>
                   </div>
                 )}
               </div>
             </div>
           );
+      
       default:
         return <div>Invalid Step</div>;
     }

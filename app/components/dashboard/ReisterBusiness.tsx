@@ -182,7 +182,7 @@ export default function RegisterBusiness() {
         return (
           <div className="grid lg:grid-cols-2 lg:bg-mainBlack lg:gap-5 py-8   lg:py-8 lg:px-5">
             {/* Left Column */}
-            <div className="space-y-5 lg:space-y-0">
+            <div className="space-y-5 ">
               <OptionInput
                 label="You are interested in"
                 name="interestedIn"
@@ -276,7 +276,7 @@ export default function RegisterBusiness() {
             </div>
 
             {/* Right Column */}
-            <div className="space-y-5 mt-5 lg:space-y-0">
+            <div className="space-y-5 mt-5 lg:mt-0">
               <OptionInput
                 label="How many employees does the business have?"
                 name="numOfEmployees"
@@ -361,7 +361,7 @@ export default function RegisterBusiness() {
         </p>
       </div>
       <div className="col-span-8">
-        <div className="flex gap-5 justify-between text-sm lg:text-base lg:gap-7">
+        <div className="flex gap-5 justify-between lg:justify-normal text-sm lg:text-base lg:gap-7">
           <p
             className={`cursor-pointer ${
               currentStep === 0 ? "border-b-2  border-mainGreen" : ""
