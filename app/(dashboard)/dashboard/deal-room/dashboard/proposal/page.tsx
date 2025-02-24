@@ -20,7 +20,6 @@ export default function Valuation() {
   const [modalErrors, setModalErrors] = useState<string[]>([]);
   const searchParams= useSearchParams();
   const id = searchParams.get("id");
-  const { user } = useUser();
  
 
 

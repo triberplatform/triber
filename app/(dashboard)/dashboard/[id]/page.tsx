@@ -1,5 +1,5 @@
 "use client";
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUser } from "@/app/components/layouts/UserContext";
 import { useParams } from "next/navigation";
 import Image from "next/image";
@@ -12,6 +12,7 @@ import Link from "next/link";
 import CircularProgress from "@/app/components/dashboard/Circular";
 import { getBusinessProposals } from "@/app/services/dashboard";
 import { Proposal } from "@/app/type";
+import { BusinessDetails } from "@/app/type"; 
 
 export default function BusinessDetail() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -20,23 +21,29 @@ export default function BusinessDetail() {
   const [proposal, setProposal] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const business = businessDetails.find((b) => b.publicId === id);
+  
+  const [business, setBusiness] = useState<BusinessDetails | null>(null);
 
-  if (!business) {
-    return <p className="text-center text-white">Business not found</p>;
-  }
+  // Find the business first
+  useEffect(() => {
+    if (businessDetails && businessDetails.length > 0) {
+      const foundBusiness = businessDetails.find((b) => b.publicId === id);
+      setBusiness(foundBusiness || null);
+    }
+  }, [businessDetails, id]);
 
+  // Fetch proposals
   useEffect(() => {
     const fetchProposals = async () => {
       const token = localStorage.getItem("token");
-      if (!token) return;
+      if (!token || !id) return;
       
       setLoading(true);
       try {
         const response = await getBusinessProposals(token, Array.isArray(id) ? id[0] : id);
         if (response.success) {
           setProposal(response.data);
-          console.log(response.data)
+          console.log(response.data);
         } else {
           console.error('Failed to fetch proposals:', response.message);
         }
@@ -48,7 +55,12 @@ export default function BusinessDetail() {
     };
   
     fetchProposals();
-  }, [id]); // Add id as dependency
+  }, [id]);
+
+  // If no business is found, show loading or not found message
+  if (!business) {
+    return <p className="text-center text-white">Business not found</p>;
+  }
 
   const renderContent = () => {
     switch (currentStep) {
