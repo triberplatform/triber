@@ -9,7 +9,6 @@ import { submitProposal } from "@/app/services/dashboard";
 import * as Yup from "yup";
 import { ProposalPayload } from "@/app/type";
 import { useSearchParams } from "next/navigation";
-import { useUser } from "@/app/components/layouts/UserContext";
 import Link from "next/link";
 import TextArea from "@/app/components/dashboard/TextArea";
 
