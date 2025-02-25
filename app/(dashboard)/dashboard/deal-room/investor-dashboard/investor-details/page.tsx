@@ -6,7 +6,7 @@ import Loading from "@/app/loading";
 import { getAllInvestors } from "@/app/services/dashboard";
 import { Investor } from "@/app/type";
 import { useSearchParams } from "next/navigation";
-import { ShieldCheck, MapPin, Clock, Mail, Phone, Globe, Edit } from "lucide-react";
+import { ShieldCheck, MapPin, Clock, Mail, Phone } from "lucide-react";
 import { MdBusinessCenter } from "react-icons/md";
 
 export default function InvestorDetails() {
@@ -35,7 +35,7 @@ export default function InvestorDetails() {
           setInvestors(response);
           
           // Find the specific investor by publicId
-          const foundInvestor = response.find(inv => inv.publicId === publicId);
+          const foundInvestor = investors.find(inv => inv.publicId === publicId);
           if (foundInvestor) {
             setInvestor(foundInvestor);
           }
@@ -220,7 +220,6 @@ export default function InvestorDetails() {
             </span>
           </div>
         </div>
-        
         {/* Disclaimer */}
         <div className="mt-12 text-xs text-gray-500 border-t border-gray-800 pt-6">
           <p>
