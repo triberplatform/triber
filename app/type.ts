@@ -425,3 +425,72 @@ export interface Investor {
   createdAt: string; 
   updatedAt: string; 
 }
+
+export interface FundType {
+
+    id: number;
+    userId: number;
+    publicId: string;
+    score: number;
+    businessId: string;
+    
+    // Company information
+    registeredCompany: boolean;
+    legalName: string;
+    companyRegistration: string;
+    city: string;
+    country: string;
+    industry: string;
+    registeredAddress: string;
+    companyEmail: string;
+    contactNumber: string;
+    principalAddress: string;
+    applicantsAddress: string;
+    
+    // Position information
+    position: string;
+    title: string;
+    
+    // Business metrics
+    yearsOfOperation: number;
+    companySize: number;
+    companyLegalCases: boolean;
+    startupStage: string;
+    
+    // People and organization
+    ownership: string[];
+    executiveManagement: string[];
+    boardOfDirectors: string[];
+    isicIndustry: boolean;
+    isicActivity: string;
+    legalAdvisors: string[];
+    
+    // Financial metrics
+    averageAnnualRevenue?: number; // Optional as it appears in only one example
+    revenueGrowthRate?: number; // Optional as it appears in only one example
+    totalAddressableMarket?: number; // Optional as it appears in only one example
+    customerLifetimeValue?: number; // Optional as it appears in only one example
+    customerAcquisitionCost?: number; // Optional as it appears in only one example
+    expectedAnnualGrowthRate?: number; // Optional as it appears in only one example
+    
+    // Compliance and documentation status
+    auditedFinancialStatement?: boolean; // Optional as it appears in only one example
+    licensesToOperate?: boolean; // Optional as it appears in only one example
+    companyPitchDeck: boolean;
+    companyBusinessPlan: boolean;
+    company5yearCashFlow: boolean;
+    companySolidAssetHolding: boolean;
+    companyLargeInventory: boolean;
+    company3YearProfitable: boolean;
+    companyHighScalibilty: boolean; // Note: Potential typo in field name (scalibility)
+    companyCurrentLiabilities: boolean;
+    ownerCurrentLiabilities: boolean;
+    
+    // Documents
+    docs: CompanyDocs;
+    
+    // Timestamps
+    createdAt: string;
+    updatedAt: string;
+  
+}

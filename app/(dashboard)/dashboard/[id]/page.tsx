@@ -11,7 +11,7 @@ import { LiaIndustrySolid } from "react-icons/lia";
 import Link from "next/link";
 import CircularProgress from "@/app/components/dashboard/Circular";
 import { getBusinessProposals, getFundabilityResultsSme, getFundabilityResultsStartup } from "@/app/services/dashboard";
-import { Proposal } from "@/app/type";
+import { CompanyData, FundType, Proposal } from "@/app/type";
 import { BusinessDetails } from "@/app/type"; 
 
 export default function BusinessDetail() {
@@ -20,7 +20,7 @@ export default function BusinessDetail() {
   const { businessDetails } = useUser();
   const [proposal, setProposal] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(true);
-  const [fundabilityData, setFundabilityData] = useState<any>(null);
+  const [fundabilityData, setFundabilityData] = useState<FundType | null>(null);
   const [fundabilityLoading, setFundabilityLoading] = useState(false);
   
   const [business, setBusiness] = useState<BusinessDetails | null>(null);
