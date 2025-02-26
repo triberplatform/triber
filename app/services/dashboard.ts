@@ -311,6 +311,8 @@ export const submitProposalBusiness = async (payload: ProposalPayload, token: st
 }
 
 
+
+
 export const getValuatedBusiness = async (token: string) => {
   try {
     const response = await fetch(`${apiUrl}/dealroom/businesses`, {
@@ -361,3 +363,36 @@ export const getAllInvestors = async (token: string) => {
     return 
   }
 };
+
+
+export const getFundabilityResultsSme = async (token: string,fundabilityId:string) => {
+  try {
+    const response = await fetch(`${apiUrl}/fundability/${fundabilityId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const BusinessDetails = await response.json();
+    return BusinessDetails;
+  }
+  catch {
+    console.error('unable to fetch')
+  }
+
+}
+
+export const getFundabilityResultsStartup = async (token: string,fundabilityId:string) => {
+  try {
+    const response = await fetch(`${apiUrl}fundability/startup/${fundabilityId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const BusinessDetails = await response.json();
+    return BusinessDetails;
+  }
+  catch {
+    console.error('unable to fetch')
+  }
+
+}
