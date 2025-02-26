@@ -11,7 +11,7 @@ import { LiaIndustrySolid } from "react-icons/lia";
 import Link from "next/link";
 import CircularProgress from "@/app/components/dashboard/Circular";
 import { getBusinessProposals, getFundabilityResultsSme, getFundabilityResultsStartup } from "@/app/services/dashboard";
-import { CompanyData, FundType, Proposal } from "@/app/type";
+import {  FundType, Proposal } from "@/app/type";
 import { BusinessDetails } from "@/app/type"; 
 
 export default function BusinessDetail() {
