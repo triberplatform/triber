@@ -17,9 +17,9 @@ export default function InvestorDetails() {
   const [investors, setInvestors] = useState<Investor[]>([]);
    const businessId = searchParams.get('businessId');
 
-  useEffect(() => {
+   useEffect(() => {
     setLoading(true);
-
+  
     const fetchInvestors = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -35,9 +35,11 @@ export default function InvestorDetails() {
           setInvestors(response);
           
           // Find the specific investor by publicId
-          const foundInvestor = investors.find(inv => inv.publicId === publicId);
+          const foundInvestor = response.find(inv => inv.publicId === publicId);
           if (foundInvestor) {
             setInvestor(foundInvestor);
+          } else {
+            console.error("Investor with publicId", publicId, "not found in response");
           }
         }
       } catch (error) {
@@ -46,10 +48,10 @@ export default function InvestorDetails() {
         setLoading(false);
       }
     };
-
+  
     fetchInvestors();
-  }, [publicId]);
-
+  }, [publicId]); // Add publicId as a dependency
+  
   if (loading) {
     return <Loading text="Loading investor details" />;
   }
