@@ -129,7 +129,7 @@ export default function Valuation() {
     <div className="lg:grid lg:grid-cols-11 gap-4 font-sansSerif">
       <div className="lg:col-span-3 map-bg lg:pt-12 py-5 lg:pb-36">
         <p className="lg:text-3xl font-serif font-semibold text-3xl mb-4">
-          Business Valuation
+          Create Deal Room Profile
         </p>
         <p className="lg:text-sm text-xs">
           Please fill out some basic information about your company. This is to
@@ -428,7 +428,7 @@ export default function Valuation() {
         </Formik>
       </div>
 
-      {loading && <Loading text="Getting Valuation" />}
+      {loading && <Loading text="Loading Deal room" />}
 
       {modal && (
         <Modal>

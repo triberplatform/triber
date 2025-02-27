@@ -48,7 +48,7 @@ export default function InvestorDetails() {
     };
 
     fetchInvestors();
-  }, [publicId,investors]);
+  }, [publicId]);
 
   if (loading) {
     return <Loading text="Loading investor details" />;

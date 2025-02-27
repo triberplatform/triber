@@ -143,7 +143,7 @@ export default function BusinessListings() {
       </div>
 
       {/* Business Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
         {businesses.map((business) => (
           <div key={business.id} className="bg-mainBlack rounded-lg overflow-hidden">
             <Link href={`dashboard/business?id=${business.publicId}&businessId=${business.businessId}`}>
