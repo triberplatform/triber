@@ -98,7 +98,7 @@ export default function InvestorDetails() {
           const foundInvestor = response.find(inv => 
             inv.publicId.toLowerCase() === publicId.toLowerCase()
           );
-          
+          console.log(investors)
           console.log("Investor found:", foundInvestor ? "Yes" : "No");
           
           if (foundInvestor) {
