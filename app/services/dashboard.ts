@@ -2,7 +2,9 @@ import { ConnectFormValues, Investor, InvestorProfilePayload, JobConnectForm, Pr
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const getUserDetails = async (token: string, publicId: string) => {
+export const 
+
+getUserDetails = async (token: string, publicId: string) => {
   try {
     const response = await fetch(`${apiUrl}/users/${publicId}`, {
       headers: {

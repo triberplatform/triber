@@ -30,6 +30,7 @@ const InvestorsList = () => {
         const response = await getAllInvestors(token);
         if (response) {
           setInvestors(response);
+          console.log(investors)
         }
       } catch (error) {
         console.error('Error fetching investors:', error);
@@ -134,7 +135,7 @@ const InvestorsList = () => {
       </div>
 
       {/* Investors Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5  gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5  gap-4">
         {loading ? (
           <div>Loading...</div>
         ) : (

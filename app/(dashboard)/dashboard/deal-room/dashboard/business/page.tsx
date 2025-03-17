@@ -324,50 +324,7 @@ export default function BusinessDetail() {
         );
       case 1:
         return (
-          <div className="lg:bg-mainBlack p-4 lg:p-8">
-            {fundabilityResults === null ? (
-              <div className="flex flex-col items-center justify-center h-[60vh] text-center">
-                <p className="text-xl lg:text-2xl mb-6">
-                  Fundability Check Not Started
-                </p>
-                <p className="text-sm lg:text-base mb-8 max-w-lg">
-                  Your business hasn&apos;t undergone a fundability assessment yet.
-                  Complete the fundability check to understand your business&apos;s
-                  funding readiness.
-                </p>
-              </div>
-            ) : fundabilityResults.length > 0 ? (
-              <div className="max-w-4xl mx-auto">
-                {/* Rest of your existing fundability display code */}
-                {/* Score Section */}
-                <div className="text-center mb-10">
-                  <p className="mb-5 font-semibold text-xl lg:text-2xl">
-                    Fundability Score
-                  </p>
-                  <CircularProgress value={fundabilityResults[0].score} />
-                  <p className="mt-4 text-xs lg:text-sm">
-                    Your current fundability score
-                  </p>
-                </div>
-
-                {/* Company Details */}
-                <div className="grid lg:grid-cols-2 gap-8">
-                  {/* Your existing company details sections */}
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-[60vh] text-center">
-                <p className="text-xl lg:text-2xl mb-6">
-                  Complete Your Fundability Check
-                </p>
-                <p className="text-sm lg:text-base mb-8 max-w-lg">
-                  You&apos;ve started the fundability assessment but haven&apos;t
-                  completed it yet. Continue your assessment to get your
-                  business&apos;s funding readiness score.
-                </p>
-              </div>
-            )}
-          </div>
+        <p>test</p>
         );
       case 2:
         return <div className="p-4">Work in Progress...</div>;
@@ -389,14 +346,14 @@ export default function BusinessDetail() {
         >
           Business Overview
         </p>
-        <p
+        {/* <p
           className={`cursor-pointer pb-1 ${
             currentStep === 1 ? "border-b-2 border-mainGreen" : ""
           }`}
           onClick={() => setCurrentStep(1)}
         >
           Fundability Check
-        </p>
+        </p> */}
         {/* <p
           className={`cursor-pointer pb-1 ${
             currentStep === 2 ? "border-b-2 border-mainGreen" : ""

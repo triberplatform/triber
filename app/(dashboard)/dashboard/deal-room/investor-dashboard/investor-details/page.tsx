@@ -11,7 +11,7 @@ import { MdBusinessCenter } from "react-icons/md";
 
 export default function InvestorDetails() {
   const searchParams = useSearchParams();
-  const publicId = searchParams.get("id") || "";
+  const publicId = searchParams.get("id");
   const [loading, setLoading] = useState(true);
   const [investor, setInvestor] = useState<Investor | null>(null);
   const [investors, setInvestors] = useState<Investor[]>([]);
