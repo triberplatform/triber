@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import CircularProgress from "@/app/components/dashboard/Circular";
+
 import { useSearchParams } from "next/navigation";
 import {
+  fundabilityTest,
   getFundabilityResults,
   getValuatedBusiness,
 } from "@/app/services/dashboard";
@@ -109,6 +110,7 @@ export default function BusinessDetail() {
           token || ""
         );
         setFundabilityResults(response.data);
+        console.log(fundabilityResults)
         setLoading(false);
       } catch (error) {
         console.log(error);

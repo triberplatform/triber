@@ -35,7 +35,7 @@ export default function InvestorDetails() {
           setInvestors(response);
           
           // Find the specific investor by publicId
-          const foundInvestor = response.find(inv => inv.publicId === publicId);
+          const foundInvestor = investors.find(inv => inv.publicId === publicId);
           if (foundInvestor) {
             setInvestor(foundInvestor);
           } else {

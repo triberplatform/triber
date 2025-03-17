@@ -5,10 +5,9 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { IoLocation } from "react-icons/io5";
 import { MdOutlinePermIdentity } from "react-icons/md";
 import { LiaIndustrySolid } from "react-icons/lia";
-import Link from "next/link";
-import { FundType } from "@/app/type";
+import { BusinessDetails, FundType } from "@/app/type";
 
-const FundabilityCheck = ({ business, businessId, handleNext }: { business: any, businessId: string, handleNext: () => void }) => {
+const FundabilityCheck = ({ business, businessId, handleNext }: { business: BusinessDetails, businessId: string, handleNext: () => void }) => {
   const [fundabilityData, setFundabilityData] = useState<FundType | null>(null);
   const [loading, setLoading] = useState(true);
 
