@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { useSearchParams } from "next/navigation";
 import {
-  fundabilityTest,
+
   getFundabilityResults,
   getValuatedBusiness,
 } from "@/app/services/dashboard";
