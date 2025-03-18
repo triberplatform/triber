@@ -115,7 +115,7 @@ export default function BusinessDetail() {
     };
 
     fetchBusinessDetails();
-  }, [id, token]);
+  }, [businessId, token]);
 
   const business = businesses.find((b) => b.publicId === id);
 
@@ -175,15 +175,7 @@ console.log(businessDetails?.businessStage)
     fetchFundabilityResults();
   }, [businessDetails, id, businessId, currentStep, fundabilityFetched]);
 
-  // Function to handle redirecting to the correct fundability test based on business stage
-  const handleRefreshRedirectFund = (id: string) => {
-    if (businessDetails?.businessStage?.toLowerCase() === "sme") {
-      window.location.href = `/dashboard/fundability-test/${id}`;
-    } else {
-      window.location.href = `/dashboard/fundability-test/select-startup/${id}`;
-    }
-  };
-
+ 
   if (loading) {
     return <Loading text="Loading" />;
   }
