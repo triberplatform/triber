@@ -21,10 +21,8 @@ export default function InvestorDetails() {
   // Check token validity
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("Token check on initial load:", token ? "Token exists" : "No token found");
     
     if (!token) {
-      console.error("No authentication token found on initial check");
       setError("Authentication required");
       setLoading(false);
       return;
@@ -37,7 +35,6 @@ export default function InvestorDetails() {
       if (tokenParts.length === 3) {
         const tokenData = JSON.parse(atob(tokenParts[1]));
         if (tokenData.exp && tokenData.exp * 1000 < Date.now()) {
-          console.error("Token is expired");
           setError("Your session has expired. Please log in again.");
           setLoading(false);
           localStorage.removeItem("token");
@@ -45,19 +42,13 @@ export default function InvestorDetails() {
         }
       }
     } catch (error) {
-      console.error("Error validating token:", error);
       // Continue anyway as the token might still be valid
     }
   }, []);
 
   // Log URL parameters for debugging
   useEffect(() => {
-    console.log("Current URL:", typeof window !== 'undefined' ? window.location.href : "SSR mode");
-    console.log("Extracted publicId:", publicId);
-    console.log("Extracted businessId:", businessId);
-    
     if (!publicId) {
-      console.error("No publicId found in URL parameters");
       setError("Investor ID is missing");
       setLoading(false);
     }
@@ -67,55 +58,38 @@ export default function InvestorDetails() {
     if (!publicId) return; // Skip if no publicId (already handled in the URL check effect)
     
     setLoading(true);
-    console.log("Starting investor fetch for publicId:", publicId);
   
     const fetchInvestors = async () => {
       try {
         const token = localStorage.getItem("token");
-        console.log("Token retrieved for API call:", token ? "Yes (exists)" : "No (missing)");
         
         if (!token) {
-          console.error("No authentication token found for API call");
           setError("Authentication required");
           setLoading(false);
           return;
         }
         
         // Fetch all investors
-        console.log("Calling getAllInvestors API...");
         const response = await getAllInvestors(token);
-        console.log("API response received:", response ? `Yes (${response.length} investors)` : "No data");
         
         if (response && Array.isArray(response)) {
           setInvestors(response);
-          console.log("Total investors fetched:", response.length);
-          
-          // Log the first few publicIds for debugging
-          const sampleIds = response.slice(0, 5).map(inv => inv.publicId);
-          console.log("Sample publicIds in response:", sampleIds);
           
           // Find the specific investor by publicId (case-insensitive)
           const foundInvestor = response.find(inv => 
             inv.publicId.toLowerCase() === publicId.toLowerCase()
           );
-          console.log(investors)
-          console.log("Investor found:", foundInvestor ? "Yes" : "No");
           
           if (foundInvestor) {
             setInvestor(foundInvestor);
             setError(null);
           } else {
-            // Log all publicIds to see what's available
-            console.log("Available publicIds:", response.map(inv => inv.publicId));
-            console.error("Investor with publicId", publicId, "not found in response");
             setError("Investor not found");
           }
         } else {
-          console.error("Invalid response format from API:", response);
           setError("Failed to load investor data");
         }
       } catch (error) {
-        console.error("Error fetching investors:", error);
         setError("Error loading investor data. Please try again.");
       } finally {
         setLoading(false);
@@ -163,7 +137,6 @@ export default function InvestorDetails() {
     interestedFactors = JSON.parse(investor.interestedFactors || "[]");
     if (!Array.isArray(interestedFactors)) interestedFactors = [];
   } catch (error) {
-    console.error("Error parsing interestedFactors:", error);
     interestedFactors = [];
   }
   
@@ -171,7 +144,6 @@ export default function InvestorDetails() {
     interestedLocations = JSON.parse(investor.interestedLocations || "[]");
     if (!Array.isArray(interestedLocations)) interestedLocations = [];
   } catch (error) {
-    console.error("Error parsing interestedLocations:", error);
     interestedLocations = [];
   }
   
@@ -296,10 +268,10 @@ export default function InvestorDetails() {
                 {investor.fundsUnderManagement ? (
                   <>
                     <p className="text-xl font-bold">
-                      NGN Between {(investor.fundsUnderManagement / 1000000).toFixed(0)} million - {(investor.fundsUnderManagement * 4 / 1000000000).toFixed(2)} billion
+                      ₦{investor.fundsUnderManagement.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </p>
                     <p className="text-sm text-gray-400">
-                      (Native Currency: USD {(investor.fundsUnderManagement / 500).toLocaleString()})
+                      (Native Currency: USD {(investor.fundsUnderManagement / 500).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})
                     </p>
                   </>
                 ) : (
