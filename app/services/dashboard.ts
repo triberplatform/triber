@@ -2,9 +2,7 @@ import { ConnectFormValues, Investor, InvestorProfilePayload, JobConnectForm, Pr
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const 
-
-getUserDetails = async (token: string, publicId: string) => {
+export const getUserDetails = async (token: string, publicId: string) => {
   try {
     const response = await fetch(`${apiUrl}/users/${publicId}`, {
       headers: {
@@ -18,6 +16,21 @@ getUserDetails = async (token: string, publicId: string) => {
     console.error('unable to fetch')
   }
 
+}
+
+export const getABusiness = async (token: string,publicId:string) => {
+  try {
+    const response = await fetch(`${apiUrl}/business/${publicId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const businesses = await response.json();
+    return businesses;
+  }
+  catch {
+    console.error('unable to fetch')
+  }
 }
 
 export const getFundabilityResults = async ( publicId: string,token: string) => {
@@ -386,6 +399,38 @@ export const getFundabilityResultsSme = async (token: string,fundabilityId:strin
 export const getFundabilityResultsStartup = async (token: string,fundabilityId:string) => {
   try {
     const response = await fetch(`${apiUrl}fundability/startup/${fundabilityId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const BusinessDetails = await response.json();
+    return BusinessDetails;
+  }
+  catch {
+    console.error('unable to fetch')
+  }
+
+}
+
+export const getFundabilityResultsSmeBusinessId  = async (token: string,fundabilityId:string) => {
+  try {
+    const response = await fetch(`${apiUrl}/fundability/test/${fundabilityId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const BusinessDetails = await response.json();
+    return BusinessDetails;
+  }
+  catch {
+    console.error('unable to fetch')
+  }
+
+}
+
+export const getFundabilityResultsStartupBusinessId = async (token: string,fundabilityId:string) => {
+  try {
+    const response = await fetch(`${apiUrl}fundability/test/startup/${fundabilityId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

@@ -5,13 +5,19 @@ import Link from "next/link";
 
 import { useSearchParams } from "next/navigation";
 import {
-
-  getFundabilityResults,
+  getABusiness,
+  getFundabilityResultsSmeBusinessId,
+  getFundabilityResultsStartupBusinessId,
   getValuatedBusiness,
 } from "@/app/services/dashboard";
 import Loading from "@/app/loading";
-import { BusinessDetails } from "@/app/type";
-import { useUser } from "@/app/components/layouts/UserContext";
+import { FundType } from "@/app/type";
+import CircularProgress from "@/app/components/dashboard/Circular";
+// Import icons for the fundability section
+import { FaCalendarAlt } from "react-icons/fa";
+import { IoLocation } from "react-icons/io5";
+import { MdOutlinePermIdentity } from "react-icons/md";
+import { LiaIndustrySolid } from "react-icons/lia";
 
 // Types for the API response
 type Business = {
@@ -44,50 +50,34 @@ type DealRoomProfile = {
   business: Business;
 };
 
-interface FundabilityTest {
+// New type for the business details from direct API call
+type BusinessDetailsAPI = {
   id: number;
-  userId: number;
   publicId: string;
-  score: number;
-  businessId: string;
-  registeredCompany: boolean;
-  legalName: string;
-  companyRegistration: string;
-  city: string;
-  country: string;
+  businessName: string;
+  businessEmail: string;
+  businessPhone: string;
+  businessLogoUrl: string;
+  businessStatus: string;
+  interestedIn: string;
   industry: string;
-  registeredAddress: string;
-  companyEmail: string;
-  contactNumber: string;
-  principalAddress: string;
-  applicantsAddress: string;
-  position: string;
-  title: string;
-  yearsOfOperation: number;
-  companySize: number;
-  companyLegalCases: boolean;
-  startupStage: string;
-  ownership: string[];
-  executiveManagement: string[];
-  boardOfDirectors: string[];
-  isicIndustry: boolean;
-  isicActivity: string;
-  legalAdvisors: string[];
-  averageAnnualRevenue: number;
-  revenueGrowthRate: number;
-  auditedFinancialStatement: boolean;
-  companyPitchDeck: boolean;
-  companyBusinessPlan: boolean;
-  company5yearCashFlow: boolean;
-  companySolidAssetHolding: boolean;
-  companyLargeInventory: boolean;
-  company3YearProfitable: boolean;
-  companyHighScalibilty: boolean;
-  companyCurrentLiabilities: boolean;
-  ownerCurrentLiabilities: boolean;
+  numOfEmployees: string;
+  yearEstablished: number;
+  location: string;
+  description: string;
+  assets: string;
+  reportedSales: string;
+  businessStage: string;
+  businessLegalEntity: string;
   createdAt: string;
   updatedAt: string;
-}
+  businessVerificationStatus: boolean;
+  fundabilityTestDetails?: {
+    id: number;
+    score: number;
+    publicId?: string;
+  };
+};
 
 export default function BusinessDetail() {
   const SearchParams = useSearchParams();
@@ -95,41 +85,41 @@ export default function BusinessDetail() {
   const id = SearchParams.get("id");
   const businessId = SearchParams.get("businessId");
   const [loading, setLoading] = useState(true);
-  const [fundabilityResults, setFundabilityResults] = useState<
-    FundabilityTest[]
-  >([]);
-  const {businessDetails} = useUser()
   const token = localStorage.getItem("token");
   const [businesses, setBusinesses] = useState<DealRoomProfile[]>([]);
-    const [businessD, setBusinessD] = useState<BusinessDetails | null>(null);
-  
-    // Find the business first
-    useEffect(() => {
-      if (businessDetails && businessDetails.length > 0) {
-        const foundBusiness = businessDetails.find((b) => b.publicId === id);
-        setBusinessD(foundBusiness || null);
-      }
-    }, [businessDetails, id]);
+  const [businessDetails, setBusinessDetails] = useState<BusinessDetailsAPI | null>(null);
+  const [fundabilityData, setFundabilityData] = useState<FundType | null>(null);
+  const [fundabilityLoading, setFundabilityLoading] = useState(false);
+  const [fundabilityFetched, setFundabilityFetched] = useState(false);
 
-  const business = businesses.find((b) => b.publicId === id);
+  // Fetch business details directly from API
   useEffect(() => {
-    setLoading(true);
-
-    const fetchFundability = async () => {
+    const fetchBusinessDetails = async () => {
+      if (!id || !token) return;
+      
       try {
-        const response = await getFundabilityResults(
-          businessId || "",
-          token || ""
-        );
-        setFundabilityResults(response.data);
-        console.log(fundabilityResults)
-        setLoading(false);
+        setLoading(true);
+        const response = await getABusiness(token, businessId || "");
+        
+        if (response && response.success) {
+          console.log("Business details fetched:", response.data);
+          setBusinessDetails(response.data);
+        } else {
+          console.error("Failed to fetch business details:", response?.message);
+        }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching business details:", error);
+      } finally {
         setLoading(false);
       }
     };
 
+    fetchBusinessDetails();
+  }, [id, token]);
+
+  const business = businesses.find((b) => b.publicId === id);
+
+  useEffect(() => {
     const fetchBusinesses = async () => {
       try {
         const response = await getValuatedBusiness(token || "");
@@ -138,19 +128,68 @@ export default function BusinessDetail() {
         }
       } catch (error) {
         console.error("Unable to fetch businesses:", error);
-      } finally {
-        setLoading(false);
       }
     };
+
     fetchBusinesses();
-    fetchFundability();
-  }, [businessId, token]);
+  }, [token]);
+console.log(businessDetails?.businessStage)
+  // Fetch fundability results 
+  useEffect(() => {
+    const fetchFundabilityResults = async () => {
+      // Only fetch if we're viewing the fundability tab or haven't fetched yet
+      if ((!fundabilityFetched || currentStep === 1) && businessDetails && id && businessId) {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+        
+        setFundabilityLoading(true);
+        
+        try {
+          console.log("Fetching fundability data for business ID:", businessId);
+          
+          let response;
+          
+          // Check business stage and call appropriate API
+          if (businessDetails.businessStage?.toLowerCase() === "startup") {
+            response = await getFundabilityResultsStartupBusinessId(token, businessId);
+          } else {
+            // Default to SME if not startup or if stage is undefined
+            response = await getFundabilityResultsSmeBusinessId(token, businessId);
+          }
+          
+          if (response && response.success) {
+            console.log("Fundability data fetched successfully:", response.data);
+            setFundabilityData(response.data);
+          } else {
+            console.error('Failed to fetch fundability results:', response?.message);
+          }
+        } catch (error) {
+          console.error('Error fetching fundability results:', error);
+        } finally {
+          setFundabilityLoading(false);
+          setFundabilityFetched(true);
+        }
+      }
+    };
+
+    fetchFundabilityResults();
+  }, [businessDetails, id, businessId, currentStep, fundabilityFetched]);
+
+  // Function to handle redirecting to the correct fundability test based on business stage
+  const handleRefreshRedirectFund = (id: string) => {
+    if (businessDetails?.businessStage?.toLowerCase() === "sme") {
+      window.location.href = `/dashboard/fundability-test/${id}`;
+    } else {
+      window.location.href = `/dashboard/fundability-test/select-startup/${id}`;
+    }
+  };
+
+  if (loading) {
+    return <Loading text="Loading" />;
+  }
 
   if (!business) {
-    return <p className="text-center text-white">Business not found</p>;
-  }
-  if(loading){
-    return <Loading text="Loading" />
+    return <Loading/>;
   }
 
   const renderContent = () => {
@@ -189,7 +228,6 @@ export default function BusinessDetail() {
                       </button>
                     </div>
                   </div>
-                
                   <div>
                     <h1 className="text-xl font-semibold text-white mb-2">
                       {business.business.businessName}
@@ -201,7 +239,7 @@ export default function BusinessDetail() {
                 </div>
                 <Link
                   href={`proposal?id=${business.businessId}`}
-                  className="bg-mainGreen text-white px-6 py-2  text-xs text-nowrap rounded-lg font-medium hover:bg-mainGreens transition-colors flex items-center gap-2"
+                  className="bg-mainGreen text-white px-6 py-2 text-xs text-nowrap rounded-lg font-medium hover:bg-mainGreens transition-colors flex items-center gap-2"
                 >
                   <svg
                     className="w-5 h-5"
@@ -237,32 +275,23 @@ export default function BusinessDetail() {
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Email Address</p>
-                    <p className="text-red-500">
-                    Available after connection
-                    </p>
+                    <p className="text-red-500">Available after connection</p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Phone Number</p>
-                    <p className="text-red-500">
-                    Available after connection
-                    </p>
+                    <p className="text-red-500">Available after connection</p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Location</p>
-                    <p className="text-red-500">
-                    {businessD?.location}
-                    </p>
+                    <p >{businessDetails?.location}</p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Industry</p>
-                    <p className="text-red-500">
-                    {businessD?.industry}
-                    </p>
+                    <p>{businessDetails?.industry}</p>
                   </div>
                 </div>
               </div>
 
-              {/* Rest of your existing sections... */}
               {/* Business Details Section */}
               <div className="mb-8">
                 <h3 className="text-lg font-medium text-mainGreen mb-4">
@@ -350,12 +379,348 @@ export default function BusinessDetail() {
         );
       case 1:
         return (
-        <p>Fundability Check</p>
+          <div className="lg:bg-mainBlack p-4 pb-8 h-full">
+            {fundabilityLoading ? (
+              <div className="flex justify-center items-center h-[60vh]">
+                <p>Loading fundability data...</p>
+              </div>
+            ) : fundabilityData ? (
+              <div className="bg-mainBlack rounded-lg p-6 shadow-lg">
+                {/* Header Section */}
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-6 pb-4 border-b border-zinc-800">
+                  <div>
+                    <h2 className="text-xl lg:text-2xl font-semibold mb-2">Fundability Overview</h2>
+                    <p className="text-gray-400 text-sm">
+                      Last updated: {new Date(fundabilityData.updatedAt || Date.now()).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="mt-4 lg:mt-0">
+                    <div className="bg-zinc-800 px-4 py-2 rounded-lg">
+                      <div className="flex items-center">
+                        <div className="mr-4">
+                          <p className="text-xs text-gray-400">Fundability Score</p>
+                          <p className="text-2xl font-bold">{fundabilityData.score}/100</p>
+                        </div>
+                        <CircularProgress value={fundabilityData.score} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+      
+                {/* Main Content */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Left Column */}
+                  <div>
+                    {/* Company Overview */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-medium mb-3 flex items-center">
+                        <MdOutlinePermIdentity className="text-mainGreen mr-2" /> 
+                        Company Overview
+                      </h3>
+                      <div className="bg-zinc-800 p-4 rounded-lg">
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-xs text-gray-400">Legal Name</p>
+                              <p className="text-sm">Available after Connection</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Registration</p>
+                              <p className="text-sm">{fundabilityData.companyRegistration || businessDetails?.businessLegalEntity}</p>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-xs text-gray-400">Years of Operation</p>
+                              <p className="text-sm">{fundabilityData.yearsOfOperation || (businessDetails ? (new Date().getFullYear() - businessDetails.yearEstablished) : 0)} years</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Company Size</p>
+                              <p className="text-sm">{fundabilityData.companySize || businessDetails?.numOfEmployees} employees</p>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <p className="text-xs text-gray-400">Industry</p>
+                            <p className="text-sm">{fundabilityData.industry || businessDetails?.industry}</p>
+                          </div>
+                          
+                          <div>
+                            <p className="text-xs text-gray-400">Location</p>
+                            <p className="text-sm">{fundabilityData.city && fundabilityData.country ? 
+                              `${fundabilityData.city}, ${fundabilityData.country}` : 
+                              businessDetails?.location}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+      
+                    {/* Business Structure */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-medium mb-3 flex items-center">
+                        <LiaIndustrySolid className="text-mainGreen mr-2" /> 
+                        Business Structure
+                      </h3>
+                      <div className="bg-zinc-800 p-4 rounded-lg">
+                        <div className="space-y-4">
+                          {fundabilityData.ownership && (
+                            <div>
+                              <p className="text-xs text-gray-400 mb-1">Ownership</p>
+                              <div className="space-y-1">
+                                {Array.isArray(fundabilityData.ownership) ? 
+                                  fundabilityData.ownership.map((owner, index) => (
+                                    <div key={index} className="flex items-center">
+                                      <div className="w-2 h-2 bg-mainGreen rounded-full mr-2"></div>
+                                      <p className="text-sm">{owner}</p>
+                                    </div>
+                                  )) : 
+                                  <p className="text-sm">Information not available</p>
+                                }
+                              </div>
+                            </div>
+                          )}
+                          
+                          {fundabilityData.executiveManagement && (
+                            <div>
+                              <p className="text-xs text-gray-400 mb-1">Executive Management</p>
+                              <div className="space-y-1">
+                                {Array.isArray(fundabilityData.executiveManagement) ? 
+                                  fundabilityData.executiveManagement.map((exec, index) => (
+                                    <div key={index} className="flex items-center">
+                                      <div className="w-2 h-2 bg-mainGreen rounded-full mr-2"></div>
+                                      <p className="text-sm">{exec}</p>
+                                    </div>
+                                  )) :
+                                  <p className="text-sm">Information not available</p>
+                                }
+                              </div>
+                            </div>
+                          )}
+      
+                          {businessDetails?.businessStage?.toLowerCase() === "startup" && fundabilityData.startupStage && (
+                            <div>
+                              <p className="text-xs text-gray-400">Startup Stage</p>
+                              <p className="text-sm capitalize">{fundabilityData.startupStage}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+      
+                  {/* Right Column */}
+                  <div>
+                    {/* Financial Health */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-medium mb-3 flex items-center">
+                        <FaCalendarAlt className="text-mainGreen mr-2" /> 
+                        Financial Health
+                      </h3>
+                      <div className="bg-zinc-800 p-4 rounded-lg">
+                        <div className="space-y-4">
+                          {businessDetails?.businessStage?.toLowerCase() !== "startup" && (
+                            <div>
+                              <p className="text-xs text-gray-400">Average Annual Revenue</p>
+                              <p className="text-sm">${fundabilityData.averageAnnualRevenue?.toLocaleString() || 'Not provided'}</p>
+                            </div>
+                          )}
+      
+                          {businessDetails?.businessStage?.toLowerCase() !== "startup" && fundabilityData.revenueGrowthRate !== undefined && (
+                            <div>
+                              <p className="text-xs text-gray-400">Revenue Growth Rate</p>
+                              <p className="text-sm">{fundabilityData.revenueGrowthRate}%</p>
+                            </div>
+                          )}
+      
+                          {businessDetails?.businessStage?.toLowerCase() === "startup" && fundabilityData.expectedAnnualGrowthRate !== undefined && (
+                            <div>
+                              <p className="text-xs text-gray-400">Expected Annual Growth Rate</p>
+                              <p className="text-sm">{fundabilityData.expectedAnnualGrowthRate}%</p>
+                            </div>
+                          )}
+      
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="flex flex-col">
+                              <p className="text-xs text-gray-400">Profitable (3+ Years)</p>
+                              <p className={`text-sm ${fundabilityData.company3YearProfitable ? 'text-mainGreen' : 'text-gray-400'}`}>
+                                {fundabilityData.company3YearProfitable ? 'Yes' : 'No'}
+                              </p>
+                            </div>
+                            <div className="flex flex-col">
+                              <p className="text-xs text-gray-400">High Scalability</p>
+                              <p className={`text-sm ${fundabilityData.companyHighScalibilty ? 'text-mainGreen' : 'text-gray-400'}`}>
+                                {fundabilityData.companyHighScalibilty ? 'Yes' : 'No'}
+                              </p>
+                            </div>
+                          </div>
+      
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="flex flex-col">
+                              <p className="text-xs text-gray-400">Solid Asset Holdings</p>
+                              <p className={`text-sm ${fundabilityData.companySolidAssetHolding ? 'text-mainGreen' : 'text-gray-400'}`}>
+                                {fundabilityData.companySolidAssetHolding ? 'Yes' : 'No'}
+                              </p>
+                            </div>
+                            <div className="flex flex-col">
+                              <p className="text-xs text-gray-400">Current Liabilities</p>
+                              <p className={`text-sm ${!fundabilityData.companyCurrentLiabilities ? 'text-mainGreen' : 'text-gray-400'}`}>
+                                {fundabilityData.companyCurrentLiabilities ? 'Yes' : 'No'}
+                              </p>
+                            </div>
+                          </div>
+      
+                          {businessDetails?.businessStage?.toLowerCase() === "startup" && fundabilityData.customerLifetimeValue !== undefined && fundabilityData.customerAcquisitionCost !== undefined && (
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <p className="text-xs text-gray-400">Customer LTV</p>
+                                <p className="text-sm">${fundabilityData.customerLifetimeValue}</p>
+                              </div>
+                              <div>
+                                <p className="text-xs text-gray-400">Customer Acquisition Cost</p>
+                                <p className="text-sm">${fundabilityData.customerAcquisitionCost}</p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+      
+                    {/* Documentation */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-medium mb-3 flex items-center">
+                        <IoLocation className="text-mainGreen mr-2" /> 
+                        Documentation & Compliance
+                      </h3>
+                      <div className="bg-zinc-800 p-4 rounded-lg">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="flex flex-col">
+                            <p className="text-xs text-gray-400">Business Plan</p>
+                            <p className={`text-sm ${fundabilityData.companyBusinessPlan ? 'text-mainGreen' : 'text-gray-400'}`}>
+                              {fundabilityData.companyBusinessPlan ? 'Available' : 'Not Available'}
+                            </p>
+                          </div>
+                          <div className="flex flex-col">
+                            <p className="text-xs text-gray-400">Pitch Deck</p>
+                            <p className={`text-sm ${fundabilityData.companyPitchDeck ? 'text-mainGreen' : 'text-gray-400'}`}>
+                              {fundabilityData.companyPitchDeck ? 'Available' : 'Not Available'}
+                            </p>
+                          </div>
+                          <div className="flex flex-col">
+                            <p className="text-xs text-gray-400">5-Year Cash Flow</p>
+                            <p className={`text-sm ${fundabilityData.company5yearCashFlow ? 'text-mainGreen' : 'text-gray-400'}`}>
+                              {fundabilityData.company5yearCashFlow ? 'Available' : 'Not Available'}
+                            </p>
+                          </div>
+                          {businessDetails?.businessStage?.toLowerCase() !== "startup" && (
+                            <div className="flex flex-col">
+                              <p className="text-xs text-gray-400">Audited Financials</p>
+                              <p className={`text-sm ${fundabilityData.auditedFinancialStatement ? 'text-mainGreen' : 'text-gray-400'}`}>
+                                {fundabilityData.auditedFinancialStatement ? 'Available' : 'Not Available'}
+                              </p>
+                            </div>
+                          )}<div className="flex flex-col">
+                          <p className="text-xs text-gray-400">Legal Issues</p>
+                          <p className={`text-sm ${!fundabilityData.companyLegalCases ? 'text-mainGreen' : 'text-red-400'}`}>
+                            {fundabilityData.companyLegalCases ? 'Pending Cases' : 'No Issues'}
+                          </p>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-xs text-gray-400">Required Licenses</p>
+                          <p className={`text-sm ${fundabilityData.licensesToOperate ? 'text-mainGreen' : 'text-gray-400'}`}>
+                              {fundabilityData.licensesToOperate ? 'All Acquired' : 'Not Applicable'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+      
+                    {/* Funding Recommendation */}
+                    {/* <div>
+                      <h3 className="text-lg font-medium mb-3 flex items-center">
+                        <FaCalendarAlt className="text-mainGreen mr-2" /> 
+                        Funding Recommendation
+                      </h3>
+                      <div className="bg-zinc-800 p-4 rounded-lg">
+                        {fundabilityData.score >= 80 ? (
+                          <div className="space-y-3">
+                            <div className="flex items-start mb-2">
+                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                              <p className="text-sm">Your business shows strong fundability. Consider equity financing, venture capital, or traditional bank loans.</p>
+                            </div>
+                            <div className="flex items-start mb-2">
+                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                              <p className="text-sm">Your documentation and financial track record position you well for premium funding options.</p>
+                            </div>
+                          </div>
+                        ) : fundabilityData.score >= 60 ? (
+                          <div className="space-y-3">
+                            <div className="flex items-start mb-2">
+                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                              <p className="text-sm">Your business shows moderate fundability. Consider angel investors, government grants, or asset-backed loans.</p>
+                            </div>
+                            <div className="flex items-start mb-2">
+                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                              <p className="text-sm">Improving your documentation and addressing financial gaps could increase your funding options.</p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-3">
+                            <div className="flex items-start mb-2">
+                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                              <p className="text-sm">Your business may benefit from bootstrapping, friends & family funding, or microloans.</p>
+                            </div>
+                            <div className="flex items-start mb-2">
+                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                              <p className="text-sm">Consider addressing key areas in your business structure and documentation before seeking larger funding.</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div> */}
+                  </div>
+                </div>
+      
+                {/* Next button */}
+                <div className="flex justify-end mt-6">
+                  <button 
+                    onClick={() => setCurrentStep(2)}
+                    className="bg-mainGreen text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-mainGreen/90 transition-colors"
+                  >
+                    Next: Investment Proposals
+                  </button>
+                </div>
+              </div>
+            ) : businessDetails?.fundabilityTestDetails?.publicId ? (
+              <div className="flex justify-center items-center h-[60vh]">
+                <div className="text-center">
+                  <p className="mb-5 font-semibold text-xl lg:text-2xl">
+                    Fundability Score
+                  </p>
+                  <CircularProgress
+                    value={businessDetails?.fundabilityTestDetails?.score || 0}
+                  />
+                  <p className="mt-4 text-xs lg:text-sm">
+                    Loading your fundability score...
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-center items-center h-[60vh]">
+                <div className="text-xs lg:text-sm text-center px-4 max-w-md">
+                  <h3 className="text-lg font-semibold mb-3">No Fundability Assessment</h3>
+                  <p className="mb-6">
+                   The business is yet to carry out an assessment
+                  </p>
+                
+                </div>
+              </div>
+            )}
+          </div>
         );
       case 2:
-        return <div className="p-4">Work in Progress...</div>;
-        case 3:
-          return <div className="p-4">Work in Progress...</div>;
+        return <div className="p-4">Valuation Report - Work in Progress...</div>;
+      case 3:
+        return <div className="p-4">Business Documents - Work in Progress...</div>;
 
       default:
         return <div>Invalid Step</div>;
@@ -388,11 +753,11 @@ export default function BusinessDetail() {
           }`}
           onClick={() => setCurrentStep(2)}
         >
-          Valuarion Report
+          Valuation Report
         </p>
         <p
           className={`cursor-pointer pb-1 ${
-            currentStep === 2 ? "border-b-2 border-mainGreen" : ""
+            currentStep === 3 ? "border-b-2 border-mainGreen" : ""
           }`}
           onClick={() => setCurrentStep(3)}
         >
