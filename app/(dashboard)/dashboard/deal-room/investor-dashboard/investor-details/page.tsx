@@ -14,7 +14,7 @@ export default function InvestorDetails() {
   const publicId = searchParams.get("id") || "";
   const [loading, setLoading] = useState(true);
   const [investor, setInvestor] = useState<Investor | null>(null);
-  const [investors, setInvestors] = useState<Investor[]>([]);
+  // Removing unused 'investors' state
   const businessId = searchParams.get('businessId');
   const [error, setError] = useState<string | null>(null);
 
@@ -41,7 +41,7 @@ export default function InvestorDetails() {
           return;
         }
       }
-    } catch (error) {
+    } catch {
       // Continue anyway as the token might still be valid
     }
   }, []);
@@ -73,8 +73,6 @@ export default function InvestorDetails() {
         const response = await getAllInvestors(token);
         
         if (response && Array.isArray(response)) {
-          setInvestors(response);
-          
           // Find the specific investor by publicId (case-insensitive)
           const foundInvestor = response.find(inv => 
             inv.publicId.toLowerCase() === publicId.toLowerCase()
@@ -89,7 +87,7 @@ export default function InvestorDetails() {
         } else {
           setError("Failed to load investor data");
         }
-      } catch (error) {
+      } catch {
         setError("Error loading investor data. Please try again.");
       } finally {
         setLoading(false);
@@ -136,14 +134,14 @@ export default function InvestorDetails() {
   try {
     interestedFactors = JSON.parse(investor.interestedFactors || "[]");
     if (!Array.isArray(interestedFactors)) interestedFactors = [];
-  } catch (error) {
+  } catch {
     interestedFactors = [];
   }
   
   try {
     interestedLocations = JSON.parse(investor.interestedLocations || "[]");
     if (!Array.isArray(interestedLocations)) interestedLocations = [];
-  } catch (error) {
+  } catch {
     interestedLocations = [];
   }
   

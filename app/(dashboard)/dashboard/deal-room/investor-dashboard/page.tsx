@@ -32,7 +32,7 @@ const InvestorsList = () => {
         if (response) {
           setInvestors(response);
         }
-      } catch (error) {
+      } catch {
         // Error handling
       } finally {
         setLoading(false);
@@ -61,7 +61,7 @@ const InvestorsList = () => {
     try {
       interestedFactors = JSON.parse(investor.interestedFactors || "[]");
       if (!Array.isArray(interestedFactors)) interestedFactors = [];
-    } catch (e) {
+    } catch {
       // Handle JSON parse error
     }
 
@@ -79,7 +79,7 @@ const InvestorsList = () => {
   // Generate pagination buttons
   const generatePaginationButtons = () => {
     const maxButtons = 5;
-    let buttons = [];
+    const buttons = [];
     
     if (totalPages <= maxButtons) {
       // Show all pages if there are fewer than maxButtons
@@ -215,14 +215,14 @@ const InvestorsList = () => {
             try {
               interestedFactors = JSON.parse(investor.interestedFactors || "[]");
               if (!Array.isArray(interestedFactors)) interestedFactors = [];
-            } catch (e) {
+            } catch {
               // Handle JSON parse error
             }
             
             try {
               interestedLocations = JSON.parse(investor.interestedLocations || "[]");
               if (!Array.isArray(interestedLocations)) interestedLocations = [];
-            } catch (e) {
+            } catch {
               // Handle JSON parse error
             }
             

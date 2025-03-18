@@ -12,7 +12,7 @@ const formatCurrency = (amount: number) => {
   // Format with commas directly in case Intl doesn't work as expected
   try {
     return '₦' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  } catch (error) {
+  } catch {
     return '₦' + amount;
   }
 };
@@ -68,7 +68,7 @@ export default function BusinessListings() {
         if (response?.success) {
           setBusinesses(response.data);
         }
-      } catch (error) {
+      } catch {
         // Error handling
       } finally {
         setLoading(false);
@@ -98,7 +98,7 @@ export default function BusinessListings() {
   // Generate pagination buttons
   const generatePaginationButtons = () => {
     const maxButtons = 5;
-    let buttons = [];
+    const buttons = [];
     
     if (totalPages <= maxButtons) {
       // Show all pages if there are fewer than maxButtons
