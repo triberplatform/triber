@@ -10,6 +10,8 @@ import {
   getValuatedBusiness,
 } from "@/app/services/dashboard";
 import Loading from "@/app/loading";
+import { BusinessDetails } from "@/app/type";
+import { useUser } from "@/app/components/layouts/UserContext";
 
 // Types for the API response
 type Business = {
@@ -96,8 +98,18 @@ export default function BusinessDetail() {
   const [fundabilityResults, setFundabilityResults] = useState<
     FundabilityTest[]
   >([]);
+  const {businessDetails} = useUser()
   const token = localStorage.getItem("token");
   const [businesses, setBusinesses] = useState<DealRoomProfile[]>([]);
+    const [businessD, setBusinessD] = useState<BusinessDetails | null>(null);
+  
+    // Find the business first
+    useEffect(() => {
+      if (businessDetails && businessDetails.length > 0) {
+        const foundBusiness = businessDetails.find((b) => b.publicId === id);
+        setBusinessD(foundBusiness || null);
+      }
+    }, [businessDetails, id]);
 
   const business = businesses.find((b) => b.publicId === id);
   useEffect(() => {
@@ -153,7 +165,7 @@ export default function BusinessDetail() {
                   {" "}
                   <div className="relative">
                     <Image
-                      src={"/assets/logos.svg"}
+                      src={business.businessPhotos[0]}
                       width={100}
                       height={100}
                       alt="business logo"
@@ -182,14 +194,14 @@ export default function BusinessDetail() {
                     <h1 className="text-xl font-semibold text-white mb-2">
                       {business.business.businessName}
                     </h1>
-                    <p className="text-gray-400 max-w-2xl">
+                    <p className="text-gray-400 text-sm max-w-2xl">
                       {business.highlightsOfBusiness}
                     </p>
                   </div>
                 </div>
                 <Link
                   href={`proposal?id=${business.businessId}`}
-                  className="bg-mainGreen text-white px-6 py-2 text-sm rounded-lg font-medium hover:bg-mainGreens transition-colors flex items-center gap-2"
+                  className="bg-mainGreen text-white px-6 py-2  text-xs text-nowrap rounded-lg font-medium hover:bg-mainGreens transition-colors flex items-center gap-2"
                 >
                   <svg
                     className="w-5 h-5"
@@ -225,14 +237,26 @@ export default function BusinessDetail() {
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Email Address</p>
-                    <p className="text-white">
+                    <p className="text-red-500">
                     Available after connection
                     </p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Phone Number</p>
-                    <p className="text-white">
+                    <p className="text-red-500">
                     Available after connection
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-gray-400 text-sm">Location</p>
+                    <p className="text-red-500">
+                    {businessD?.location}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-gray-400 text-sm">Industry</p>
+                    <p className="text-red-500">
+                    {businessD?.industry}
                     </p>
                   </div>
                 </div>
@@ -326,10 +350,12 @@ export default function BusinessDetail() {
         );
       case 1:
         return (
-        <p>test</p>
+        <p>Fundability Check</p>
         );
       case 2:
         return <div className="p-4">Work in Progress...</div>;
+        case 3:
+          return <div className="p-4">Work in Progress...</div>;
 
       default:
         return <div>Invalid Step</div>;
@@ -348,22 +374,30 @@ export default function BusinessDetail() {
         >
           Business Overview
         </p>
-        {/* <p
+        <p
           className={`cursor-pointer pb-1 ${
             currentStep === 1 ? "border-b-2 border-mainGreen" : ""
           }`}
           onClick={() => setCurrentStep(1)}
         >
           Fundability Check
-        </p> */}
-        {/* <p
+        </p>
+        <p
           className={`cursor-pointer pb-1 ${
             currentStep === 2 ? "border-b-2 border-mainGreen" : ""
           }`}
           onClick={() => setCurrentStep(2)}
         >
-          Investment Proposals
-        </p> */}
+          Valuarion Report
+        </p>
+        <p
+          className={`cursor-pointer pb-1 ${
+            currentStep === 2 ? "border-b-2 border-mainGreen" : ""
+          }`}
+          onClick={() => setCurrentStep(3)}
+        >
+          Business Documents
+        </p>
       </div>
 
       <div className="mt-4">{renderContent()}</div>

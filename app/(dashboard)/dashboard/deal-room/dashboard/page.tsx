@@ -248,6 +248,7 @@ export default function BusinessListings() {
                       fill
                       className="object-cover"
                     />
+                    
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4 mb-4">

@@ -10,6 +10,7 @@ interface DocumentUploadProps {
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   error?: string;
   touched?: boolean;
+  maxSizeKB?: number; // Add maxSizeKB prop with default value in component
 }
 
 const DocumentUpload: React.FC<DocumentUploadProps> = ({
@@ -20,13 +21,27 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
   onBlur,
   error,
   touched,
+  maxSizeKB = 800, // Default to 800KB if not specified
 }) => {
   const [fileName, setFileName] = useState<string>('');
   const [inputKey, setInputKey] = useState<number>(Date.now());
+  const [sizeError, setSizeError] = useState<string>('');
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSizeError('');
+    
     if (event.currentTarget.files && event.currentTarget.files[0]) {
       const file = event.currentTarget.files[0];
+      
+      // Check file size (convert KB to bytes by multiplying by 1024)
+      if (file.size > maxSizeKB * 1024) {
+        setSizeError(`File size exceeds ${maxSizeKB}KB limit`);
+        setFileName('');
+        onChange(null);
+        setInputKey(Date.now()); // Reset input
+        return;
+      }
+      
       setFileName(file.name);
       onChange(file);
     } else {
@@ -37,9 +52,12 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
 
   const handleRemoveFile = () => {
     setFileName('');
+    setSizeError('');
     onChange(null);
     setInputKey(Date.now()); // Reset the key to force re-render
   };
+
+  const displayError = sizeError || (touched && error ? error : '');
 
   return (
     <div className="lg:mb-7 relative">
@@ -61,7 +79,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
           />
         </label>
         <span className="ml-3 text-gray-300 flex items-center">
-          {fileName || (touched && error ? <span className="text-red-500">{error}</span> : 'No file chosen')}
+          {fileName || (displayError ? <span className="text-red-500">{displayError}</span> : 'No file chosen')}
           {fileName && (
             <button
               type="button"
@@ -74,6 +92,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
           )}
         </span>
       </div>
+      {sizeError && <p className="mt-1 text-sm text-red-500">{sizeError}</p>}
     </div>
   );
 };
