@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { Search, ShieldCheck, Users } from 'lucide-react';
-import { getValuatedBusiness } from '@/app/services/dashboard';
+// import { getValuatedBusiness } from '@/app/services/dashboard';
 import Image from 'next/image';
 import Link from 'next/link';
 import Loading from '@/app/loading';

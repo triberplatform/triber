@@ -119,7 +119,7 @@ export default function BusinessDetail() {
     };
 
     fetchBusinessDetails();
-  }, [businessId, token]);
+  }, [businessId, token,id]);
 
   useEffect(() => {
     const fetchBusinesses = async () => {
