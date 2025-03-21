@@ -5,6 +5,7 @@ import { getValuatedBusiness } from '@/app/services/dashboard';
 import Image from 'next/image';
 import Link from 'next/link';
 import Loading from '@/app/loading';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 const filters = ['Finance', 'Health', 'Education', 'Media', 'Other'];
 
@@ -25,7 +26,7 @@ type Business = {
   businessPhone: string;
 }
 
-type set = {
+type Set = {
   set: string;
 }
 
@@ -33,18 +34,18 @@ type DealRoomProfile = {
   id: number;
   publicId: string;
   businessId: string;
-  topSellingProducts: string;
+  topSellingProducts: string[] | string;
   highlightsOfBusiness: string;
   facilityDetails: string;
   fundingDetails: string;
   averageMonthlySales: number;
   reportedYearlySales: number;
   profitMarginPercentage: number;
-  assetsDetails: string;
+  assetsDetails: string[] | string;
   valueOfPhysicalAssets: number;
   tentativeSellingPrice: number;
   reasonForSale: string;
-  businessPhotos: string[] | set | null;
+  businessPhotos: string[] | Set | null;
   proofOfBusiness: string[];
   businessDocuments: string[];
   createdAt: string;
@@ -52,51 +53,106 @@ type DealRoomProfile = {
   business: Business;
 }
 
+type PaginationMetadata = {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+type ApiResponse = {
+  success: boolean;
+  data: {
+    businesses: DealRoomProfile[];
+    metadata: PaginationMetadata;
+  };
+}
+
 export default function BusinessListings() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Get pagination parameters from URL query or use defaults
+  const currentPage = Number(searchParams.get('page') || 1);
+  const rowsPerPage = Number(searchParams.get('size') || 10);
+  
   const [businesses, setBusinesses] = useState<DealRoomProfile[]>([]);
+  const [metadata, setMetadata] = useState<PaginationMetadata>({
+    total: 0,
+    page: currentPage,
+    limit: rowsPerPage,
+    totalPages: 0
+  });
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [error, setError] = useState<string | null>(null);
 
+  // Function to update URL with search params
+  const updateUrlParams = (page: number, size: number) => {
+    const params = new URLSearchParams();
+    params.set('page', page.toString());
+    params.set('size', size.toString());
+    router.push(`?${params.toString()}`);
+  };
+
+  // Fetch businesses with server-side pagination
   useEffect(() => {
     const token = localStorage.getItem('token')
     const fetchBusinesses = async () => {
       try {
-        const response = await getValuatedBusiness(token || "");
-        if (response?.success) {
-          setBusinesses(response.data);
+        setLoading(true);
+        // Create URL with query parameters
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || ''}/dealroom/businesses?page=${currentPage}&size=${rowsPerPage}`;
+        
+        const response = await fetch(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${token || ''}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API request failed with status ${response.status}`);
         }
-      } catch {
-        // Error handling
+        
+        const data: ApiResponse = await response.json();
+        
+        if (data?.success) {
+          if (Array.isArray(data.data.businesses)) {
+            setBusinesses(data.data.businesses);
+            setMetadata(data.data.metadata);
+          } else {
+            console.error("API response businesses is not an array:", data.data);
+            setBusinesses([]);
+            setError("Received invalid data format from server");
+          }
+        } else {
+          console.error("API response unsuccessful:", data);
+          setBusinesses([]);
+          setError("Failed to fetch businesses");
+        }
+      } catch (err) {
+        console.error("Error fetching businesses:", err);
+        setBusinesses([]);
+        setError("An error occurred while fetching businesses");
       } finally {
         setLoading(false);
       }
     };
 
     fetchBusinesses();
-  }, []);
+  }, [currentPage, rowsPerPage]);
 
-  // Filter businesses based on search and filters
-  const filteredBusinesses = businesses.filter(business => {
-    const matchesSearch = searchTerm === "" || 
+  // Filter businesses based on search - note: ideally this would be server-side too
+  const filteredBusinesses = Array.isArray(businesses) ? businesses.filter(business => {
+    return searchTerm === "" || 
       (business.business?.businessName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       (business.highlightsOfBusiness || "").toLowerCase().includes(searchTerm.toLowerCase());
-      
-    // In a real app, you'd add logic here to filter by category based on your data structure
-    const matchesFilters = activeFilters.length === 0; // Placeholder - need actual data structure
-    
-    return matchesSearch && matchesFilters;
-  });
+  }) : [];
 
-  // Pagination logic
-  const totalPages = Math.ceil(filteredBusinesses.length / rowsPerPage);
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const paginatedBusinesses = filteredBusinesses.slice(startIndex, startIndex + rowsPerPage);
-  
   // Generate pagination buttons
   const generatePaginationButtons = () => {
+    const totalPages = metadata.totalPages;
     const maxButtons = 5;
     const buttons = [];
     
@@ -133,8 +189,13 @@ export default function BusinessListings() {
 
   // Handle page change
   const changePage = (newPage: number) => {
-    if (newPage < 1 || newPage > totalPages) return;
-    setCurrentPage(newPage);
+    if (newPage < 1 || newPage > metadata.totalPages) return;
+    updateUrlParams(newPage, rowsPerPage);
+  };
+
+  // Handle rows per page change
+  const changeRowsPerPage = (newSize: number) => {
+    updateUrlParams(1, newSize); // Reset to page 1 when changing page size
   };
 
   // Toggle filter
@@ -145,11 +206,41 @@ export default function BusinessListings() {
       setActiveFilters([...activeFilters, filter]);
     }
     // Reset to first page when filter changes
-    setCurrentPage(1);
+    updateUrlParams(1, rowsPerPage);
+  };
+
+  // Get business photo URL
+  const getBusinessPhotoUrl = (photos: string[] | Set | null): string => {
+    if (!photos) return '/assets/placeholder.jpg';
+    
+    if (Array.isArray(photos) && photos.length > 0) {
+      return photos[0];
+    }
+    
+    if (typeof photos === 'object' && 'set' in photos && photos.set) {
+      return photos.set;
+    }
+    
+    return '/assets/placeholder.jpg';
   };
 
   if (loading) {
     return <Loading text="Loading businesses" />;
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center">
+        <h2 className="text-xl font-bold text-red-500 mb-4">Error</h2>
+        <p>{error}</p>
+        <button 
+          className="mt-4 bg-mainGreen px-4 py-2 rounded-lg"
+          onClick={() => window.location.reload()}
+        >
+          Try Again
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -198,7 +289,8 @@ export default function BusinessListings() {
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                setCurrentPage(1); // Reset to first page when search changes
+                // Note: In a production app, you'd want to debounce this
+                // and make it server-side search
               }}
             />
           </div>
@@ -225,12 +317,12 @@ export default function BusinessListings() {
 
       {/* Business Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
-        {paginatedBusinesses.length === 0 ? (
+        {filteredBusinesses.length === 0 ? (
           <div className="col-span-full text-center py-8">
             <p>No businesses found matching your criteria.</p>
           </div>
         ) : (
-          paginatedBusinesses.map((business) => (
+          filteredBusinesses.map((business) => (
             <div key={business.id} className="bg-mainBlack rounded-lg overflow-hidden">
               <Link href={`dashboard/business?id=${business.publicId}&businessId=${business.businessId}`}>
                 <div className="p-4">
@@ -242,13 +334,11 @@ export default function BusinessListings() {
                   
                   <div className="relative w-full h-32 sm:h-40 mb-4">
                     <Image
-                      src={(Array.isArray(business.businessPhotos) && business.businessPhotos[0]) || 
-                          (business.businessPhotos as set)?.set || '/assets/placeholder.jpg'}
+                      src={getBusinessPhotoUrl(business.businessPhotos)}
                       alt={business.business?.businessName || "Business"}
                       fill
                       className="object-cover"
                     />
-                    
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4 mb-4">
@@ -273,17 +363,14 @@ export default function BusinessListings() {
       </div>
 
       {/* Pagination */}
-      {!loading && filteredBusinesses.length > 0 && (
+      {!loading && metadata.total > 0 && (
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8">
           <div className="flex items-center gap-2">
             <span className="text-sm">Show</span>
             <select 
               className="bg-mainBlack rounded px-2 py-1 text-sm"
               value={rowsPerPage}
-              onChange={(e) => {
-                setRowsPerPage(Number(e.target.value));
-                setCurrentPage(1); // Reset to first page when changing rows per page
-              }}
+              onChange={(e) => changeRowsPerPage(Number(e.target.value))}
             >
               <option value={10}>10</option>
               <option value={20}>20</option>
@@ -291,7 +378,7 @@ export default function BusinessListings() {
             </select>
             <span className="text-sm">Per Page</span>
             <span className="text-sm ml-4">
-              Showing {Math.min(startIndex + 1, filteredBusinesses.length)} to {Math.min(startIndex + rowsPerPage, filteredBusinesses.length)} of {filteredBusinesses.length}
+              Showing {((currentPage - 1) * rowsPerPage) + 1} to {Math.min(currentPage * rowsPerPage, metadata.total)} of {metadata.total}
             </span>
           </div>
           
@@ -336,16 +423,16 @@ export default function BusinessListings() {
             ))}
             
             {/* Last page button (if not in view) */}
-            {paginationButtons[paginationButtons.length - 1] < totalPages && (
+            {paginationButtons[paginationButtons.length - 1] < metadata.totalPages && (
               <>
-                {paginationButtons[paginationButtons.length - 1] < totalPages - 1 && (
+                {paginationButtons[paginationButtons.length - 1] < metadata.totalPages - 1 && (
                   <button className="px-2 py-1 bg-mainBlack rounded-lg text-sm">...</button>
                 )}
                 <button
                   className={`w-8 h-8 rounded-lg text-sm bg-mainBlack`}
-                  onClick={() => changePage(totalPages)}
+                  onClick={() => changePage(metadata.totalPages)}
                 >
-                  {totalPages}
+                  {metadata.totalPages}
                 </button>
               </>
             )}
@@ -353,10 +440,10 @@ export default function BusinessListings() {
             {/* Next page button */}
             <button
               className={`px-3 py-1 rounded-lg text-sm ${
-                currentPage === totalPages ? 'bg-mainBlack text-gray-500' : 'bg-mainBlack'
+                currentPage === metadata.totalPages ? 'bg-mainBlack text-gray-500' : 'bg-mainBlack'
               }`}
               onClick={() => changePage(currentPage + 1)}
-              disabled={currentPage === totalPages}
+              disabled={currentPage === metadata.totalPages}
             >
               Next
             </button>

@@ -12,6 +12,7 @@ import { ValuationFormPayload } from "@/app/type";
 import { useSearchParams } from "next/navigation";
 import MultipleDocumentUpload from "@/app/components/dashboard/MultipleDocument";
 import Link from "next/link";
+import ArrayInput from "@/app/components/dashboard/ArrayInput";
 
 export default function Valuation() {
   const [loading, setLoading] = useState(false);
@@ -21,9 +22,10 @@ export default function Valuation() {
   const id = useSearchParams().get("id");
 
   const validationSchema = Yup.object().shape({
-    topSellingProducts: Yup.string().required(
-      "Please describe your top-selling products and services"
-    ),
+    topSellingProducts: Yup.array()
+      .of(Yup.string().required("Product cannot be empty"))
+      .min(1, "At least one top-selling product is required")
+      .required("Please describe your top-selling products and services"),
     highlightsOfBusiness: Yup.string().required(
       "Business highlights are required"
     ),
@@ -47,7 +49,10 @@ export default function Valuation() {
       .typeError("Must be a number")
       .positive("Must be positive")
       .required("This field is required"),
-    assetsDetails: Yup.string().required("Asset details are required"),
+    assetsDetails: Yup.array()
+      .of(Yup.string().required("Asset cannot be empty"))
+      .min(1, "At least one asset detail is required")
+      .required("Asset details are required"),
     valueOfPhysicalAssets: Yup.number()
       .typeError("Must be a number")
       .positive("Must be positive")
@@ -57,29 +62,30 @@ export default function Valuation() {
       .nullable()
       .test("fileType", "Unsupported file format", (value) => {
         if (!value) return true;
-        const files = Array.isArray(value) ? value : [value];
+        const files = Array.isArray(value) ? value : [value]; // Handles both single and multiple files
         return files.every((file) =>
           ["image/jpeg", "image/png", "image/jpg", "application/pdf"].includes(
             file.type
           )
         );
       }),
-    proofOfBusiness: Yup.mixed()
+      proofOfBusiness: Yup.mixed()
       .nullable()
       .test("fileType", "Unsupported file format", (value) => {
         if (!value) return true;
-        const files = Array.isArray(value) ? value : [value];
-        return files.every((file) =>
-          ["image/jpeg", "image/png", "image/jpg", "application/pdf"].includes(
-            file.type
-          )
-        );
+        // Type guard to check if value is a File
+        if (value instanceof File) {
+          return ["image/jpeg", "image/png", "image/jpg", "application/pdf"].includes(
+            value.type
+          );
+        }
+        return false;
       }),
     businessDocuments: Yup.mixed()
       .nullable()
       .test("fileType", "Unsupported file format", (value) => {
         if (!value) return true;
-        const files = Array.isArray(value) ? value : [value];
+        const files = Array.isArray(value) ? value : [value]; // Handles both single and multiple files
         return files.every((file) =>
           ["image/jpeg", "image/png", "image/jpg", "application/pdf"].includes(
             file.type
@@ -90,7 +96,7 @@ export default function Valuation() {
 
   const initialValues: ValuationFormPayload = {
     businessId: id || "",
-    topSellingProducts: "",
+    topSellingProducts: [""], // Initialize as array with empty string
     highlightsOfBusiness: "",
     facilityDetails: "",
     fundingDetails: "",
@@ -98,7 +104,7 @@ export default function Valuation() {
     reportedYearlySales: 0,
     profitMarginPercentage: 0,
     tentativeSellingPrice: 0,
-    assetsDetails: "",
+    assetsDetails: [""], // Initialize as array with empty string
     valueOfPhysicalAssets: 0,
     reasonForSale: "",
     businessPhotos: null,
@@ -146,16 +152,26 @@ export default function Valuation() {
           {(formikProps: FormikProps<ValuationFormPayload>) => (
             <Form>
               <div className="lg:bg-mainBlack flex flex-col  py-8 lg:gap-0 gap-5 lg:px-5">
-                <FormInput
-                  label="What are the business's top-selling products and services, who uses them, and how?"
-                  name="topSellingProducts"
-                  placeholder="Top selling products and services"
-                  value={formikProps.values.topSellingProducts}
-                  onChange={formikProps.handleChange}
-                  onBlur={formikProps.handleBlur}
-                  error={formikProps.errors.topSellingProducts}
-                  touched={formikProps.touched.topSellingProducts}
-                />
+                <div className="mb-5">
+                  <ArrayInput
+                    label="What are the business's top-selling products and services, who uses them, and how?"
+                    name="topSellingProducts"
+                    values={formikProps.values.topSellingProducts as string[]}
+                    onChange={(newValues) =>
+                      formikProps.setFieldValue("topSellingProducts", newValues)
+                    }
+                  />
+                  {formikProps.touched.topSellingProducts &&
+                    formikProps.errors.topSellingProducts && (
+                      <div className="text-red-500 text-sm mt-1">
+                        {typeof formikProps.errors.topSellingProducts ===
+                        "string"
+                          ? formikProps.errors.topSellingProducts
+                          : "Please add at least one product"}
+                      </div>
+                    )}
+                </div>
+
                 <FormInput
                   label="Mention highlights of the business including number of clients, revenue model, promoter experience, business relationships, awards, etc."
                   name="highlightsOfBusiness"
@@ -214,7 +230,6 @@ export default function Valuation() {
                       error={formikProps.errors.averageMonthlySales}
                       touched={formikProps.touched.averageMonthlySales}
                     />
-                
                   </div>
                   <div>
                     <FormInput
@@ -243,7 +258,6 @@ export default function Valuation() {
                       error={formikProps.errors.reportedYearlySales}
                       touched={formikProps.touched.reportedYearlySales}
                     />
-           
                   </div>
                 </div>
                 <div className="lg:grid lg:grid-cols-2 flex flex-col lg:items-end lg:mt-5 gap-5">
@@ -304,16 +318,26 @@ export default function Valuation() {
                     />
                   </div>
                 </div>
-                <FormInput
-                  label="List all the tangible and intangible assets the buyer would get."
-                  name="assetsDetails"
-                  placeholder="Assets Details"
-                  value={formikProps.values.assetsDetails}
-                  onChange={formikProps.handleChange}
-                  onBlur={formikProps.handleBlur}
-                  error={formikProps.errors.assetsDetails}
-                  touched={formikProps.touched.assetsDetails}
-                />
+
+                <div className="mb-5 mt-5">
+                  <ArrayInput
+                    label="List all the tangible and intangible assets the buyer would get."
+                    name="assetsDetails"
+                    values={formikProps.values.assetsDetails as string[]}
+                    onChange={(newValues) =>
+                      formikProps.setFieldValue("assetsDetails", newValues)
+                    }
+                  />
+                  {formikProps.touched.assetsDetails &&
+                    formikProps.errors.assetsDetails && (
+                      <div className="text-red-500 text-sm mt-1">
+                        {typeof formikProps.errors.assetsDetails === "string"
+                          ? formikProps.errors.assetsDetails
+                          : "Please add at least one asset"}
+                      </div>
+                    )}
+                </div>
+
                 <div className="lg:grid lg:grid-cols-2 flex flex-col lg:items-end gap-5">
                   <div>
                     <FormInput
@@ -360,15 +384,15 @@ export default function Valuation() {
                 <div className="grid lg:grid-cols-2 gap-5">
                   <div>
                     <MultipleDocumentUpload
-                      label="Business Photos"
-                      name="businessPhotos"
-                      multiple={true}
-                      onChange={(files) => {
-                        formikProps.setFieldValue("businessPhotos", files);
-                      }}
+                      label="Business Document"
+                      name="businessDocuments"
+                      multiple={true} // This is correctly set to true
+                      onChange={(file) =>
+                        formikProps.setFieldValue("businessDocuments", file)
+                      }
                       onBlur={formikProps.handleBlur}
-                      error={formikProps.errors.businessPhotos}
-                      touched={formikProps.touched.businessPhotos}
+                      error={formikProps.errors.businessDocuments}
+                      touched={formikProps.touched.businessDocuments}
                       accept="application/pdf, image/*"
                     />
                   </div>
@@ -376,10 +400,13 @@ export default function Valuation() {
                     <MultipleDocumentUpload
                       label="Proof of Business"
                       name="proofOfBusiness"
-                      multiple={true}
-                      onChange={(file) =>
-                        formikProps.setFieldValue("proofOfBusiness", file)
-                      }
+                      multiple={false} // Changed to false for single file upload
+                      onChange={(file) => {
+                        // If an array is returned (due to component implementation),
+                        // take only the first file since we want a single file
+                        const singleFile = Array.isArray(file) && file.length > 0 ? file[0] : file;
+                        formikProps.setFieldValue("proofOfBusiness", singleFile);
+                      }}
                       onBlur={formikProps.handleBlur}
                       error={formikProps.errors.proofOfBusiness}
                       touched={formikProps.touched.proofOfBusiness}
@@ -391,21 +418,20 @@ export default function Valuation() {
                 <div className="grid lg:grid-cols-2 gap-5">
                   <div className="col-span-1">
                     <MultipleDocumentUpload
-                      label="Business Document"
-                      name="businessDocuments"
-                      multiple={true}
-                      onChange={(file) =>
-                        formikProps.setFieldValue("businessDocuments", file)
-                      }
+                      label="Business Photos"
+                      name="businessPhotos"
+                      multiple={true} // This enables multiple file uploads
+                      onChange={(files) => {
+                        formikProps.setFieldValue("businessPhotos", files);
+                      }}
                       onBlur={formikProps.handleBlur}
-                      error={formikProps.errors.businessDocuments}
-                      touched={formikProps.touched.businessDocuments}
+                      error={formikProps.errors.businessPhotos}
+                      touched={formikProps.touched.businessPhotos}
                       accept="application/pdf, image/*"
                     />
                   </div>
                 </div>
                 <button
-
                   className="px-4 lg:mb-5 py-2 w-full text-white bg-mainGreen rounded"
                   type="submit"
                   onClick={(e) => {
@@ -437,8 +463,8 @@ export default function Valuation() {
               <div className="col-span-7">
                 <p className="text-xl mb-3 font-bold">Profile Submitted!</p>
                 <p className="lg:text-base text-sm">
-                  Your business profile has been successfully submitted. We&apos;re
-                  now reviewing your information{" "}
+                  Your business profile has been successfully submitted.
+                  We&apos;re now reviewing your information{" "}
                 </p>
               </div>
               <div className="col-span-3 flex justify-center item-center mt-6">
@@ -446,11 +472,13 @@ export default function Valuation() {
               </div>
             </div>
             <button className="w-full text-white bg-mainGreen px-4 py-2 mt-5">
-            <Link href={`investor-dashboard?id=${id}`} className="  rounded mt-5">
-              Go to Deal Room
-            </Link>
+              <Link
+                href={`investor-dashboard?id=${id}`}
+                className="rounded mt-5"
+              >
+                Go to Deal Room
+              </Link>
             </button>
-          
           </div>
         </Modal>
       )}

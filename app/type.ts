@@ -169,8 +169,8 @@ export interface InvestorProfile {
   updatedAt: string;
 }
 export interface ValuationFormPayload {
-  businessId:string;
-  topSellingProducts: string;
+  businessId: string;
+  topSellingProducts: string[] | string;
   highlightsOfBusiness: string;
   facilityDetails: string;
   fundingDetails: string;
@@ -178,12 +178,13 @@ export interface ValuationFormPayload {
   reportedYearlySales: number;
   profitMarginPercentage: number;
   tentativeSellingPrice: number;
-  assetsDetails: string;
+  assetsDetails: string[] | string;
   valueOfPhysicalAssets: number;
   reasonForSale: string;
   businessPhotos: File[] | null;
-  proofOfBusiness: File[] | null;
-  businessDocuments: File[] | null;}
+  proofOfBusiness: File | null;
+  businessDocuments: File[] | null;
+}
 
 export interface FundabilityPayload {
   registeredCompany: boolean | string;

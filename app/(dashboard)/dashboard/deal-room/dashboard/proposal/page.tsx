@@ -77,7 +77,7 @@ export default function Valuation() {
             <Form>
               <div className="lg:bg-mainBlack flex flex-col h-[50vh] justify-center  py-8 lg:gap-0 gap-5 lg:px-5">
                 <TextArea
-                  label="Send a message to the business owner"
+                  label="Send an elevation Pitch to the business and include your proposal"
                   name="message"
                   placeholder="Write a message"
                   value={formikProps.values.message}
@@ -85,8 +85,6 @@ export default function Valuation() {
                   onBlur={formikProps.handleBlur}
                   error={formikProps.errors.message}
                 />
-
-    
                 <div className="lg:col-span-2 mt-5">
                   <button
                     className="px-4 py-2 w-full text-white bg-mainGreen rounded"

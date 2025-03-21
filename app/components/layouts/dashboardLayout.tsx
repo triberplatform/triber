@@ -30,7 +30,7 @@ interface ProfileChangeEvent extends CustomEvent {
 
 // Separate navigation components into their own client components
 const BusinessNavLinks = () => (
-  <div className="flex flex-col gap-6">
+  <div className="flex flex-col gap-6 pl-3">
     <Link href="/dashboard" className="items-center gap-2 hover:text-mainGreen flex">
       <LuLayoutDashboard />  Home
     </Link>
@@ -44,7 +44,7 @@ const BusinessNavLinks = () => (
 )
 
 const InvestorNavLinks = () => (
-  <div className="flex flex-col gap-6">
+  <div className="flex flex-col gap-6 pl-3">
     <Link href="/dashboard/investor" className="items-center gap-2 hover:text-mainGreen flex">
       <LuLayoutDashboard />  Home
     </Link>
@@ -158,13 +158,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             className="w-16 self-center"
             priority
           />
-          <nav className="py-10 flex flex-col relative ml-2 h-screen items-start text-base">
+          <nav className="py-10 flex flex-col justify-between relative ml-2 h-screen items-start text-base">
             <div className='text-sm'>
               {/* Use the NavLinks component determined by state */}
               <NavLinks />
             </div>
            
-            <div className="flex flex-col absolute bottom-0 text-sm left-0 gap-6">
+            <div className="flex flex-col text-sm pl-3 gap-6">
               <Link href="#" className="items-center gap-2 hover:text-mainGreen flex">
                 <IoSettingsOutline /> Settings
               </Link>
@@ -208,8 +208,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <NavLinks />
               </nav>
 
-              <div className="mt-auto pt-16 border-t text-sm border-gray-700 flex flex-col gap-6">
-                <Link href="#" className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded">
+              <div className="mt-auto border-t text-sm border-gray-700 flex flex-col  gap-6">
+                <Link href="#" className="flex items-center gap-2 p-2  hover:bg-gray-800 rounded">
                   <IoSettingsOutline /> Settings
                 </Link>
                 <Link href="#" className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded">

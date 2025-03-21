@@ -179,7 +179,7 @@ export const startupFundabilityTest = async (payload: FormData, token: string) =
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
-
+        
       },
       body: payload,
     });
@@ -241,37 +241,40 @@ export const jobRequest = async (payload: JobConnectForm) => {
 export const getValuation = async (payload: ValuationFormPayload, token: string) => {
   try {
     const formData = new FormData();
-
-    // Append all non-file fields
+    
+    // Handle all non-file fields
     Object.entries(payload).forEach(([key, value]) => {
       if (key !== 'businessPhotos' && key !== 'proofOfBusiness' && key !== 'businessDocuments') {
         if (value !== null && value !== undefined) {
-          formData.append(key, value.toString());
+          // Convert arrays to JSON strings before appending to formData
+          if (Array.isArray(value)) {
+            formData.append(key, JSON.stringify(value));
+          } else {
+            formData.append(key, value.toString());
+          }
         }
       }
     });
-
+    
     // Handle businessPhotos (multiple files)
     if (payload.businessPhotos && Array.isArray(payload.businessPhotos)) {
       payload.businessPhotos.forEach((photo) => {
         formData.append('businessPhotos', photo);
       });
     }
-
-    // Handle proofOfBusiness (multiple files)
-    if (payload.proofOfBusiness && Array.isArray(payload.proofOfBusiness)) {
-      payload.proofOfBusiness.forEach((proof) => {
-        formData.append('proofOfBusiness', proof);
-      });
+    
+    // Handle proofOfBusiness (single file)
+    if (payload.proofOfBusiness) {
+      formData.append('proofOfBusiness', payload.proofOfBusiness);
     }
-
+    
     // Handle businessDocuments (multiple files)
     if (payload.businessDocuments && Array.isArray(payload.businessDocuments)) {
       payload.businessDocuments.forEach((doc) => {
         formData.append('businessDocuments', doc);
       });
     }
-
+    
     const response = await fetch(`${apiUrl}/dealroom/create`, {
       method: "POST",
       headers: {
@@ -279,7 +282,7 @@ export const getValuation = async (payload: ValuationFormPayload, token: string)
       },
       body: formData,
     });
-
+    
     return response;
   } catch (error) {
     console.error("Error during API call:", error);
@@ -326,23 +329,31 @@ export const submitProposalBusiness = async (payload: ProposalPayload, token: st
 }
 
 
-
-
-export const getValuatedBusiness = async (token: string) => {
+export const getValuatedBusiness = async (token: string, page = 1, size = 10) => {
   try {
-    const response = await fetch(`${apiUrl}/dealroom/businesses`, {
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      size: size.toString()
+    });
+
+    const response = await fetch(`${apiUrl}/dealroom/businesses?${queryParams}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
-    const BusinessDetails = await response.json();
-    return BusinessDetails;
+    
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
+    
+    const businessDetails = await response.json();
+    return businessDetails;
   }
-  catch {
-    console.error('unable to fetch')
+  catch (error) {
+    console.error('Unable to fetch businesses:', error);
+    throw error; // Rethrow to allow component to handle the error
   }
-
-}
+};
 
 export const getBusinessProposals = async (token: string, businessId: string) => {
   try {

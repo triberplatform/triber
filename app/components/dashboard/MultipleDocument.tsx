@@ -23,36 +23,37 @@ const MultipleDocumentUpload: React.FC<DocumentUploadProps> = ({
   error,
   touched,
 }) => {
-  const [fileNames, setFileNames] = useState<string[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
   const [inputKey, setInputKey] = useState<number>(Date.now());
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.currentTarget.files && event.currentTarget.files.length > 0) {
-      const files = Array.from(event.currentTarget.files);
+      const selectedFiles = Array.from(event.currentTarget.files);
       
       if (multiple) {
-        setFileNames(files.map(file => file.name));
-        onChange(files);
+        // For multiple files, add the newly selected files to existing ones
+        const updatedFiles = [...files, ...selectedFiles];
+        setFiles(updatedFiles);
+        onChange(updatedFiles);
       } else {
-        setFileNames([files[0].name]);
-        onChange(files[0]);
+        // For single file, just use the first one
+        setFiles([selectedFiles[0]]);
+        onChange(selectedFiles[0]);
       }
     } else {
-      setFileNames([]);
+      setFiles([]);
       onChange(null);
     }
   };
 
   const handleRemoveFile = (index: number) => {
-    const newFileNames = fileNames.filter((_, i) => i !== index);
-    setFileNames(newFileNames);
+    const newFiles = files.filter((_, i) => i !== index);
+    setFiles(newFiles);
     
     if (multiple) {
       // If there are remaining files, update with the filtered list
-      if (newFileNames.length > 0) {
-        // We need to create new File objects here since we only have names
-        // In practice, you might want to keep track of the actual File objects
-        onChange(newFileNames.map(name => new File([], name)));
+      if (newFiles.length > 0) {
+        onChange(newFiles);
       } else {
         onChange(null);
       }
@@ -60,9 +61,18 @@ const MultipleDocumentUpload: React.FC<DocumentUploadProps> = ({
       onChange(null);
     }
 
-    if (newFileNames.length === 0) {
+    if (newFiles.length === 0) {
       setInputKey(Date.now()); // Reset input only if all files are removed
     }
+  };
+
+  // Function to truncate long filenames
+  const truncateFileName = (fileName: string, maxLength: number = 20) => {
+    if (fileName.length <= maxLength) return fileName;
+    const extension = fileName.split('.').pop() || '';
+    const nameWithoutExtension = fileName.substring(0, fileName.lastIndexOf('.'));
+    const truncatedName = nameWithoutExtension.substring(0, maxLength - extension.length - 3);
+    return `${truncatedName}...${extension}`;
   };
 
   return (
@@ -71,7 +81,7 @@ const MultipleDocumentUpload: React.FC<DocumentUploadProps> = ({
         {label}
       </label>
       <div className="mt-1">
-        <label className="text-mainGreen flex gap-3 items-center py-2 px-4 text-sm bg-black rounded-md cursor-pointer">
+        <label className="text-mainGreen flex gap-3 items-center py-2 px-4 text-sm bg-black rounded-md cursor-pointer hover:bg-black/80 transition-colors">
           <BiUpload size={15} /> Upload Document
           <input
             key={inputKey}
@@ -88,11 +98,13 @@ const MultipleDocumentUpload: React.FC<DocumentUploadProps> = ({
         
         {/* File List */}
         <div className="mt-2">
-          {fileNames.length > 0 ? (
+          {files.length > 0 ? (
             <ul className="space-y-2">
-              {fileNames.map((name, index) => (
-                <li key={index} className="flex items-center text-gray-300">
-                  <span className="truncate max-w-xs">{name}</span>
+              {files.map((file, index) => (
+                <li key={index} className="flex items-center justify-between text-gray-300 bg-black/20 p-2 rounded">
+                  <span className="truncate max-w-xs" title={file.name}>
+                    {truncateFileName(file.name)}
+                  </span>
                   <button
                     type="button"
                     className="ml-2 text-red-500 hover:text-red-700 focus:outline-none"

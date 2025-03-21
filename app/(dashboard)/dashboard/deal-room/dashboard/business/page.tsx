@@ -14,8 +14,8 @@ import Loading from "@/app/loading";
 import { FundType } from "@/app/type";
 import CircularProgress from "@/app/components/dashboard/Circular";
 // Import icons for the fundability section
-import { FaCalendarAlt } from "react-icons/fa";
-import { IoLocation } from "react-icons/io5";
+import { FaCalendarAlt, FaDownload, FaFileAlt, FaImage } from "react-icons/fa";
+import { IoLocation, IoClose } from "react-icons/io5";
 import { MdOutlinePermIdentity } from "react-icons/md";
 import { LiaIndustrySolid } from "react-icons/lia";
 
@@ -43,7 +43,7 @@ type DealRoomProfile = {
   tentativeSellingPrice: number;
   reasonForSale: string;
   businessPhotos: string[];
-  proofOfBusiness: string[];
+  proofOfBusiness: string; // Changed from array to string
   businessDocuments: string[];
   createdAt: string;
   updatedAt: string;
@@ -91,6 +91,10 @@ export default function BusinessDetail() {
   const [fundabilityData, setFundabilityData] = useState<FundType | null>(null);
   const [fundabilityLoading, setFundabilityLoading] = useState(false);
   const [fundabilityFetched, setFundabilityFetched] = useState(false);
+  // State for photo gallery lightbox
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [activeGalleryTab, setActiveGalleryTab] = useState('photos');
 
   // Fetch business details directly from API
   useEffect(() => {
@@ -117,14 +121,12 @@ export default function BusinessDetail() {
     fetchBusinessDetails();
   }, [businessId, token]);
 
-  const business = businesses.find((b) => b.publicId === id);
-
   useEffect(() => {
     const fetchBusinesses = async () => {
       try {
         const response = await getValuatedBusiness(token || "");
         if (response?.success) {
-          setBusinesses(response.data);
+          setBusinesses(response.data.businesses);
         }
       } catch (error) {
         console.error("Unable to fetch businesses:", error);
@@ -133,7 +135,9 @@ export default function BusinessDetail() {
 
     fetchBusinesses();
   }, [token]);
-console.log(businessDetails?.businessStage)
+
+  const business = businesses.find((b) => b.publicId === id);
+  
   // Fetch fundability results 
   useEffect(() => {
     const fetchFundabilityResults = async () => {
@@ -175,6 +179,48 @@ console.log(businessDetails?.businessStage)
     fetchFundabilityResults();
   }, [businessDetails, id, businessId, currentStep, fundabilityFetched]);
 
+  // Lightbox functions for photo gallery
+  const openLightbox = (index: number) => {
+    setCurrentImageIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+  };
+
+  const nextImage = () => {
+    // Only apply to photos since proofOfBusiness is now a string
+    if (activeGalleryTab === 'photos' && business?.businessPhotos) {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % business.businessPhotos.length);
+    }
+  };
+
+  const prevImage = () => {
+    // Only apply to photos since proofOfBusiness is now a string
+    if (activeGalleryTab === 'photos' && business?.businessPhotos) {
+      setCurrentImageIndex((prevIndex) => (prevIndex - 1 + business.businessPhotos.length) % business.businessPhotos.length);
+    }
+  };
+
+  // Function to get file extension from URL
+  const getFileExtension = (url: string) => {
+    return url.split('.').pop()?.toLowerCase() || '';
+  };
+
+  // Function to get file name from URL
+  const getFileName = (url: string) => {
+    const parts = url.split('/');
+    const fileName = parts[parts.length - 1];
+    // Decode URL encoded characters
+    return decodeURIComponent(fileName);
+  };
+
+  // Function to determine if a file is an image
+  const isImageFile = (url: string) => {
+    const extension = getFileExtension(url);
+    return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(extension);
+  };
  
   if (loading) {
     return <Loading text="Loading" />;
@@ -275,7 +321,7 @@ console.log(businessDetails?.businessStage)
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Location</p>
-                    <p >{businessDetails?.location}</p>
+                    <p>{businessDetails?.location}</p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Industry</p>
@@ -617,71 +663,18 @@ console.log(businessDetails?.businessStage)
                           </p>
                         </div>
                         <div className="flex flex-col">
-                          <p className="text-xs text-gray-400">Required Licenses</p>
-                          <p className={`text-sm ${fundabilityData.licensesToOperate ? 'text-mainGreen' : 'text-gray-400'}`}>
-                              {fundabilityData.licensesToOperate ? 'All Acquired' : 'Not Applicable'}
-                            </p>
+                        <p className="text-xs text-gray-400">Required Licenses</p>
+                              <p className={`text-sm ${fundabilityData.licensesToOperate ? 'text-mainGreen' : 'text-gray-400'}`}>
+                                {fundabilityData.licensesToOperate ? 'All Acquired' : 'Not Applicable'}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-      
-                    {/* Funding Recommendation */}
-                    {/* <div>
-                      <h3 className="text-lg font-medium mb-3 flex items-center">
-                        <FaCalendarAlt className="text-mainGreen mr-2" /> 
-                        Funding Recommendation
-                      </h3>
-                      <div className="bg-zinc-800 p-4 rounded-lg">
-                        {fundabilityData.score >= 80 ? (
-                          <div className="space-y-3">
-                            <div className="flex items-start mb-2">
-                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                              <p className="text-sm">Your business shows strong fundability. Consider equity financing, venture capital, or traditional bank loans.</p>
-                            </div>
-                            <div className="flex items-start mb-2">
-                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                              <p className="text-sm">Your documentation and financial track record position you well for premium funding options.</p>
-                            </div>
-                          </div>
-                        ) : fundabilityData.score >= 60 ? (
-                          <div className="space-y-3">
-                            <div className="flex items-start mb-2">
-                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                              <p className="text-sm">Your business shows moderate fundability. Consider angel investors, government grants, or asset-backed loans.</p>
-                            </div>
-                            <div className="flex items-start mb-2">
-                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                              <p className="text-sm">Improving your documentation and addressing financial gaps could increase your funding options.</p>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="space-y-3">
-                            <div className="flex items-start mb-2">
-                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                              <p className="text-sm">Your business may benefit from bootstrapping, friends & family funding, or microloans.</p>
-                            </div>
-                            <div className="flex items-start mb-2">
-                              <div className="w-2 h-2 bg-mainGreen rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                              <p className="text-sm">Consider addressing key areas in your business structure and documentation before seeking larger funding.</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div> */}
                   </div>
                 </div>
-      
-                {/* Next button */}
-                <div className="flex justify-end mt-6">
-                  <button 
-                    onClick={() => setCurrentStep(2)}
-                    className="bg-mainGreen text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-mainGreen/90 transition-colors"
-                  >
-                    Next: Investment Proposals
-                  </button>
-                </div>
-              </div>
+            
             ) : businessDetails?.fundabilityTestDetails?.publicId ? (
               <div className="flex justify-center items-center h-[60vh]">
                 <div className="text-center">
@@ -703,7 +696,6 @@ console.log(businessDetails?.businessStage)
                   <p className="mb-6">
                    The business is yet to carry out an assessment
                   </p>
-                
                 </div>
               </div>
             )}
@@ -711,8 +703,226 @@ console.log(businessDetails?.businessStage)
         );
       case 2:
         return <div className="p-4">Valuation Report - Work in Progress...</div>;
-      case 3:
-        return <div className="p-4">Business Documents - Work in Progress...</div>;
+      
+      case 3: // Photo Gallery Tab
+        return (
+          <div className="bg-mainBlack rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">Photo Gallery</h2>
+            
+            {/* Tab Navigation */}
+            <div className="flex border-b border-gray-800 mb-4">
+              <button 
+                className={`px-4 py-2 font-medium text-sm ${activeGalleryTab === 'photos' ? 'text-mainGreen border-b-2 border-mainGreen' : 'text-gray-400'}`}
+                onClick={() => setActiveGalleryTab('photos')}
+              >
+                <div className="flex items-center">
+                  <FaImage className="mr-2" />
+                  Business Photos ({business.businessPhotos.length})
+                </div>
+              </button>
+              <button 
+                className={`px-4 py-2 font-medium text-sm ${activeGalleryTab === 'proof' ? 'text-mainGreen border-b-2 border-mainGreen' : 'text-gray-400'}`}
+                onClick={() => setActiveGalleryTab('proof')}
+              >
+                <div className="flex items-center">
+                  <FaImage className="mr-2" />
+                  Proof of Business
+                </div>
+              </button>
+            </div>
+            
+            {/* Photo Grid */}
+            {activeGalleryTab === 'photos' && (
+              <>
+                {business.businessPhotos.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {business.businessPhotos.map((photo, index) => (
+                      <div 
+                        key={index} 
+                        className="relative aspect-square overflow-hidden rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => openLightbox(index)}
+                      >
+                        {isImageFile(photo) ? (
+                          <Image 
+                            src={photo} 
+                            alt={`Business photo ${index + 1}`} 
+                            fill
+                            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="bg-zinc-800 h-full w-full flex items-center justify-center">
+                            <FaFileAlt size={40} className="text-gray-400" />
+                            <p className="text-xs mt-2">{getFileExtension(photo).toUpperCase()}</p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-400 text-center py-8">No business photos available</p>
+                )}
+              </>
+            )}
+            
+            {/* Proof of Business (now as a single string) */}
+            {activeGalleryTab === 'proof' && (
+              <>
+                {business.proofOfBusiness ? (
+                  <div className="bg-zinc-800 p-6 rounded-lg">
+                    {isImageFile(business.proofOfBusiness) ? (
+                      <div className="flex justify-center">
+                        <div className="relative w-full max-w-xl aspect-video">
+                          <Image 
+                            src={business.proofOfBusiness} 
+                            alt="Proof of business" 
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center p-8">
+                        <FaFileAlt size={60} className="text-gray-400 mb-4" />
+                        <p className="text-base mb-2">{getFileName(business.proofOfBusiness)}</p>
+                        <a 
+                          href={business.proofOfBusiness} 
+                          download 
+                          className="mt-4 flex items-center bg-mainGreen text-black px-4 py-2 rounded-md hover:bg-mainGreen/90 transition-colors"
+                        >
+                          <FaDownload className="mr-2" /> Download Document
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-gray-400 text-center py-8">No proof of business available</p>
+                )}
+              </>
+            )}
+            
+            {/* Lightbox (only for businessPhotos now) */}
+            {lightboxOpen && activeGalleryTab === 'photos' && (
+              <div 
+                className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+                onClick={closeLightbox}
+              >
+                <div className="relative max-w-4xl max-h-[80vh] w-full" onClick={(e) => e.stopPropagation()}>
+                  <button 
+                    className="absolute top-2 right-2 z-10 bg-black bg-opacity-50 rounded-full p-2"
+                    onClick={closeLightbox}
+                  >
+                    <IoClose size={24} />
+                  </button>
+                  
+                  <div className="relative h-[80vh]">
+                    {business.businessPhotos[currentImageIndex] && (
+                      <>
+                        {isImageFile(business.businessPhotos[currentImageIndex]) ? (
+                          <Image 
+                            src={business.businessPhotos[currentImageIndex]} 
+                            alt="Gallery image" 
+                            fill
+                            className="object-contain"
+                          />
+                        ) : (
+                          <div className="bg-zinc-800 h-full w-full flex flex-col items-center justify-center">
+                            <FaFileAlt size={80} className="text-gray-400" />
+                            <p className="text-lg mt-4">{getFileName(business.businessPhotos[currentImageIndex])}</p>
+                            <a 
+                              href={business.businessPhotos[currentImageIndex]} 
+                              download 
+                              className="mt-4 flex items-center bg-mainGreen text-black px-4 py-2 rounded-md hover:bg-mainGreen/90 transition-colors"
+                            >
+                              <FaDownload className="mr-2" /> Download
+                            </a>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  
+                  {business.businessPhotos.length > 1 && (
+                    <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+                      <div className="bg-black bg-opacity-60 px-3 py-1 rounded-full">
+                        <p className="text-sm">{currentImageIndex + 1} / {business.businessPhotos.length}</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {business.businessPhotos.length > 1 && (
+                    <>
+                      <button 
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-3"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          prevImage();
+                        }}
+                      >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <button 
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-3"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          nextImage();
+                        }}
+                      >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 4: // Business Documents Tab
+        return (
+          <div className="bg-mainBlack rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-white mb-6">Business Documents</h2>
+            
+            {business.businessDocuments.length > 0 ? (
+              <div className="space-y-4">
+                {business.businessDocuments.map((doc, index) => (
+                  <div 
+                    key={index} 
+                    className="flex items-center justify-between p-4 bg-zinc-800 rounded-lg hover:bg-zinc-700 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <div className="p-3 bg-zinc-700 rounded-lg mr-4">
+                        <FaFileAlt className="text-mainGreen text-xl" />
+                      </div>
+                      <div>
+                        <p className="font-medium">{getFileName(doc)}</p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          {isImageFile(doc) ? 'Image Document' : `${getFileExtension(doc).toUpperCase()} Document`}
+                        </p>
+                      </div>
+                    </div>
+                    <a 
+                      href={doc} 
+                      download 
+                      className="p-3 bg-mainGreen text-black rounded-lg hover:bg-mainGreen/90 transition-colors flex items-center"
+                    >
+                      <FaDownload className="mr-2" /> Download
+                    </a>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-zinc-800 rounded-lg">
+                <FaFileAlt size={40} className="mx-auto text-gray-500 mb-4" />
+                <p className="text-gray-400">No business documents available</p>
+              </div>
+            )}
+          </div>
+        );
 
       default:
         return <div>Invalid Step</div>;
@@ -752,6 +962,14 @@ console.log(businessDetails?.businessStage)
             currentStep === 3 ? "border-b-2 border-mainGreen" : ""
           }`}
           onClick={() => setCurrentStep(3)}
+        >
+          Photo Gallery
+        </p>
+        <p
+          className={`cursor-pointer pb-1 ${
+            currentStep === 4 ? "border-b-2 border-mainGreen" : ""
+          }`}
+          onClick={() => setCurrentStep(4)}
         >
           Business Documents
         </p>
