@@ -52,10 +52,10 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
     totalAddressableMarket: Yup.string().required("TAM is required"),
     title: Yup.string().required("Title is required"),
     yearsOfOperation: Yup.number()
-      .min(0, "Years of Operation cannot be negative")
+      .min(1, "Years of Operation cannot be zero")
       .notRequired(),
     companySize: Yup.number()
-      .min(0, "Company Size cannot be negative")
+      .min(1, "Company Size cannot be zero")
       .required("Company Size is required"),
     companyLegalCases: Yup.mixed()
       .test(
@@ -93,7 +93,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
       .required("This field is required"),
     expectedAnnualRevenueGrowthRate: Yup.number()
       .typeError("Must be a number")
-      .min(0, "Must be 0 or higher")
+      .min(1, "Must be 1 or higher")
       .max(100, "Must be 100 or lower"),
     licensesToOperate: Yup.mixed()
       .test(
