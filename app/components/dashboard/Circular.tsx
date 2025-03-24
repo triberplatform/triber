@@ -9,7 +9,7 @@ interface CircularProgressProps {
 }
 
 const CircularProgress: React.FC<CircularProgressProps> = ({
-  value = 61,
+  value =61 ,
   size = 180,
   strokeWidth = 15,
   className = "",

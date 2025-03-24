@@ -409,7 +409,7 @@ export const getFundabilityResultsSme = async (token: string,fundabilityId:strin
 
 export const getFundabilityResultsStartup = async (token: string,fundabilityId:string) => {
   try {
-    const response = await fetch(`${apiUrl}fundability/startup/${fundabilityId}`, {
+    const response = await fetch(`${apiUrl}/fundability/startup/${fundabilityId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -441,7 +441,7 @@ export const getFundabilityResultsSmeBusinessId  = async (token: string,fundabil
 
 export const getFundabilityResultsStartupBusinessId = async (token: string,fundabilityId:string) => {
   try {
-    const response = await fetch(`${apiUrl}fundability/test/startup/${fundabilityId}`, {
+    const response = await fetch(`${apiUrl}/fundability/test/startup/${fundabilityId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

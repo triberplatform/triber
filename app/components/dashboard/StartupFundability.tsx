@@ -229,52 +229,98 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
   const handlePrevious = () => {
     if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
-
   const handleSubmit = async (values: StartupFundabilityPayload) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-
+  
       // Create a new FormData object
       const formData = new FormData();
-      // Append each field to FormData
+      
+      // Filter out empty non-required fields
+      // List of fields that are not required according to the validation schema
+      const nonRequiredFields = [
+        "yearsOfOperation",
+        "isicActivity",
+        "legalAdvisors",
+        "expectedAnnualGrowthRate",
+        "certificateOfIncorporation",
+        "memorandumOfAssociation",
+        "statusReport",
+        "letterOfGoodStanding",
+        "companyLiabilitySchedule",
+        "businessPlan",
+        "financialStatements",
+        "relevantLicenses",
+        "pitchDeck"
+      ];
+  
+      // Append each field to FormData, skipping empty non-required fields
       Object.entries(values).forEach(([key, value]) => {
+        // Skip empty non-required fields
+        if (nonRequiredFields.includes(key)) {
+          // For arrays, check if empty or only contains empty strings
+          if (Array.isArray(value)) {
+            if (value.length === 0 || (value.length === 1 && value[0] === "")) {
+              return; // Skip this field
+            }
+          } 
+          // For numbers, check if 0 (might be default value)
+          else if (typeof value === "number" && value === 0) {
+            return; // Skip this field
+          }
+          // For strings, check if empty
+          else if (typeof value === "string" && value === "") {
+            return; // Skip this field
+          }
+          // For null values
+          else if (value === null) {
+            return; // Skip this field
+          }
+        }
+  
+        // Add the field to the payload
         if (value instanceof File || value instanceof Blob) {
-          // Append files directly
-          formData.append(key, value);
+          // Append files directly (but only if they exist)
+          if (value !== null) {
+            formData.append(key, value);
+          }
         } else if (Array.isArray(value)) {
-          // Convert array to JSON string and append
-          formData.append(key, JSON.stringify(value));
+          // Filter out empty strings from arrays before converting to JSON
+          const filteredArray = value.filter(item => item !== "");
+          if (filteredArray.length > 0) {
+            formData.append(key, JSON.stringify(filteredArray));
+          }
         } else if (typeof value === "boolean" || typeof value === "number") {
           // Convert booleans and numbers to strings
           formData.append(key, String(value));
-        } else if (value !== null && value !== undefined) {
-          // Append all other values as strings
+        } else if (value !== null && value !== undefined && value !== "") {
+          // Append all other non-empty values as strings
           formData.append(key, String(value));
         }
       });
-
+  
       // Debugging: Log FormData key-value pairs
       for (const [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
       }
-
+  
       // Call the API
       const response = await startupFundabilityTest(formData, token || "");
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         alert(errorData.message);
         return;
       }
-
+  
       if (response.ok) {
         const data = await response.json();
-        setModalMessage(data.score);
+        setModalMessage(data.data.score);
         showModal(true);
         return;
       }
-
+  
       if (!response) {
         alert("An Error Occurred. Please try again.");
       }

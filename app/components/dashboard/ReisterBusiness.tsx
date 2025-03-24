@@ -19,7 +19,7 @@ export default function RegisterBusiness() {
   const [modal, showModal] = useState(false)
   const [modalErrors, setModalErrors] = useState<string[]>([]);
   const [id, setId] = useState(null);
-  const [stage, setStage] = useState(null);
+  const [stage, setStage] = useState("");
 
   const validationSchema = Yup.object().shape({
     businessName: Yup.string().required("Business Name is required"),
@@ -51,6 +51,7 @@ export default function RegisterBusiness() {
       }),
   });
 
+
   const initialValues = {
     businessName: "",
     businessPhone: "",
@@ -72,11 +73,12 @@ export default function RegisterBusiness() {
     window.location.href = "/dashboard"; // Replace with the desired path
   };
 
-  const handleRefreshRedirectFund = (id:string) => {
+  const handleRefreshRedirectFund = (id: string) => {
     if (stage === "SME") {
-      window.location.href = `/dashboard/fundability-test/${id}`; // Replace with the desired path
+      window.location.href = `/dashboard/fundability-test/${id}`;
+    } else {
+      window.location.href = `/dashboard/fundability-test/select-startup/${id}`;
     }
-    window.location.href = `/dashboard/fundability-test/select-startup/${id}`; // Replace with the desired path
   };
   const handleNext = () => {
     if (currentStep < 1) {
@@ -91,13 +93,17 @@ export default function RegisterBusiness() {
   const handleSubmit = async (values: RegisterBusinessPayload) => {
     try {
       setLoading(true);
+      // Set stage directly from form values
+      setStage(values.businessStage);
+      
       const token = localStorage.getItem("token");
       const response = await registerBusiness(values, token ?? "");
-
+  
       if (response.ok) {
         const data = await response.json();
         setId(data.data.publicId);
-        setStage(data.data.businessStage)
+        // You can remove this line if you want to use the form value directly
+        // setStage(data.data.businessStage)
         setTimeout(() => {
         showModal(true);},1000)
       } else {
@@ -110,7 +116,9 @@ export default function RegisterBusiness() {
       setLoading(false);
     }
   };
-
+  
+  
+ 
   const renderStepContent = (
     formikProps: FormikProps<RegisterBusinessPayload>
   ) => {
