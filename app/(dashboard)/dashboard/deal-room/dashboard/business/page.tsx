@@ -79,8 +79,8 @@ type BusinessDetailsAPI = {
   };
 };
 
-// Helper function to format array data as an HTML list
-const formatArrayData = (data:any) => {
+// Helper function to format array data as an HTML list with TypeScript types
+const formatArrayData = (data: string | string[] | null | undefined): React.ReactNode => {
   if (!data) return "Not provided";
   
   // If it's already a string, return it
