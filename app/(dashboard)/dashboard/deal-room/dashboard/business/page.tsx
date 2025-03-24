@@ -31,14 +31,14 @@ type DealRoomProfile = {
   id: number;
   publicId: string;
   businessId: string;
-  topSellingProducts: string;
+  topSellingProducts: string[] | string;
   highlightsOfBusiness: string;
   facilityDetails: string;
   fundingDetails: string;
   averageMonthlySales: number;
   reportedYearlySales: number;
   profitMarginPercentage: number;
-  assetsDetails: string;
+  assetsDetails: string[] | string;
   valueOfPhysicalAssets: number;
   tentativeSellingPrice: number;
   reasonForSale: string;
@@ -77,6 +77,34 @@ type BusinessDetailsAPI = {
     score: number;
     publicId?: string;
   };
+};
+
+// Helper function to format array data as an HTML list
+const formatArrayData = (data:any) => {
+  if (!data) return "Not provided";
+  
+  // If it's already a string, return it
+  if (typeof data === 'string') return data;
+  
+  // If it's an array, format as an HTML list
+  if (Array.isArray(data)) {
+    // Filter out empty strings
+    const filteredArray = data.filter(item => item && item.trim() !== '');
+    
+    if (filteredArray.length === 0) return "Not provided";
+    
+    // Return array items as an unordered list
+    return (
+      <ul className="list-disc pl-5 space-y-1">
+        {filteredArray.map((item, index) => (
+          <li key={index} className="text-white">{item}</li>
+        ))}
+      </ul>
+    );
+  }
+  
+  // If it's neither string nor array, convert to string
+  return String(data);
 };
 
 export default function BusinessDetail() {
@@ -332,28 +360,30 @@ export default function BusinessDetail() {
 
               {/* Business Details Section */}
               <div className="mb-8">
-                <h3 className="text-lg font-medium text-mainGreen mb-4">
-                  Business Details
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <p className="text-gray-400 text-sm">
-                      Top Selling Products
-                    </p>
-                    <p className="text-white">{business.topSellingProducts}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-gray-400 text-sm">Facility Details</p>
-                    <p className="text-white">{business.facilityDetails}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-gray-400 text-sm">Business Highlights</p>
-                    <p className="text-white">
-                      {business.highlightsOfBusiness}
-                    </p>
-                  </div>
-                </div>
-              </div>
+  <h3 className="text-lg font-medium text-mainGreen mb-4">
+    Business Details
+  </h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="space-y-2">
+      <p className="text-gray-400 text-sm">
+        Top Selling Products
+      </p>
+      <div className="text-white">
+        {formatArrayData(business.topSellingProducts)}
+      </div>
+    </div>
+    <div className="space-y-2">
+      <p className="text-gray-400 text-sm">Facility Details</p>
+      <p className="text-white">{business.facilityDetails}</p>
+    </div>
+    <div className="space-y-2">
+      <p className="text-gray-400 text-sm">Business Highlights</p>
+      <p className="text-white">
+        {business.highlightsOfBusiness}
+      </p>
+    </div>
+  </div>
+</div>
 
               {/* Financial Information */}
               <div className="mb-8">
@@ -398,20 +428,22 @@ export default function BusinessDetail() {
 
               {/* Additional Information */}
               <div>
-                <h3 className="text-lg font-medium text-mainGreen mb-4">
-                  Additional Information
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <p className="text-gray-400 text-sm">Reason for Sale</p>
-                    <p className="text-white">{business.reasonForSale}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-gray-400 text-sm">Asset Details</p>
-                    <p className="text-white">{business.assetsDetails}</p>
-                  </div>
-                </div>
-              </div>
+  <h3 className="text-lg font-medium text-mainGreen mb-4">
+    Additional Information
+  </h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="space-y-2">
+      <p className="text-gray-400 text-sm">Reason for Sale</p>
+      <p className="text-white">{business.reasonForSale}</p>
+    </div>
+    <div className="space-y-2">
+      <p className="text-gray-400 text-sm">Asset Details</p>
+      <div className="text-white">
+        {formatArrayData(business.assetsDetails)}
+      </div>
+    </div>
+  </div>
+</div>
             </div>
           </div>
         );
@@ -653,9 +685,9 @@ export default function BusinessDetail() {
                             <div className="flex flex-col">
                               <p className="text-xs text-gray-400">Audited Financials</p>
                               <p className={`text-sm ${fundabilityData.auditedFinancialStatement ? 'text-mainGreen' : 'text-gray-400'}`}>
-                                {fundabilityData.auditedFinancialStatement ? 'Available' : 'Not Available'}
-                              </p>
-                            </div>
+                              {fundabilityData.auditedFinancialStatement ? 'Available' : 'Not Available'}
+                            </p>
+                          </div>
                           )}<div className="flex flex-col">
                           <p className="text-xs text-gray-400">Legal Issues</p>
                           <p className={`text-sm ${!fundabilityData.companyLegalCases ? 'text-mainGreen' : 'text-red-400'}`}>
