@@ -418,7 +418,7 @@ export default function BusinessDetail() {
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-gray-400 text-sm">Asking Price</p>
+                    <p className="text-gray-400 text-sm">Valuation</p>
                     <p className="text-white">
                       ${business.tentativeSellingPrice.toLocaleString()}
                     </p>
