@@ -33,6 +33,38 @@ export const getABusiness = async (token: string,publicId:string) => {
   }
 }
 
+
+ 
+export const getDealRoomProfile = async (token: string, publicId: string) => {
+  try {
+    const response = await fetch(`${apiUrl}/dealroom/business/${publicId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        success: false,
+        message: errorData.message || 'Failed to fetch deal room profile',
+        data: null
+      };
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching deal room profile:', error);
+    return {
+      success: false,
+      message: 'An error occurred while fetching the deal room profile',
+      data: null
+    };
+  }
+};
+
+
 export const getFundabilityResults = async ( publicId: string,token: string) => {
   try {
     const response = await fetch(`${apiUrl}/fundability/${publicId}`, {
@@ -287,6 +319,101 @@ export const getValuation = async (payload: ValuationFormPayload, token: string)
   } catch (error) {
     console.error("Error during API call:", error);
     throw new Error("Please try again.");
+  }
+};
+export const updateDealRoomProfile = async (data: any, token: string, businessId: string) => {
+  try {
+    // Create a FormData object for file uploads
+    const formData = new FormData();
+    
+    // Add all text fields to the form data
+    formData.append('businessId', data.businessId || businessId);
+    
+    // Handle arrays by serializing them to match expected server format
+    if (data.topSellingProducts) {
+      // Instead of using array indexes, serialize the array to JSON
+      formData.append('topSellingProducts', JSON.stringify(data.topSellingProducts));
+    }
+    
+    // Add other text fields
+    if (data.highlightsOfBusiness) formData.append('highlightsOfBusiness', data.highlightsOfBusiness);
+    if (data.facilityDetails) formData.append('facilityDetails', data.facilityDetails);
+    if (data.fundingDetails) formData.append('fundingDetails', data.fundingDetails);
+    if (data.averageMonthlySales !== undefined) formData.append('averageMonthlySales', data.averageMonthlySales.toString());
+    if (data.reportedYearlySales !== undefined) formData.append('reportedYearlySales', data.reportedYearlySales.toString());
+    if (data.profitMarginPercentage !== undefined) formData.append('profitMarginPercentage', data.profitMarginPercentage.toString());
+    if (data.tentativeSellingPrice !== undefined) formData.append('tentativeSellingPrice', data.tentativeSellingPrice.toString());
+    if (data.valueOfPhysicalAssets !== undefined) formData.append('valueOfPhysicalAssets', data.valueOfPhysicalAssets.toString());
+    if (data.reasonForSale) formData.append('reasonForSale', data.reasonForSale);
+    
+    // Handle asset details array - using JSON.stringify instead of individual entries
+    if (data.assetsDetails) {
+      formData.append('assetsDetails', JSON.stringify(data.assetsDetails));
+    }
+    
+    // Handle file uploads - only append if new files were provided
+    // Business Photos (multiple files)
+    if (data.businessPhotos && (data.businessPhotos instanceof FileList || 
+       (Array.isArray(data.businessPhotos) && data.businessPhotos[0] instanceof File))) {
+      
+      const files = Array.from(data.businessPhotos);
+      files.forEach((file: any) => {
+        formData.append('businessPhotos', file);
+      });
+    }
+    
+    // Proof of Business (single file)
+    if (data.proofOfBusiness && data.proofOfBusiness instanceof File) {
+      formData.append('proofOfBusiness', data.proofOfBusiness);
+    }
+    
+    // Business Documents (multiple files)
+    if (data.businessDocuments && (data.businessDocuments instanceof FileList || 
+       (Array.isArray(data.businessDocuments) && data.businessDocuments[0] instanceof File))) {
+      
+      const files = Array.from(data.businessDocuments);
+      files.forEach((file: any) => {
+        formData.append('businessDocuments', file);
+      });
+    }
+    
+    // Log the form data to check what's being sent (for debugging only)
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(`${key}: ${value}`);
+    // }
+    
+    // Make the API call
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dealroom/business/${businessId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        success: false,
+        message: errorData.message || 'Failed to update deal room profile',
+        data: null
+      };
+    }
+    
+    const result = await response.json();
+    
+    return {
+      success: true,
+      message: 'Deal room profile updated successfully',
+      data: result
+    };
+  } catch (error) {
+    console.error('Error updating deal room profile:', error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'An unexpected error occurred',
+      data: null
+    };
   }
 };
 

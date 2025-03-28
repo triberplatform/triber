@@ -403,6 +403,66 @@ export interface ProposalResponse {
   data: Proposal[];
 }
 
+export type DealRoomProfile = {
+  id: number;
+  publicId: string;
+  businessId: string;
+  topSellingProducts: string[] | string;
+  highlightsOfBusiness: string;
+  facilityDetails: string;
+  fundingDetails: string;
+  averageMonthlySales: number;
+  reportedYearlySales: number;
+  profitMarginPercentage: number;
+  assetsDetails: string[] | string;
+  valueOfPhysicalAssets: number;
+  tentativeSellingPrice: number;
+  reasonForSale: string;
+  businessPhotos: string[];
+  proofOfBusiness: string; // Changed from array to string
+  businessDocuments: string[];
+  createdAt: string;
+  updatedAt: string;
+  business: Business;
+};
+
+export type Business = {
+  publicId: string;
+  businessName: string;
+  businessEmail: string;
+  businessPhone: string;
+};
+
+
+
+// New type for the business details from direct API call
+export type BusinessDetailsAPI = {
+  id: number;
+  publicId: string;
+  businessName: string;
+  businessEmail: string;
+  businessPhone: string;
+  businessLogoUrl: string;
+  businessStatus: string;
+  interestedIn: string;
+  industry: string;
+  numOfEmployees: string;
+  yearEstablished: number;
+  location: string;
+  description: string;
+  assets: string;
+  reportedSales: string;
+  businessStage: string;
+  businessLegalEntity: string;
+  createdAt: string;
+  updatedAt: string;
+  businessVerificationStatus: boolean;
+  fundabilityTestDetails?: {
+    id: number;
+    score: number;
+    publicId?: string;
+  };
+};
 
 export interface Investor {
   id: number;

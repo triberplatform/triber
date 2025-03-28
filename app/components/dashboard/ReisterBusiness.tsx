@@ -160,9 +160,26 @@ export default function RegisterBusiness() {
               label="Business Status"
               name="businessStatus"
               options={[
-                { value: "OWNER", label: "Owner" },
-                { value: "MEMBER", label: "Member" },
-                { value: "BROKER", label: "Broker" },
+                {
+                  value: "PRIVATE_LIABILITY_COMPANY",
+                  label: "Private Liability Company",
+                },
+                {
+                  value: "LIMITED_LIABILITY_COMPANY",
+                  label: "Limited Liability Company",
+                },
+                {
+                  value: "PUBLIC_LIMITED_COMPANY",
+                  label: "Public Limited Company",
+                },
+                {
+                  value: "GENERAL_PARTNERSHIP",
+                  label: "General Partnership",
+                },
+                {
+                  value: "SOLE_PROPRIETORSHIP",
+                  label: "Sole Proprietorship",
+                },
               ]}
               value={formikProps.values.businessStatus}
               onBlur={formikProps.handleBlur}
@@ -200,7 +217,7 @@ export default function RegisterBusiness() {
                     label: "Full Sale of Business",
                   },
                   { value: "PARTIAL_STAKE", label: "Partial Stake" },
-                  { value: "LOAN", label: "Loan" },
+                  { value: "DEBT_FUNDING", label: "Debt Funding" },
                   {
                     value: "SELL_OR_LEASE_OF_BUSINESS_ASSETS",
                     label: "Sell or Lease Business Assets",
@@ -212,17 +229,10 @@ export default function RegisterBusiness() {
                 error={formikProps.errors.interestedIn}
                 touched={formikProps.touched.interestedIn}
               />
-              <OptionInput
+              <FormInput
                 label="Select business industry"
                 name="industry"
-                options={[
-                  { value: "IT", label: "IT" },
-                  { value: "FINANCE", label: "Finance" },
-                  { value: "HEALTH", label: "Health" },
-                  { value: "EDUCATION", label: "Education" },
-                  { value: "MEDIA", label: "Media" },
-                  { value: "OTHER", label: "Other" },
-                ]}
+                placeholder="e.g finance,health,agriculture"
                 value={formikProps.values.industry}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
@@ -323,17 +333,10 @@ export default function RegisterBusiness() {
                 error={formikProps.errors.location}
                 touched={formikProps.touched.location}
               />
-              <OptionInput
+              <FormInput
                 label="At present, what is your average monthly sales?"
                 name="reportedSales"
-                options={[
-                  { value: "0-100000", label: "0-100,000" },
-                  { value: "100000-1000000", label: "100,000-1,000,000" },
-                  { value: "1000000-10000000", label: "1,000,000-10,000,000" },
-                  { value: "10000000-50000000", label: "10,000,000-50,000,000" },
-                  { value: "50000000-100000000", label: "50,000,000-100,000,000" },
-                  {value: "100000000-500000000", label: "100,000,000-500,000,000"},
-                ]}
+                placeholder="10,000,000"
                 value={formikProps.values.reportedSales}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}

@@ -352,7 +352,7 @@ export default function BusinessListings() {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400">Asking Price:</p>
+                    <p className="text-sm text-gray-400">Valuation:</p>
                     <p className="text-lg sm:text-lg font-bold">{formatCurrency(business.tentativeSellingPrice || 0)}</p>
                   </div>
                 </div>

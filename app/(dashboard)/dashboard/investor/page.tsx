@@ -4,18 +4,25 @@ import React from "react";
 import Image from "next/image";
 import { BsArrowUpRight } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
+import { FiEdit } from "react-icons/fi"; // Import edit icon
+import { useRouter } from "next/navigation";
 
 export default function InvestorProfile() {
   const { user } = useUser();
+  const router = useRouter()
   
   if (!user) {
     return <p>No user details available</p>;
   }
 
+  const handleEdit = () => {
+    // Add your edit functionality here
+   router.push(`/dashboard/investor/edit-investor?id=${user.investorProfile.publicId}`)
+  };
+
   return (
     <div className="">
    
-
       {/* Title */}
       <h1 className="lg:text-2xl text-lg mb-4">
         {user.firstname} {user.lastname}
@@ -25,6 +32,17 @@ export default function InvestorProfile() {
       <div className="lg:grid lg:grid-cols-10 gap-4 mb-4">
         {/* Profile Info */}
         <div className="col-span-6 bg-mainBlack p-4 mb-3 lg:mb-0 rounded-xl">
+          <div className="flex justify-between mb-2">
+            <h2 className="text-lg">Profile Info</h2>
+            <button 
+              onClick={handleEdit}
+              className="flex items-center gap-1 text-sm bg-mainBlacks hover:bg-gray-700 px-3 py-1 rounded-md transition duration-200"
+            >
+              <FiEdit className="text-gray-300" /> 
+              <span>Edit</span>
+            </button>
+          </div>
+          
           <div className="flex lg:gap-6">
             <div className="w-24 shrink-0">
             {user.investorProfile.companyLogoUrl ? ( <Image
@@ -111,8 +129,6 @@ export default function InvestorProfile() {
           </p>
         </div>
       </div>
-
-     
     </div>
   );
 }

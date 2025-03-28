@@ -11,7 +11,7 @@ import {
   getValuatedBusiness,
 } from "@/app/services/dashboard";
 import Loading from "@/app/loading";
-import { FundType } from "@/app/type";
+import { BusinessDetailsAPI, DealRoomProfile, FundType } from "@/app/type";
 import CircularProgress from "@/app/components/dashboard/Circular";
 // Import icons for the fundability section
 import { FaCalendarAlt, FaDownload, FaFileAlt, FaImage } from "react-icons/fa";
@@ -20,64 +20,7 @@ import { MdOutlinePermIdentity } from "react-icons/md";
 import { LiaIndustrySolid } from "react-icons/lia";
 
 // Types for the API response
-type Business = {
-  publicId: string;
-  businessName: string;
-  businessEmail: string;
-  businessPhone: string;
-};
 
-type DealRoomProfile = {
-  id: number;
-  publicId: string;
-  businessId: string;
-  topSellingProducts: string[] | string;
-  highlightsOfBusiness: string;
-  facilityDetails: string;
-  fundingDetails: string;
-  averageMonthlySales: number;
-  reportedYearlySales: number;
-  profitMarginPercentage: number;
-  assetsDetails: string[] | string;
-  valueOfPhysicalAssets: number;
-  tentativeSellingPrice: number;
-  reasonForSale: string;
-  businessPhotos: string[];
-  proofOfBusiness: string; // Changed from array to string
-  businessDocuments: string[];
-  createdAt: string;
-  updatedAt: string;
-  business: Business;
-};
-
-// New type for the business details from direct API call
-type BusinessDetailsAPI = {
-  id: number;
-  publicId: string;
-  businessName: string;
-  businessEmail: string;
-  businessPhone: string;
-  businessLogoUrl: string;
-  businessStatus: string;
-  interestedIn: string;
-  industry: string;
-  numOfEmployees: string;
-  yearEstablished: number;
-  location: string;
-  description: string;
-  assets: string;
-  reportedSales: string;
-  businessStage: string;
-  businessLegalEntity: string;
-  createdAt: string;
-  updatedAt: string;
-  businessVerificationStatus: boolean;
-  fundabilityTestDetails?: {
-    id: number;
-    score: number;
-    publicId?: string;
-  };
-};
 
 // Helper function to format array data as an HTML list with TypeScript types
 const formatArrayData = (data: string | string[] | null | undefined): React.ReactNode => {
@@ -148,6 +91,7 @@ export default function BusinessDetail() {
 
     fetchBusinessDetails();
   }, [businessId, token,id]);
+
 
   useEffect(() => {
     const fetchBusinesses = async () => {
@@ -235,6 +179,13 @@ export default function BusinessDetail() {
   const getFileExtension = (url: string) => {
     return url.split('.').pop()?.toLowerCase() || '';
   };
+
+  const toSentenceCase = (str:any) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+  
+  
 
   // Function to get file name from URL
   const getFileName = (url: string) => {
@@ -349,11 +300,15 @@ export default function BusinessDetail() {
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Location</p>
-                    <p>{businessDetails?.location}</p>
+                    <p>{toSentenceCase(businessDetails?.location)}</p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Industry</p>
                     <p>{businessDetails?.industry}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-gray-400 text-sm">Funding Requirement</p>
+                    <p>{businessDetails?.interestedIn}</p>
                   </div>
                 </div>
               </div>
