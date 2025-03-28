@@ -12,7 +12,7 @@ import {
   updateDealRoomProfile,
 } from "@/app/services/dashboard";
 import * as Yup from "yup";
-import { DealRoomData, ValuationFormPayload } from "@/app/type";
+import {  ValuationFormPayload } from "@/app/type";
 import { useSearchParams } from "next/navigation";
 import MultipleDocumentUpload from "@/app/components/dashboard/MultipleDocument";
 import Link from "next/link";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const formatBusinessTypeToSentence = (businessType:any) => {
     if (!businessType) return '';
     
