@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -11,7 +12,7 @@ import {
   updateDealRoomProfile,
 } from "@/app/services/dashboard";
 import * as Yup from "yup";
-import { ValuationFormPayload } from "@/app/type";
+import { DealRoomData, ValuationFormPayload } from "@/app/type";
 import { useSearchParams } from "next/navigation";
 import MultipleDocumentUpload from "@/app/components/dashboard/MultipleDocument";
 import Link from "next/link";
@@ -199,8 +200,6 @@ export default function EditProfile() {
         return;
       }
 
-      // Prepare form data with existing files if new ones weren't uploaded
-      const formData = new FormData();
 
       // Handle file fields specially - only update if new files were provided
       const isNewBusinessPhotos =

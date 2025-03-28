@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { emailPayload, loginpayload, signUpPayload } from "../type";
 import { useRouter } from "next/navigation";
 

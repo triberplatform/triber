@@ -180,7 +180,7 @@ export default function BusinessDetail() {
     return url.split('.').pop()?.toLowerCase() || '';
   };
 
-  const toSentenceCase = (str:any) => {
+  const toSentenceCase = (str:string) => {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
@@ -300,7 +300,7 @@ export default function BusinessDetail() {
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Location</p>
-                    <p>{toSentenceCase(businessDetails?.location)}</p>
+                    <p>{businessDetails?.location && toSentenceCase(businessDetails?.location)}</p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Industry</p>

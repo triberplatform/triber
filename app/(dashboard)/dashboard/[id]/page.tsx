@@ -111,7 +111,7 @@ export default function BusinessDetail() {
   // State for photo gallery lightbox
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [activeGalleryTab, setActiveGalleryTab] = useState('photos');
+  const [activeGalleryTab] = useState('photos');
 
   // Find the business first
   useEffect(() => {

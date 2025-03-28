@@ -168,6 +168,23 @@ export interface InvestorProfile {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface DealRoomData {
+  topSellingProducts: string[] | string;
+  highlightsOfBusiness?: string;
+  facilityDetails?: string;
+  fundingDetails?: string;
+  averageMonthlySales?: number;
+  reportedYearlySales?: number;
+  profitMarginPercentage?: number;
+  tentativeSellingPrice?: number;
+  assetsDetails: string[] | string;
+  valueOfPhysicalAssets?: number;
+  reasonForSale?: string;
+  businessPhotos?: string[] | null;
+  proofOfBusiness?: string | null;
+  businessDocuments?: string[] | null;
+}
 export interface ValuationFormPayload {
   businessId: string;
   topSellingProducts: string[] | string;

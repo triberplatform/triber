@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConnectFormValues, Investor, InvestorProfilePayload, JobConnectForm, ProposalPayload, ProposalResponse, RegisterBusinessPayload, ValuationFormPayload } from "../type";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
