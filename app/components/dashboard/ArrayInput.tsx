@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GoDash } from "react-icons/go";
 
 interface ArrayInputProps {
   label: string;
   name: string;
-  values: string[]; // Array of input values
+  values: string[] | string; // Can be array or string representation of array
   onChange: (values: string[]) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void; 
   errors?: string[]; // Array of errors for each input
@@ -20,30 +20,72 @@ const ArrayInput: React.FC<ArrayInputProps> = ({
   errors = [],
   touched = [],
 }) => {
+  // Parse values if needed and maintain as state
+  const [parsedValues, setParsedValues] = useState<string[]>([]);
+  
+  // Parse values on component mount or when values change
+  useEffect(() => {
+    let arrayValues: string[] = [];
+    
+    // Handle different formats of values
+    if (Array.isArray(values)) {
+      // Already an array
+      arrayValues = values;
+    } else if (typeof values === 'string') {
+      try {
+        // Try to parse as JSON (for format like "[\"Test\",\"test\"]")
+        const parsed = JSON.parse(values);
+        if (Array.isArray(parsed)) {
+          arrayValues = parsed;
+        } else {
+          // If parsed but not an array, use as single item
+          arrayValues = [values];
+        }
+      } catch (e) {
+        // If parsing fails, treat as a single string value
+        arrayValues = [values];
+      }
+    } else if (values === null || values === undefined) {
+      // Handle null/undefined
+      arrayValues = [''];
+    }
+    
+    // Ensure we have at least one empty field
+    if (arrayValues.length === 0) {
+      arrayValues = [''];
+    }
+    
+    setParsedValues(arrayValues);
+  }, [values]);
+
   // Handle value change for a specific index
   const handleValueChange = (index: number, newValue: string) => {
-    const updatedValues = [...values];
+    const updatedValues = [...parsedValues];
     updatedValues[index] = newValue;
+    setParsedValues(updatedValues);
     onChange(updatedValues);
   };
 
   // Add a new input
   const handleAdd = () => {
-    if (values.length < 3) {
-      onChange([...values, ""]);
+    if (parsedValues.length < 3) {
+      const updatedValues = [...parsedValues, ""];
+      setParsedValues(updatedValues);
+      onChange(updatedValues);
     }
   };
 
   // Remove an input by index
   const handleRemove = (index: number) => {
-    const updatedValues = values.filter((_, i) => i !== index);
+    const updatedValues = parsedValues.filter((_, i) => i !== index);
+    setParsedValues(updatedValues);
     onChange(updatedValues);
   };
 
   return (
     <div className="mb-4">
       <label className="block text-left text-sm font-medium">{label}</label>
-      {values.map((value, index) => (
+      {parsedValues.map((value, index) => (
         <div key={index} className="flex items-center space-x-2 ">
           <div className="w-full">
             <input
@@ -76,9 +118,9 @@ const ArrayInput: React.FC<ArrayInputProps> = ({
       <button
         type="button"
         onClick={handleAdd}
-        disabled={values.length >= 3} // Disable when max inputs reached
+        disabled={parsedValues.length >= 3} // Disable when max inputs reached
         className={`mt-4 w-full text-sm px-4 py-2 rounded ${
-          values.length >= 3 ? "bg-gray-400 cursor-not-allowed" : "bg-mainGreen text-white"
+          parsedValues.length >= 3 ? "bg-gray-400 cursor-not-allowed" : "bg-mainGreen text-white"
         }`}
       >
         Add More
