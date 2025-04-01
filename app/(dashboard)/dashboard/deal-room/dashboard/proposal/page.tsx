@@ -12,21 +12,21 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import TextArea from "@/app/components/dashboard/TextArea";
 import { useUser } from "@/app/components/layouts/UserContext";
+import PricingModal from "@/app/components/dashboard/Pricing";
 
 export default function Valuation() {
   const [loading, setLoading] = useState(false);
   const [errorModal, showErrorModal] = useState(false);
   const [modal, showModal] = useState(false);
+  const [pricingModal, showPricingModal] = useState(false); // New state for pricing modal
+  const [selectedPackage, setSelectedPackage] = useState<number | null>(null); // Track selected package (dummy)
   const [modalErrors, setModalErrors] = useState<string[]>([]);
-  const searchParams= useSearchParams();
+  const searchParams = useSearchParams();
   const id = searchParams.get("id");
- const {user}= useUser();
+  const { user } = useUser();
 
- const businesses = user?.businesses
-
- const business =  businesses?.find(business => business.publicId === id);
-
-
+  const businesses = user?.businesses;
+  const business = businesses?.find(business => business.publicId === id);
 
   const validationSchema = Yup.object().shape({
     message: Yup.string().required("Please write a message"),
@@ -35,17 +35,44 @@ export default function Valuation() {
   const initialValues: ProposalPayload = {
     businessId: id || "",
     message: "",
+    // packageId removed from payload as requested
+  };
+
+  // Updated to handle package selection first
+  const handleValidationAndSubmit = (formikProps: FormikProps<ProposalPayload>) => {
+    if (Object.keys(formikProps.errors).length > 0) {
+      setModalErrors(Object.values(formikProps.errors) as string[]);
+      showErrorModal(true);
+    } else {
+      // Show pricing modal instead of submitting directly
+      showPricingModal(true);
+    }
+  };
+
+  // Handle package selection and continue with submission
+  const handlePackageConfirm = (packageId: number) => {
+    setSelectedPackage(packageId); // Just for tracking, not used in payload
+    showPricingModal(false);
+    // Proceed with form submission
+    const form = document.getElementById("proposal-form");
+    if (form) {
+      form.dispatchEvent(
+        new Event("submit", { cancelable: true, bubbles: true })
+      );
+    }
   };
 
   const handleSubmit = async (values: ProposalPayload) => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
+      
+      // No need to include the selected package in the payload
       const response = await submitProposal(values, token ?? "");
 
-
       if (response.ok) {
-        showModal(true)
+        showModal(true);
+        console.log(selectedPackage)
       } else {
         const errorData = await response.json();
         alert(errorData.message);
@@ -64,7 +91,7 @@ export default function Valuation() {
           Submit a Proposal
         </p>
         <p className="lg:text-sm text-xs">
-         Please enter your details here. Information entered here is not publicly displayed. 
+          Please enter your details here. Information entered here is not publicly displayed.
         </p>
       </div>
       <div className="col-span-8">
@@ -74,8 +101,8 @@ export default function Valuation() {
           onSubmit={handleSubmit}
         >
           {(formikProps: FormikProps<ProposalPayload>) => (
-            <Form>
-              <div className="lg:bg-mainBlack flex flex-col h-[50vh] justify-center  py-8 lg:gap-0 gap-5 lg:px-5">
+            <Form id="proposal-form">
+              <div className="lg:bg-mainBlack flex flex-col h-[50vh] justify-center py-8 lg:gap-0 gap-5 lg:px-5">
                 <TextArea
                   label="Send an elevation Pitch to the business and include your proposal"
                   name="message"
@@ -88,18 +115,8 @@ export default function Valuation() {
                 <div className="lg:col-span-2 mt-5">
                   <button
                     className="px-4 py-2 w-full text-white bg-mainGreen rounded"
-                    type="submit"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (Object.keys(formikProps.errors).length > 0) {
-                        setModalErrors(
-                          Object.values(formikProps.errors) as string[]
-                        );
-                        showErrorModal(true);
-                      } else {
-                        formikProps.handleSubmit();
-                      }
-                    }}
+                    type="button" // Changed to button type to control flow
+                    onClick={() => handleValidationAndSubmit(formikProps)}
                   >
                     Submit
                   </button>
@@ -119,7 +136,7 @@ export default function Valuation() {
               <div className="col-span-7">
                 <p className="text-xl mb-3 font-bold">Proposal Submitted!</p>
                 <p className="lg:text-base text-sm">
-                Thank you for showing interest in {business?.businessName}. Your proposal has been sent to the business owner. We will review your offer and reach out via email to discuss the next steps..
+                  Thank you for showing interest in {business?.businessName}. Your proposal has been sent to the business owner. We will review your offer and reach out via email to discuss the next steps.
                 </p>
               </div>
               <div className="col-span-3 flex justify-center item-center mt-6">
@@ -127,12 +144,21 @@ export default function Valuation() {
               </div>
             </div>
             <button className="mt-5 px-6 py-2 bg-mainGreen text-white font-medium rounded hover:bg-green-700 transition duration-300">
-                <Link href="/dashboard/deal-room/dashboard">
-                    Go to Deal Room
-                </Link>
+              <Link href="/dashboard/deal-room/dashboard">
+                Go to Deal Room
+              </Link>
             </button>
           </div>
         </Modal>
+      )}
+
+      {/* Pricing Modal */}
+      {pricingModal && (
+        <PricingModal 
+          onClose={() => showPricingModal(false)}
+          onConfirm={handlePackageConfirm}
+          businessName={business?.businessName || "this business"}
+        />
       )}
 
       {errorModal && (

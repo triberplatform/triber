@@ -35,6 +35,8 @@ export const getABusiness = async (token: string,publicId:string) => {
 }
 
 
+
+
  
 export const getDealRoomProfile = async (token: string, publicId: string) => {
   try {
@@ -143,6 +145,54 @@ export const registerInvestor = async (payload: InvestorProfilePayload, token: s
     });
 
     const response = await fetch(`${apiUrl}/investor/create`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error during API call:", error);
+    throw new Error("Please try again.");
+  }
+};
+
+export const getInvestor = async (token: string,publicId:string) => {
+  try {
+    const response = await fetch(`${apiUrl}/investor/${publicId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const businesses = await response.json();
+    return businesses;
+  }
+  catch {
+    console.error('unable to fetch')
+  }
+}
+
+export const editInvestor = async (payload: InvestorProfilePayload, token: string) => {
+  try {
+    const formData = new FormData();
+
+    // Append payload properties to FormData
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value === null || value === undefined) {
+        return; // Skip null/undefined values
+      }
+      
+      if (Array.isArray(value)) {
+        // Convert arrays and objects to JSON string and append
+        formData.append(key, JSON.stringify(value));
+      } else {
+        formData.append(key, value as Blob | string);
+      }
+    });
+
+    const response = await fetch(`${apiUrl}/api/investor/update`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

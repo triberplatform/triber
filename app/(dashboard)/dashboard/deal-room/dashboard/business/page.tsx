@@ -255,7 +255,7 @@ export default function BusinessDetail() {
                   </div>
                 </div>
                 <Link
-                  href={`proposal?id=${business.businessId}`}
+                  href={`proposal?id=${businessId}`}
                   className="bg-mainGreen text-white px-6 py-2 text-xs text-nowrap rounded-lg font-medium hover:bg-mainGreens transition-colors flex items-center gap-2"
                 >
                   <svg
