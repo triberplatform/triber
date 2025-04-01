@@ -41,7 +41,7 @@ const ArrayInput: React.FC<ArrayInputProps> = ({
           // If parsed but not an array, use as single item
           arrayValues = [values];
         }
-      } catch (e) {
+      } catch  {
         // If parsing fails, treat as a single string value
         arrayValues = [values];
       }
