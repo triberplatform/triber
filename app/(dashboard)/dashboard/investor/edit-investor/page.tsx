@@ -181,8 +181,22 @@ export default function EditInvestor() {
         // Add field to payload
         const value = values[key];
         if (value !== undefined) {
-          // Type assertion is safe here because we're filtering fields from InvestorFormValues
-          (payload as any)[key] = value;
+          // Add the field to the payload in a type-safe way
+          if (key === 'email') payload.email = value as string;
+          else if (key === 'companyName') payload.companyName = value as string;
+          else if (key === 'phoneNumber') payload.phoneNumber = value as string;
+          else if (key === 'about') payload.about = value as string;
+          else if (key === 'companyWebsiteUrl') payload.companyWebsiteUrl = value as string;
+          else if (key === 'companyType') payload.companyType = value as string;
+          else if (key === 'location') payload.location = value as string;
+          else if (key === 'interestedLocations') payload.interestedLocations = value as string[];
+          else if (key === 'designation') payload.designation = value as string;
+          else if (key === 'numOfExpectedDeals') payload.numOfExpectedDeals = value as string;
+          else if (key === 'fundsUnderManagement') payload.fundsUnderManagement = value as string;
+          else if (key === 'interestedFactors') payload.interestedFactors = value as string[];
+          else if (key === 'logo') payload.logo = value as File;
+          else if (key === 'termsOfAgreement') payload.termsOfAgreement = value as File;
+          else if (key === 'proofOfBusiness') payload.proofOfBusiness = value as File;
         }
       });
       
