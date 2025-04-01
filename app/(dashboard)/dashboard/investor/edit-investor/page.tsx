@@ -26,6 +26,9 @@ interface InvestorFormValues extends Omit<InvestorProfilePayload, 'logo' | 'term
   publicId: string | null;
 }
 
+// Define a type for payload fields
+type PayloadField = keyof InvestorFormValues;
+
 export default function EditInvestor() {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -165,17 +168,22 @@ export default function EditInvestor() {
       setLoading(true);
       const token = localStorage.getItem("token");
       
-      // Create a new object with only the fields we want to send
-      const payload: Record<string, any> = {};
+      // Create a typed payload object
+      const payload: Partial<InvestorProfilePayload> = {};
       
       // Copy all required fields from values
-      Object.keys(values).forEach(key => {
+      (Object.keys(values) as Array<PayloadField>).forEach(key => {
         // Skip file fields that are null (not being updated)
-        if ((key === 'logo' || key === 'termsOfAgreement' || key === 'proofOfBusiness') && !values[key as keyof InvestorFormValues]) {
+        if ((key === 'logo' || key === 'termsOfAgreement' || key === 'proofOfBusiness') && !values[key]) {
           return;
         }
-        // Copy all other fields
-        payload[key] = values[key as keyof InvestorFormValues];
+        
+        // Add field to payload
+        const value = values[key];
+        if (value !== undefined) {
+          // Type assertion is safe here because we're filtering fields from InvestorFormValues
+          (payload as any)[key] = value;
+        }
       });
       
       const response = await editInvestor(payload as InvestorProfilePayload, token ?? "");
