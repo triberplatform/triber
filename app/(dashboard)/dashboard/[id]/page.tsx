@@ -18,7 +18,7 @@ import {
 } from "@/app/services/dashboard";
 import { FundType, Proposal, BusinessDetails } from "@/app/type";
 import { formatBusinessTypeToSentence } from "@/app/services/utils";
-import { div } from "framer-motion/client";
+
 
 // Import the DealRoomProfile type
 type Business = {
