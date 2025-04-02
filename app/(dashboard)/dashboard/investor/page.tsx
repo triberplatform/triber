@@ -29,6 +29,16 @@ type Proposal = {
   };
 };
 
+// Define the Activity type
+type Activity = {
+  id: string;
+  businessName: string;
+  businessType: string;
+  location: string;
+  proposalType: string;
+  date: string;
+  status: string;
+};
 
 // Import the existing API function
 import { getInvestorProposals } from "@/app/services/dashboard";
@@ -71,6 +81,37 @@ export default function InvestorProfile() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(false);
   
+  // Mock deal room activity data
+  const [activities] = useState<Activity[]>([
+    {
+      id: "act-001",
+      businessName: "Electrical & Business Consulting",
+      businessType: "Corporate",
+      location: "Florida",
+      proposalType: "Buyer",
+      date: "October 23, 2024",
+      status: "Submitted"
+    },
+    {
+      id: "act-002",
+      businessName: "Electrical & Business Consulting",
+      businessType: "Corporate",
+      location: "Florida",
+      proposalType: "Buyer",
+      date: "October 23, 2024",
+      status: "Submitted"
+    },
+    {
+      id: "act-003",
+      businessName: "Electrical & Business Consulting",
+      businessType: "Corporate",
+      location: "Florida",
+      proposalType: "Buyer",
+      date: "October 23, 2024",
+      status: "Submitted"
+    }
+  ]);
+  
   // Fetch proposals when component mounts
   useEffect(() => {
     const fetchProposals = async () => {
@@ -109,7 +150,7 @@ export default function InvestorProfile() {
 
   const renderTabContent = () => {
     switch (currentStep) {
-      case 0: // Proposals Received
+      case 0: // Proposals Submitted
         return (
           <div className="bg-mainBlack rounded-lg p-4 mt-4">
             <h2 className="text-lg mb-4">Proposals Submitted</h2>
@@ -128,7 +169,6 @@ export default function InvestorProfile() {
                       <th className="px-4 py-3 text-left">Business Name</th>
                       <th className="px-4 py-3 text-left">Proposed Amount</th>
                       <th className="px-4 py-3 text-left">Status</th>
-                 
                       <th className="px-4 py-3 text-left">Proposal</th>
                       <th className="px-4 py-3 text-left">Actions</th>
                     </tr>
@@ -192,7 +232,6 @@ export default function InvestorProfile() {
                             {item.status || "In-progress"}
                           </span>
                         </td>
-                 
                         <td className="px-4 py-3 max-w-xs">
                           <div className="w-64">
                             <TruncatedText text={item.proposal} maxLength={80} />
@@ -241,9 +280,84 @@ export default function InvestorProfile() {
                 <p className="text-gray-400 text-sm max-w-md mb-6">
                   When businesses accept your proposals, they will appear here. Submit proposals to businesses you&apos;re interested in to start engaging.
                 </p>
-               
               </div>
             </div>
+          </div>
+        );
+      
+      case 2: // Deal Room Activity - UPDATED WITH IMPROVED TIMELINE
+        return (
+          <div className="bg-mainBlack rounded-lg p-4 mt-4">
+            <h2 className="text-lg mb-4">Recent Deal Room Activity</h2>
+            
+            {activities.length > 0 ? (
+              <div className="relative">
+                {/* Vertical timeline line */}
+                <div className="absolute left-3 top-3 bottom-3 w-0.5 bg-gray-700" />
+                
+                <div className="space-y-8">
+                  {activities.map((activity, index) => (
+                    <div key={activity.id} className="relative">
+                      <div className="flex items-start">
+                        {/* Timeline marker */}
+                        <div className="relative mr-4 flex-shrink-0">
+                          {index === 0 ? (
+                            // Active/most recent marker (green filled circle)
+                            <div className="h-6 w-6 rounded-full bg-mainGreen flex items-center justify-center">
+                              <div className="h-2 w-2 rounded-full bg-black" />
+                            </div>
+                          ) : index === activities.length - 1 ? (
+                            // Last/oldest marker (outlined circle)
+                            <div className="h-6 w-6 rounded-full border-2 border-gray-400" />
+                          ) : (
+                            // Mid-timeline marker (outlined circle with dot)
+                            <div className="h-6 w-6 rounded-full border-2 border-gray-400 flex items-center justify-center">
+                              <div className="h-2 w-2 rounded-full bg-gray-400" />
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Activity content */}
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start mb-1">
+                            <h3 className="text-base">
+                              Owner, {activity.businessName}, {activity.location}, {activity.businessType} Investor / {activity.proposalType}
+                            </h3>
+                            <span className="text-xs text-gray-400 whitespace-nowrap ml-4">{activity.date}</span>
+                          </div>
+                          
+                          <p className="text-sm text-gray-400 mb-2">
+                            Proposal submitted with interest in equity partnership.
+                          </p>
+                          
+                          <Link 
+                            href={`/dashboard/deal-room/activity/${activity.id}`}
+                            className="text-mainGreen hover:underline text-xs"
+                          >
+                            View full proposal for details.
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col justify-center items-center h-60 px-4 py-8 text-center bg-mainBlacks rounded-lg">
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">No Recent Activity</h3>
+                  <p className="text-gray-400 text-sm max-w-md mb-6">
+                    Your recent deal room activities will appear here. Start engaging with businesses to see activity updates.
+                  </p>
+                  <Link 
+                    href="/dashboard/deal-room/dashboard"
+                    className="bg-mainGreen text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-mainGreen/90 transition-colors"
+                  >
+                    Explore Deal Room
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         );
       
@@ -378,6 +492,14 @@ export default function InvestorProfile() {
           onClick={() => setCurrentStep(1)}
         >
           Businesses Engaged
+        </button>
+        <button
+          className={`pb-2 px-1 text-sm font-medium ${
+            currentStep === 2 ? "border-b-2 border-mainGreen text-mainGreen" : "text-gray-400"
+          }`}
+          onClick={() => setCurrentStep(2)}
+        >
+          Deal Room Activity
         </button>
       </div>
 
