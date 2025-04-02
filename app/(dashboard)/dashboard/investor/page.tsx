@@ -29,7 +29,12 @@ type Proposal = {
   };
 };
 
-
+// Define the response type
+type ProposalResponse = {
+  success: boolean;
+  message: string;
+  data: Proposal[];
+};
 
 // Import the existing API function
 import { getInvestorProposals } from "@/app/services/dashboard";
@@ -122,25 +127,26 @@ export default function InvestorProfile() {
             ) : proposals && proposals.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-mainGreen/20">
+                  <thead>
                     <tr>
-                      <th className="px-4 py-3 text-left">No.</th>
-                      <th className="px-4 py-3 text-left">Date</th>
+                      <th className="px-4 py-3 text-left">SL No</th>
+                      <th className="px-4 py-3 text-left">Proposal Date</th>
                       <th className="px-4 py-3 text-left">Business Name</th>
+                      <th className="px-4 py-3 text-left">Proposed Amount</th>
                       <th className="px-4 py-3 text-left">Status</th>
-                      <th className="px-4 py-3 text-left">Price</th>
+                 
                       <th className="px-4 py-3 text-left">Proposal</th>
                       <th className="px-4 py-3 text-left">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {proposals.map((item, index) => (
-                      <tr key={item.publicId} className="border-b border-gray-800">
-                        <td className="px-4 py-3">{index + 1}</td>
-                        <td className="px-4 py-3 text-mainGreen">
-                          {new Date(item.createdAt).toLocaleDateString('en-GB', { 
-                            day: 'numeric', 
+                      <tr key={item.publicId} className="border-b border-zinc-800">
+                        <td className="px-4 py-3">{String(index + 1).padStart(2, '0')}.</td>
+                        <td className="px-4 py-3 text-xs">
+                          {new Date(item.createdAt).toLocaleDateString('en-US', { 
                             month: 'long', 
+                            day: 'numeric', 
                             year: 'numeric' 
                           })}
                         </td>
@@ -149,55 +155,59 @@ export default function InvestorProfile() {
                             {item.business?.businessLogoUrl && (
                               <Image
                                 src={item.business.businessLogoUrl}
-                                width={30}
-                                height={30}
+                                width={24}
+                                height={24}
                                 alt="business logo"
-                                className="rounded-full"
+                                className="rounded-full hidden"
                               />
                             )}
                             <span>{item.business?.businessName || "Unknown Business"}</span>
                           </div>
                         </td>
                         <td className="px-4 py-3">
+                          {item.sellingPrice ? (
+                            <p className="text-sm">NGN {item.sellingPrice.toLocaleString()}</p>
+                          ) : item.fundingAmount ? (
+                            <p className="text-sm">NGN {item.fundingAmount.toLocaleString()}</p>
+                          ) : item.buyingPrice ? (
+                            <p className="text-sm">NGN {item.buyingPrice.toLocaleString()}</p>
+                          ) : (
+                            <p className="text-xs text-gray-400">Not specified</p>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
                           <span 
-                            className={`px-2 py-1 text-xs rounded-full ${
+                            className={`px-3 py-1 text-xs rounded-full inline-flex items-center ${
                               item.status === 'PENDING' 
-                                ? 'bg-yellow-500/20 text-yellow-500'
+                                ? 'bg-blue-500/20 text-blue-400'
                                 : item.status === 'ACCEPTED'
                                 ? 'bg-green-500/20 text-green-500'
                                 : 'bg-red-500/20 text-red-500'
                             }`}
                           >
-                            {item.status || "PENDING"}
+                            <span className="relative flex h-2 w-2 mr-1">
+                              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                                item.status === 'PENDING' ? 'bg-blue-400' : 
+                                item.status === 'ACCEPTED' ? 'bg-green-400' : 'bg-red-400'
+                              }`}></span>
+                              <span className={`relative inline-flex rounded-full h-2 w-2 ${
+                                item.status === 'PENDING' ? 'bg-blue-500' : 
+                                item.status === 'ACCEPTED' ? 'bg-green-500' : 'bg-red-500'
+                              }`}></span>
+                            </span>
+                            {item.status || "In-progress"}
                           </span>
                         </td>
-                        <td className="px-4 py-3">
-                          {item.sellingPrice ? (
-                            <p className="text-sm">${item.sellingPrice.toLocaleString()}</p>
-                          ) : (
-                            <p className="text-xs text-gray-400">Not specified</p>
-                          )}
-                        </td>
-                        
+                 
                         <td className="px-4 py-3 max-w-xs">
                           <div className="w-64">
                             <TruncatedText text={item.proposal} maxLength={80} />
-                            
-                            {/* Financial details */}
-                            <div className="mt-2 space-y-1">
-                              {item.fundingAmount && (
-                                <p className="text-xs text-gray-400">Funding: ${item.fundingAmount.toLocaleString()}</p>
-                              )}
-                              {item.buyingPrice && (
-                                <p className="text-xs text-gray-400">Offer: ${item.buyingPrice.toLocaleString()}</p>
-                              )}
-                            </div>
                           </div>
                         </td>
                         <td className="px-4 py-3">
                           <Link 
                             href={`/dashboard/deal-room/dashboard/business?id=${item.publicId}&businessId=${item.businessId}`}
-                            className="text-mainGreen hover:underline"
+                            className="text-blue-400 hover:underline text-xs"
                           >
                             View Details
                           </Link>
@@ -235,7 +245,7 @@ export default function InvestorProfile() {
               <div>
                 <h3 className="text-lg font-semibold mb-2">No Businesses Engaged Yet</h3>
                 <p className="text-gray-400 text-sm max-w-md mb-6">
-                  When businesses accept your proposals, they will appear here. Submit proposals to businesses you&lsquo;re interested in to start engaging.
+                  When businesses accept your proposals, they will appear here. Submit proposals to businesses you're interested in to start engaging.
                 </p>
                
               </div>
