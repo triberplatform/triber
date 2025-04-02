@@ -107,9 +107,6 @@ const PricingModal: React.FC<PricingModalProps> = ({ onClose, onConfirm, busines
       <div className="bg-black dark:bg-black rounded-lg shadow-xl w-[90%] max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-white">
-              Pricing Package Brief: Triber Platform
-            </h2>
             <button 
               onClick={onClose}
               className="text-gray-300 hover:text-white"
