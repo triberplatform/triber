@@ -202,7 +202,7 @@ export const editInvestor = async (payload: InvestorProfilePayload, token: strin
 
     return response;
   } catch (error) {
-    
+
     console.error("Error during API call:", error);
     throw new Error("Please try again.");
   }
@@ -548,6 +548,25 @@ export const getBusinessProposals = async (token: string, businessId: string) =>
     return {
       success: false,
       message: 'Failed to fetch business proposals',
+      data: []
+    };
+  }
+};
+
+export const getInvestorProposals = async (token: string, investorId: string) => {
+  try {
+    const response = await fetch(`${apiUrl}/dealroom/investor/proposals/${investorId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    const data: ProposalResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Unable to fetch  proposals:', error);
+    return {
+      success: false,
+      message: 'Failed to fetch  proposals',
       data: []
     };
   }

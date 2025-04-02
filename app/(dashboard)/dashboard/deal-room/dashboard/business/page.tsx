@@ -6,9 +6,9 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   getABusiness,
+  getDealRoomProfile,
   getFundabilityResultsSmeBusinessId,
   getFundabilityResultsStartupBusinessId,
-  getValuatedBusiness,
 } from "@/app/services/dashboard";
 import Loading from "@/app/loading";
 import { BusinessDetailsAPI, DealRoomProfile, FundType } from "@/app/type";
@@ -18,9 +18,6 @@ import { FaCalendarAlt, FaDownload, FaFileAlt, FaImage } from "react-icons/fa";
 import { IoLocation, IoClose } from "react-icons/io5";
 import { MdOutlinePermIdentity } from "react-icons/md";
 import { LiaIndustrySolid } from "react-icons/lia";
-
-// Types for the API response
-
 
 // Helper function to format array data as an HTML list with TypeScript types
 const formatArrayData = (data: string | string[] | null | undefined): React.ReactNode => {
@@ -56,9 +53,8 @@ export default function BusinessDetail() {
   const id = SearchParams.get("id");
   const businessId = SearchParams.get("businessId");
   const [loading, setLoading] = useState(true);
-  const token = localStorage.getItem("token");
-  const [businesses, setBusinesses] = useState<DealRoomProfile[]>([]);
   const [businessDetails, setBusinessDetails] = useState<BusinessDetailsAPI | null>(null);
+  const [dealRoomProfile, setDealRoomProfile] = useState<DealRoomProfile | null>(null);
   const [fundabilityData, setFundabilityData] = useState<FundType | null>(null);
   const [fundabilityLoading, setFundabilityLoading] = useState(false);
   const [fundabilityFetched, setFundabilityFetched] = useState(false);
@@ -67,55 +63,60 @@ export default function BusinessDetail() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeGalleryTab, setActiveGalleryTab] = useState('photos');
 
-  // Fetch business details directly from API
+  // Get token from localStorage
+  const getToken = () => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem("token");
+    }
+    return null;
+  };
+
+  // Fetch business details and deal room profile
   useEffect(() => {
-    const fetchBusinessDetails = async () => {
-      if (!id || !token) return;
+    const fetchData = async () => {
+      if (!id || !businessId) return;
+      
+      const token = getToken();
+      if (!token) return;
       
       try {
         setLoading(true);
-        const response = await getABusiness(token, businessId || "");
         
-        if (response && response.success) {
-          console.log("Business details fetched:", response.data);
-          setBusinessDetails(response.data);
+        // Fetch business details
+        const businessResponse = await getABusiness(token, businessId);
+        
+        if (businessResponse && businessResponse.success) {
+          console.log("Business details fetched:", businessResponse.data);
+          setBusinessDetails(businessResponse.data);
         } else {
-          console.error("Failed to fetch business details:", response?.message);
+          console.error("Failed to fetch business details:", businessResponse?.message);
+        }
+        
+        // Fetch deal room profile
+        const profileResponse = await getDealRoomProfile(token, businessId);
+        
+        if (profileResponse && profileResponse.success) {
+          console.log("Deal room profile fetched:", profileResponse.data);
+          setDealRoomProfile(profileResponse.data);
+        } else {
+          console.error("Failed to fetch deal room profile:", profileResponse?.message);
         }
       } catch (error) {
-        console.error("Error fetching business details:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBusinessDetails();
-  }, [businessId, token,id]);
-
-
-  useEffect(() => {
-    const fetchBusinesses = async () => {
-      try {
-        const response = await getValuatedBusiness(token || "");
-        if (response?.success) {
-          setBusinesses(response.data.businesses);
-        }
-      } catch (error) {
-        console.error("Unable to fetch businesses:", error);
-      }
-    };
-
-    fetchBusinesses();
-  }, [token]);
-
-  const business = businesses.find((b) => b.publicId === id);
+    fetchData();
+  }, [businessId, id]);
   
   // Fetch fundability results 
   useEffect(() => {
     const fetchFundabilityResults = async () => {
       // Only fetch if we're viewing the fundability tab or haven't fetched yet
       if ((!fundabilityFetched || currentStep === 1) && businessDetails && id && businessId) {
-        const token = localStorage.getItem("token");
+        const token = getToken();
         if (!token) return;
         
         setFundabilityLoading(true);
@@ -163,15 +164,15 @@ export default function BusinessDetail() {
 
   const nextImage = () => {
     // Only apply to photos since proofOfBusiness is now a string
-    if (activeGalleryTab === 'photos' && business?.businessPhotos) {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % business.businessPhotos.length);
+    if (activeGalleryTab === 'photos' && dealRoomProfile?.businessPhotos) {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % dealRoomProfile.businessPhotos.length);
     }
   };
 
   const prevImage = () => {
     // Only apply to photos since proofOfBusiness is now a string
-    if (activeGalleryTab === 'photos' && business?.businessPhotos) {
-      setCurrentImageIndex((prevIndex) => (prevIndex - 1 + business.businessPhotos.length) % business.businessPhotos.length);
+    if (activeGalleryTab === 'photos' && dealRoomProfile?.businessPhotos) {
+      setCurrentImageIndex((prevIndex) => (prevIndex - 1 + dealRoomProfile.businessPhotos.length) % dealRoomProfile.businessPhotos.length);
     }
   };
 
@@ -180,13 +181,11 @@ export default function BusinessDetail() {
     return url.split('.').pop()?.toLowerCase() || '';
   };
 
-  const toSentenceCase = (str:string) => {
+  const toSentenceCase = (str: string) => {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
   
-  
-
   // Function to get file name from URL
   const getFileName = (url: string) => {
     const parts = url.split('/');
@@ -205,7 +204,7 @@ export default function BusinessDetail() {
     return <Loading text="Loading" />;
   }
 
-  if (!business) {
+  if (!dealRoomProfile) {
     return <Loading/>;
   }
 
@@ -221,7 +220,7 @@ export default function BusinessDetail() {
                   {" "}
                   <div className="relative">
                     <Image
-                      src={business.businessPhotos[0]}
+                      src={dealRoomProfile.businessPhotos[0]}
                       width={100}
                       height={100}
                       alt="business logo"
@@ -247,10 +246,10 @@ export default function BusinessDetail() {
                   </div>
                   <div>
                     <h1 className="text-xl font-semibold text-white mb-2">
-                      {business.business.businessName}
+                      {businessDetails && businessDetails.businessName}
                     </h1>
                     <p className="text-gray-400 text-sm max-w-2xl">
-                      {business.highlightsOfBusiness}
+                      {dealRoomProfile.highlightsOfBusiness}
                     </p>
                   </div>
                 </div>
@@ -287,7 +286,7 @@ export default function BusinessDetail() {
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Business Name</p>
                     <p className="text-white">
-                      {business.business.businessName}
+                      {businessDetails && businessDetails.businessName}
                     </p>
                   </div>
                   <div className="space-y-2">
@@ -315,30 +314,30 @@ export default function BusinessDetail() {
 
               {/* Business Details Section */}
               <div className="mb-8">
-  <h3 className="text-lg font-medium text-mainGreen mb-4">
-    Business Details
-  </h3>
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div className="space-y-2">
-      <p className="text-gray-400 text-sm">
-        Top Selling Products
-      </p>
-      <div className="text-white">
-        {formatArrayData(business.topSellingProducts)}
-      </div>
-    </div>
-    <div className="space-y-2">
-      <p className="text-gray-400 text-sm">Facility Details</p>
-      <p className="text-white">{business.facilityDetails}</p>
-    </div>
-    <div className="space-y-2">
-      <p className="text-gray-400 text-sm">Business Highlights</p>
-      <p className="text-white">
-        {business.highlightsOfBusiness}
-      </p>
-    </div>
-  </div>
-</div>
+                <h3 className="text-lg font-medium text-mainGreen mb-4">
+                  Business Details
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <p className="text-gray-400 text-sm">
+                      Top Selling Products
+                    </p>
+                    <div className="text-white">
+                      {formatArrayData(dealRoomProfile.topSellingProducts)}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-gray-400 text-sm">Facility Details</p>
+                    <p className="text-white">{dealRoomProfile.facilityDetails}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-gray-400 text-sm">Business Highlights</p>
+                    <p className="text-white">
+                      {dealRoomProfile.highlightsOfBusiness}
+                    </p>
+                  </div>
+                </div>
+              </div>
 
               {/* Financial Information */}
               <div className="mb-8">
@@ -349,19 +348,19 @@ export default function BusinessDetail() {
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Monthly Sales</p>
                     <p className="text-white">
-                      ${business.averageMonthlySales.toLocaleString()}
+                      ${dealRoomProfile.averageMonthlySales.toLocaleString()}
                     </p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Yearly Sales</p>
                     <p className="text-white">
-                      ${business.reportedYearlySales.toLocaleString()}
+                      ${dealRoomProfile.reportedYearlySales.toLocaleString()}
                     </p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Profit Margin</p>
                     <p className="text-white">
-                      {business.profitMarginPercentage}%
+                      {dealRoomProfile.profitMarginPercentage}%
                     </p>
                   </div>
                   <div className="space-y-2">
@@ -369,13 +368,13 @@ export default function BusinessDetail() {
                       Physical Assets Value
                     </p>
                     <p className="text-white">
-                      ${business.valueOfPhysicalAssets.toLocaleString()}
+                      ${dealRoomProfile.valueOfPhysicalAssets.toLocaleString()}
                     </p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-gray-400 text-sm">Valuation</p>
                     <p className="text-white">
-                      ${business.tentativeSellingPrice.toLocaleString()}
+                      ${dealRoomProfile.tentativeSellingPrice.toLocaleString()}
                     </p>
                   </div>
                 </div>
@@ -383,22 +382,22 @@ export default function BusinessDetail() {
 
               {/* Additional Information */}
               <div>
-  <h3 className="text-lg font-medium text-mainGreen mb-4">
-    Additional Information
-  </h3>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div className="space-y-2">
-      <p className="text-gray-400 text-sm">Reason for Sale</p>
-      <p className="text-white">{business.reasonForSale}</p>
-    </div>
-    <div className="space-y-2">
-      <p className="text-gray-400 text-sm">Asset Details</p>
-      <div className="text-white">
-        {formatArrayData(business.assetsDetails)}
-      </div>
-    </div>
-  </div>
-</div>
+                <h3 className="text-lg font-medium text-mainGreen mb-4">
+                  Additional Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <p className="text-gray-400 text-sm">Reason for Sale</p>
+                    <p className="text-white">{dealRoomProfile.reasonForSale}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-gray-400 text-sm">Asset Details</p>
+                    <div className="text-white">
+                      {formatArrayData(dealRoomProfile.assetsDetails)}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         );
@@ -643,25 +642,25 @@ export default function BusinessDetail() {
                               {fundabilityData.auditedFinancialStatement ? 'Available' : 'Not Available'}
                             </p>
                           </div>
-                          )}<div className="flex flex-col">
+                          )}
+                          <div className="flex flex-col">
                           <p className="text-xs text-gray-400">Legal Issues</p>
-                          <p className={`text-sm ${!fundabilityData.companyLegalCases ? 'text-mainGreen' : 'text-red-400'}`}>
-                            {fundabilityData.companyLegalCases ? 'Pending Cases' : 'No Issues'}
-                          </p>
-                        </div>
-                        <div className="flex flex-col">
-                        <p className="text-xs text-gray-400">Required Licenses</p>
-                              <p className={`text-sm ${fundabilityData.licensesToOperate ? 'text-mainGreen' : 'text-gray-400'}`}>
-                                {fundabilityData.licensesToOperate ? 'All Acquired' : 'Not Applicable'}
-                              </p>
-                            </div>
+                            <p className={`text-sm ${!fundabilityData.companyLegalCases ? 'text-mainGreen' : 'text-red-400'}`}>
+                              {fundabilityData.companyLegalCases ? 'Pending Cases' : 'No Issues'}
+                            </p>
+                          </div>
+                          <div className="flex flex-col">
+                            <p className="text-xs text-gray-400">Required Licenses</p>
+                            <p className={`text-sm ${fundabilityData.licensesToOperate ? 'text-mainGreen' : 'text-gray-400'}`}>
+                              {fundabilityData.licensesToOperate ? 'All Acquired' : 'Not Applicable'}
+                            </p>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-            
+              </div>
             ) : businessDetails?.fundabilityTestDetails?.publicId ? (
               <div className="flex justify-center items-center h-[60vh]">
                 <div className="text-center">
@@ -704,7 +703,7 @@ export default function BusinessDetail() {
               >
                 <div className="flex items-center">
                   <FaImage className="mr-2" />
-                  Business Photos ({business.businessPhotos.length})
+                  Business Photos ({dealRoomProfile.businessPhotos.length})
                 </div>
               </button>
               <button 
@@ -721,9 +720,9 @@ export default function BusinessDetail() {
             {/* Photo Grid */}
             {activeGalleryTab === 'photos' && (
               <>
-                {business.businessPhotos.length > 0 ? (
+                {dealRoomProfile.businessPhotos.length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {business.businessPhotos.map((photo, index) => (
+                    {dealRoomProfile.businessPhotos.map((photo, index) => (
                       <div 
                         key={index} 
                         className="relative aspect-square overflow-hidden rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
@@ -755,13 +754,13 @@ export default function BusinessDetail() {
             {/* Proof of Business (now as a single string) */}
             {activeGalleryTab === 'proof' && (
               <>
-                {business.proofOfBusiness ? (
+                {dealRoomProfile.proofOfBusiness ? (
                   <div className="bg-zinc-800 p-6 rounded-lg">
-                    {isImageFile(business.proofOfBusiness) ? (
+                    {isImageFile(dealRoomProfile.proofOfBusiness) ? (
                       <div className="flex justify-center">
                         <div className="relative w-full max-w-xl aspect-video">
                           <Image 
-                            src={business.proofOfBusiness} 
+                            src={dealRoomProfile.proofOfBusiness} 
                             alt="Proof of business" 
                             fill
                             className="object-contain"
@@ -771,9 +770,9 @@ export default function BusinessDetail() {
                     ) : (
                       <div className="flex flex-col items-center justify-center p-8">
                         <FaFileAlt size={60} className="text-gray-400 mb-4" />
-                        <p className="text-base mb-2">{getFileName(business.proofOfBusiness)}</p>
+                        <p className="text-base mb-2">{getFileName(dealRoomProfile.proofOfBusiness)}</p>
                         <a 
-                          href={business.proofOfBusiness} 
+                          href={dealRoomProfile.proofOfBusiness} 
                           download 
                           className="mt-4 flex items-center bg-mainGreen text-black px-4 py-2 rounded-md hover:bg-mainGreen/90 transition-colors"
                         >
@@ -803,11 +802,11 @@ export default function BusinessDetail() {
                   </button>
                   
                   <div className="relative h-[80vh]">
-                    {business.businessPhotos[currentImageIndex] && (
+                    {dealRoomProfile.businessPhotos[currentImageIndex] && (
                       <>
-                        {isImageFile(business.businessPhotos[currentImageIndex]) ? (
+                        {isImageFile(dealRoomProfile.businessPhotos[currentImageIndex]) ? (
                           <Image 
-                            src={business.businessPhotos[currentImageIndex]} 
+                            src={dealRoomProfile.businessPhotos[currentImageIndex]} 
                             alt="Gallery image" 
                             fill
                             className="object-contain"
@@ -815,9 +814,9 @@ export default function BusinessDetail() {
                         ) : (
                           <div className="bg-zinc-800 h-full w-full flex flex-col items-center justify-center">
                             <FaFileAlt size={80} className="text-gray-400" />
-                            <p className="text-lg mt-4">{getFileName(business.businessPhotos[currentImageIndex])}</p>
+                            <p className="text-lg mt-4">{getFileName(dealRoomProfile.businessPhotos[currentImageIndex])}</p>
                             <a 
-                              href={business.businessPhotos[currentImageIndex]} 
+                              href={dealRoomProfile.businessPhotos[currentImageIndex]} 
                               download 
                               className="mt-4 flex items-center bg-mainGreen text-black px-4 py-2 rounded-md hover:bg-mainGreen/90 transition-colors"
                             >
@@ -829,15 +828,15 @@ export default function BusinessDetail() {
                     )}
                   </div>
                   
-                  {business.businessPhotos.length > 1 && (
+                  {dealRoomProfile.businessPhotos.length > 1 && (
                     <div className="absolute bottom-4 left-0 right-0 flex justify-center">
                       <div className="bg-black bg-opacity-60 px-3 py-1 rounded-full">
-                        <p className="text-sm">{currentImageIndex + 1} / {business.businessPhotos.length}</p>
+                        <p className="text-sm">{currentImageIndex + 1} / {dealRoomProfile.businessPhotos.length}</p>
                       </div>
                     </div>
                   )}
                   
-                  {business.businessPhotos.length > 1 && (
+                  {dealRoomProfile.businessPhotos.length > 1 && (
                     <>
                       <button 
                         className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-3"
@@ -874,9 +873,9 @@ export default function BusinessDetail() {
           <div className="bg-mainBlack rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-white mb-6">Business Documents</h2>
             
-            {business.businessDocuments.length > 0 ? (
+            {dealRoomProfile.businessDocuments.length > 0 ? (
               <div className="space-y-4">
-                {business.businessDocuments.map((doc, index) => (
+                {dealRoomProfile.businessDocuments.map((doc, index) => (
                   <div 
                     key={index} 
                     className="flex items-center justify-between p-4 bg-zinc-800 rounded-lg hover:bg-zinc-700 transition-colors"

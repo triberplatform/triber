@@ -1,28 +1,260 @@
 "use client";
 import { useUser } from "@/app/components/layouts/UserContext";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { BsArrowUpRight } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
-import { FiEdit } from "react-icons/fi"; // Import edit icon
+import { FiEdit } from "react-icons/fi";
+import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+// Define the Proposal type
+type Proposal = {
+  id: number;
+  publicId: string;
+  businessId: string;
+  investorId: string;
+  buyingPrice: number | null;
+  sellingPrice: number | null;
+  fundingAmount: number | null;
+  proposal: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  business?: {
+    businessName: string;
+    businessEmail: string;
+    businessLogoUrl?: string;
+  };
+};
+
+// Define the response type
+type ProposalResponse = {
+  success: boolean;
+  message: string;
+  data: Proposal[];
+};
+
+// Import the existing API function
+import { getInvestorProposals } from "@/app/services/dashboard";
+
+// Truncate text component with "View More" functionality
+const TruncatedText = ({ text, maxLength = 100 }: { text: string, maxLength?: number }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  if (!text) return <p className="text-gray-400 italic">No proposal details</p>;
+  
+  if (text.length <= maxLength) return <p>{text}</p>;
+  
+  return (
+    <div>
+      <p>
+        {isExpanded ? text : `${text.substring(0, maxLength)}...`}
+      </p>
+      <button 
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="flex items-center text-mainGreen mt-1 text-xs hover:underline"
+      >
+        {isExpanded ? (
+          <>
+            View Less <IoMdArrowDropup className="ml-1" />
+          </>
+        ) : (
+          <>
+            View More <IoMdArrowDropdown className="ml-1" />
+          </>
+        )}
+      </button>
+    </div>
+  );
+};
 
 export default function InvestorProfile() {
   const { user } = useUser();
-  const router = useRouter()
+  const router = useRouter();
+  const [currentStep, setCurrentStep] = useState(0);
+  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [loading, setLoading] = useState(false);
+  
+  // Fetch proposals when component mounts
+  useEffect(() => {
+    const fetchProposals = async () => {
+      if (!user?.investorProfile?.publicId) return;
+      
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      
+      setLoading(true);
+      try {
+        const response = await getInvestorProposals(token, user.investorProfile.publicId);
+        if (response && response.success) {
+          setProposals(response.data || []);
+        } else {
+          console.error('Failed to fetch proposals:', response?.message);
+          setProposals([]);
+        }
+      } catch (error) {
+        console.error('Error fetching proposals:', error);
+        setProposals([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProposals();
+  }, [user?.investorProfile?.publicId]);
   
   if (!user) {
     return <p>No user details available</p>;
   }
 
   const handleEdit = () => {
-    // Add your edit functionality here
-   router.push(`/dashboard/investor/edit-investor?id=${user.investorProfile.publicId}`)
+    router.push(`/dashboard/investor/edit-investor?id=${user.investorProfile.publicId}`);
+  };
+
+  const renderTabContent = () => {
+    switch (currentStep) {
+      case 0: // Proposals Received
+        return (
+          <div className="bg-mainBlack rounded-lg p-4 mt-4">
+            <h2 className="text-lg mb-4">Proposals Submitted</h2>
+            
+            {loading ? (
+              <div className="flex justify-center items-center h-40">
+                <p>Loading proposals...</p>
+              </div>
+            ) : proposals && proposals.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-mainGreen/20">
+                    <tr>
+                      <th className="px-4 py-3 text-left">No.</th>
+                      <th className="px-4 py-3 text-left">Date</th>
+                      <th className="px-4 py-3 text-left">Business Name</th>
+                      <th className="px-4 py-3 text-left">Status</th>
+                      <th className="px-4 py-3 text-left">Price</th>
+                      <th className="px-4 py-3 text-left">Proposal</th>
+                      <th className="px-4 py-3 text-left">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {proposals.map((item, index) => (
+                      <tr key={item.publicId} className="border-b border-gray-800">
+                        <td className="px-4 py-3">{index + 1}</td>
+                        <td className="px-4 py-3 text-mainGreen">
+                          {new Date(item.createdAt).toLocaleDateString('en-GB', { 
+                            day: 'numeric', 
+                            month: 'long', 
+                            year: 'numeric' 
+                          })}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            {item.business?.businessLogoUrl && (
+                              <Image
+                                src={item.business.businessLogoUrl}
+                                width={30}
+                                height={30}
+                                alt="business logo"
+                                className="rounded-full"
+                              />
+                            )}
+                            <span>{item.business?.businessName || "Unknown Business"}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span 
+                            className={`px-2 py-1 text-xs rounded-full ${
+                              item.status === 'PENDING' 
+                                ? 'bg-yellow-500/20 text-yellow-500'
+                                : item.status === 'ACCEPTED'
+                                ? 'bg-green-500/20 text-green-500'
+                                : 'bg-red-500/20 text-red-500'
+                            }`}
+                          >
+                            {item.status || "PENDING"}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          {item.sellingPrice ? (
+                            <p className="text-sm">${item.sellingPrice.toLocaleString()}</p>
+                          ) : (
+                            <p className="text-xs text-gray-400">Not specified</p>
+                          )}
+                        </td>
+                        
+                        <td className="px-4 py-3 max-w-xs">
+                          <div className="w-64">
+                            <TruncatedText text={item.proposal} maxLength={80} />
+                            
+                            {/* Financial details */}
+                            <div className="mt-2 space-y-1">
+                              {item.fundingAmount && (
+                                <p className="text-xs text-gray-400">Funding: ${item.fundingAmount.toLocaleString()}</p>
+                              )}
+                              {item.buyingPrice && (
+                                <p className="text-xs text-gray-400">Offer: ${item.buyingPrice.toLocaleString()}</p>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <Link 
+                            href={`/dashboard/deal-room/dashboard/business?id=${item.publicId}&businessId=${item.businessId}`}
+                            className="text-mainGreen hover:underline"
+                          >
+                            View Details
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="flex flex-col justify-center items-center h-60 px-4 py-8 text-center bg-mainBlacks rounded-lg">
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">No Proposals Submitted Yet</h3>
+                  <p className="text-gray-400 text-sm max-w-md mb-6">
+                    When you submit investment proposals to businesses, they will appear here. Browse the marketplace to find businesses to invest in.
+                  </p>
+                  <Link 
+                    href="/dashboard/deal-room/dashboard"
+                    className="bg-mainGreen text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-mainGreen/90 transition-colors"
+                  >
+                    Browse Marketplace
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      
+      case 1: // Businesses Engaged
+        return (
+          <div className="bg-mainBlack rounded-lg p-4 mt-4">
+            <h2 className="text-lg mb-4">Businesses Engaged</h2>
+            
+            <div className="flex flex-col justify-center items-center h-60 px-4 py-8 text-center bg-mainBlacks rounded-lg">
+              <div>
+                <h3 className="text-lg font-semibold mb-2">No Businesses Engaged Yet</h3>
+                <p className="text-gray-400 text-sm max-w-md mb-6">
+                  When businesses accept your proposals, they will appear here. Submit proposals to businesses you're interested in to start engaging.
+                </p>
+               
+              </div>
+            </div>
+          </div>
+        );
+      
+      default:
+        return null;
+    }
   };
 
   return (
     <div className="">
-   
       {/* Title */}
       <h1 className="lg:text-2xl text-lg mb-4">
         {user.firstname} {user.lastname}
@@ -51,7 +283,7 @@ export default function InvestorProfile() {
                 width={96}
                 height={96}
                 className="rounded-full"
-              />): (<CgProfile/>)} 
+              />): (<CgProfile className="w-full h-full text-gray-400" size={96} />)} 
             </div>
             
             <div className="flex flex-col gap-3">
@@ -87,7 +319,7 @@ export default function InvestorProfile() {
         <div className="col-span-2 flex lg:flex-col justify-between gap-2">
           <div className="bg-mainBlack w-full p-4 rounded-xl">
             <p className="mb-1 text-sm">Proposals Submitted</p>
-            <p className="text-xl">0</p>
+            <p className="text-xl">{proposals.length}</p>
           </div>
           
           <div className="bg-mainBlack w-full p-4 rounded-xl">
@@ -129,6 +361,29 @@ export default function InvestorProfile() {
           </p>
         </div>
       </div>
+
+      {/* Tab Navigation */}
+      <div className="flex gap-6 mt-8 mb-2 border-b border-gray-800">
+        <button
+          className={`pb-2 px-1 text-sm font-medium ${
+            currentStep === 0 ? "border-b-2 border-mainGreen text-mainGreen" : "text-gray-400"
+          }`}
+          onClick={() => setCurrentStep(0)}
+        >
+          Proposals Submitted
+        </button>
+        <button
+          className={`pb-2 px-1 text-sm font-medium ${
+            currentStep === 1 ? "border-b-2 border-mainGreen text-mainGreen" : "text-gray-400"
+          }`}
+          onClick={() => setCurrentStep(1)}
+        >
+          Businesses Engaged
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      {renderTabContent()}
     </div>
   );
 }
