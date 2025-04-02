@@ -29,12 +29,7 @@ type Proposal = {
   };
 };
 
-// Define the response type
-type ProposalResponse = {
-  success: boolean;
-  message: string;
-  data: Proposal[];
-};
+
 
 // Import the existing API function
 import { getInvestorProposals } from "@/app/services/dashboard";
@@ -240,7 +235,7 @@ export default function InvestorProfile() {
               <div>
                 <h3 className="text-lg font-semibold mb-2">No Businesses Engaged Yet</h3>
                 <p className="text-gray-400 text-sm max-w-md mb-6">
-                  When businesses accept your proposals, they will appear here. Submit proposals to businesses you're interested in to start engaging.
+                  When businesses accept your proposals, they will appear here. Submit proposals to businesses you&lsquo;re interested in to start engaging.
                 </p>
                
               </div>
