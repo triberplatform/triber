@@ -18,6 +18,7 @@ import {
 } from "@/app/services/dashboard";
 import { FundType, Proposal, BusinessDetails } from "@/app/type";
 import { formatBusinessTypeToSentence } from "@/app/services/utils";
+import { div } from "framer-motion/client";
 
 // Import the DealRoomProfile type
 type Business = {
@@ -1233,7 +1234,9 @@ export default function BusinessDetail() {
               )}
             </div>
           );
-
+          case 5: return (
+            <div>In progress</div>
+          )
       default:
         return <div>Invalid Step</div>;
     }
@@ -1282,6 +1285,14 @@ export default function BusinessDetail() {
             onClick={() => setCurrentStep(4)}
           >
             Documents
+          </p>
+          <p
+            className={`cursor-pointer pb-1 ${
+              currentStep === 5 ? "border-b-2 border-mainGreen" : ""
+            }`}
+            onClick={() => setCurrentStep(5)}
+          >
+            Valuation
           </p>
         </div>
   

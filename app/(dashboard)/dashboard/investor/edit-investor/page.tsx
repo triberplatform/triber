@@ -92,8 +92,8 @@ export default function EditInvestor() {
     interestedFactors: Yup.array()
       .of(Yup.string())
       .min(1, "Select at least one factor"),
-    termsOfAgreement: Yup.mixed(),
-    proofOfBusiness: Yup.mixed(),
+    termsOfAgreement: Yup.mixed().nullable(),
+    proofOfBusiness: Yup.mixed().nullable(),
     logo: Yup.mixed()
       .nullable()
       .test("fileType", "Only JPG/PNG allowed", (value) => {

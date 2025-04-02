@@ -193,7 +193,7 @@ export const editInvestor = async (payload: InvestorProfilePayload, token: strin
     });
 
     const response = await fetch(`${apiUrl}/api/investor/update`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
       },
