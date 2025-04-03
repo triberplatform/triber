@@ -337,8 +337,24 @@ export default function RegisterBusiness() {
                 label="At present, what is your average monthly sales?"
                 name="reportedSales"
                 placeholder="10,000,000"
-                value={formikProps.values.reportedSales}
-                onChange={formikProps.handleChange}
+                value={
+                  formikProps.values.reportedSales !== undefined &&
+                  formikProps.values.reportedSales !== null
+                    ? formikProps.values.reportedSales
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",") // Format with commas
+                    : ""
+                }
+                onChange={(e) => {
+                  const rawValue = e.target.value.replace(/,/g, ""); // Remove commas
+                  const numericValue = Number(rawValue); // Convert to number
+                  if (!isNaN(numericValue)) {
+                    formikProps.setFieldValue(
+                      "reportedSales",
+                      numericValue
+                    ); // Store numeric value
+                  }
+                }}
                 onBlur={formikProps.handleBlur}
                 error={formikProps.errors.reportedSales}
                 touched={formikProps.touched.reportedSales}
