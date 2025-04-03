@@ -16,7 +16,7 @@ export default function RegisterBusiness() {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errorModal, showErrorModal] = useState(false);
-  const [modal, showModal] = useState(false)
+  const [modal, showModal] = useState(false);
   const [modalErrors, setModalErrors] = useState<string[]>([]);
   const [id, setId] = useState(null);
   const [stage, setStage] = useState("");
@@ -51,7 +51,6 @@ export default function RegisterBusiness() {
       }),
   });
 
-
   const initialValues = {
     businessName: "",
     businessPhone: "",
@@ -59,7 +58,7 @@ export default function RegisterBusiness() {
     businessStatus: "",
     interestedIn: "",
     industry: "",
-    businessStage:"",
+    businessStage: "",
     businessLegalEntity: "",
     description: "",
     reportedSales: "",
@@ -95,17 +94,18 @@ export default function RegisterBusiness() {
       setLoading(true);
       // Set stage directly from form values
       setStage(values.businessStage);
-      
+
       const token = localStorage.getItem("token");
       const response = await registerBusiness(values, token ?? "");
-  
+
       if (response.ok) {
         const data = await response.json();
         setId(data.data.publicId);
         // You can remove this line if you want to use the form value directly
         // setStage(data.data.businessStage)
         setTimeout(() => {
-        showModal(true);},1000)
+          showModal(true);
+        }, 1000);
       } else {
         const errorData = await response.json();
         alert(errorData.message);
@@ -116,9 +116,7 @@ export default function RegisterBusiness() {
       setLoading(false);
     }
   };
-  
-  
- 
+
   const renderStepContent = (
     formikProps: FormikProps<RegisterBusinessPayload>
   ) => {
@@ -161,24 +159,16 @@ export default function RegisterBusiness() {
               name="businessStatus"
               options={[
                 {
-                  value: "PRIVATE_LIABILITY_COMPANY",
-                  label: "Private Liability Company",
+                  value: "OWNER",
+                  label: "Owner",
                 },
                 {
-                  value: "LIMITED_LIABILITY_COMPANY",
-                  label: "Limited Liability Company",
+                  value: "MEMBER",
+                  label: "Member",
                 },
                 {
-                  value: "PUBLIC_LIMITED_COMPANY",
-                  label: "Public Limited Company",
-                },
-                {
-                  value: "GENERAL_PARTNERSHIP",
-                  label: "General Partnership",
-                },
-                {
-                  value: "SOLE_PROPRIETORSHIP",
-                  label: "Sole Proprietorship",
+                  value: "BROKER",
+                  label: "Broker",
                 },
               ]}
               value={formikProps.values.businessStatus}
@@ -187,7 +177,7 @@ export default function RegisterBusiness() {
               error={formikProps.errors.businessStatus}
               touched={formikProps.touched.businessStatus}
             />
-                 <OptionInput
+            <OptionInput
               label="Business Stage"
               name="businessStage"
               options={[
@@ -229,10 +219,35 @@ export default function RegisterBusiness() {
                 error={formikProps.errors.interestedIn}
                 touched={formikProps.touched.interestedIn}
               />
-              <FormInput
-                label="Select business industry"
+              <OptionInput
+                label="Industry"
                 name="industry"
-                placeholder="e.g finance,health,agriculture"
+                options={[
+                  {
+                    value: "IT",
+                    label: "IT",
+                  },
+                  {
+                    value: "FINANCE",
+                    label: "Finance",
+                  },
+                  {
+                    value: "HEALTH",
+                    label: "Health",
+                  },
+                  {
+                    value: "EDUCATION",
+                    label: "Education",
+                  },
+                  {
+                    value: "MEDIA",
+                    label: "Media",
+                  },
+                  {
+                    value: "OTHER",
+                    label: "Other",
+                  },
+                ]}
                 value={formikProps.values.industry}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
@@ -349,10 +364,7 @@ export default function RegisterBusiness() {
                   const rawValue = e.target.value.replace(/,/g, ""); // Remove commas
                   const numericValue = Number(rawValue); // Convert to number
                   if (!isNaN(numericValue)) {
-                    formikProps.setFieldValue(
-                      "reportedSales",
-                      numericValue
-                    ); // Store numeric value
+                    formikProps.setFieldValue("reportedSales", numericValue); // Store numeric value
                   }
                 }}
                 onBlur={formikProps.handleBlur}
@@ -380,7 +392,9 @@ export default function RegisterBusiness() {
   return (
     <div className="lg:grid lg:grid-cols-11 gap-4 font-sansSerif">
       <div className="col-span-3 map-bg lg:pt-12 py-5 lg:pb-36">
-        <p className="lg:text-3xl font-serif text-2xl mb-4">Register a Business</p>
+        <p className="lg:text-3xl font-serif text-2xl mb-4">
+          Register a Business
+        </p>
         <p className="lg:text-sm text-xs">
           Information entered here is displayed publicly to match you with the
           right set of investors and buyers. Do not mention business
@@ -484,10 +498,11 @@ export default function RegisterBusiness() {
               </div>
             </div>
             <div className="flex mt-5 justify-between lg:justify-normal lg:mt-8 gap-3 lg:gap-6">
-              <button onClick={() => id && handleRefreshRedirectFund(id)} className="bg-mainGreen lg:text-base text-xs py-2 px-2 lg:px-4 rounded">
-            
-                  Take Fundability test
-            
+              <button
+                onClick={() => id && handleRefreshRedirectFund(id)}
+                className="bg-mainGreen lg:text-base text-xs py-2 px-2 lg:px-4 rounded"
+              >
+                Take Fundability test
               </button>
               <button
                 className="bg-black py-1 px-3 rounded"
