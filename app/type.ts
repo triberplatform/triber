@@ -24,7 +24,12 @@ export interface emailPayload {
   code: string,
 
 }
+export interface resendPayload {
 
+  email: string,
+
+
+}
 export interface RegisterBusinessPayload {
   businessName: string;
   businessPhone: string;

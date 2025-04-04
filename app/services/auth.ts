@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { emailPayload, loginpayload, signUpPayload } from "../type";
+import { emailPayload, loginpayload, resendPayload, signUpPayload } from "../type";
 import { useRouter } from "next/navigation";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -25,7 +25,7 @@ export const signup = async (payload: signUpPayload) => {
 export const confirmEmail = async (payload: emailPayload) => {
   try {
 
-    const response = await fetch(`${apiUrl}/email-confirmation`, {
+    const response = await fetch(`${apiUrl}/account/email-confirmation`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,6 +50,33 @@ export const confirmEmail = async (payload: emailPayload) => {
   }
 };
 
+export const resendEmail = async (payload:resendPayload) => {
+  try {
+
+    const response = await fetch(`${apiUrl}/account/resend-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    // Check if the response is OK
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || ".");
+    }
+
+    // Parse and return the response data
+    const data = await response.json();
+    return data;
+  } catch  {
+    console.error("Signup Error:");
+
+    // Throw a new error with a user-friendly message
+    throw new Error( "Signup failed. Please try again.");
+  }
+};
 
 export const login = async (payload: loginpayload) => {
   try {
