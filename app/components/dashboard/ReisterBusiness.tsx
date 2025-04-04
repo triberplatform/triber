@@ -11,6 +11,7 @@ import Modal from "./Modal";
 import { FaCheckDouble } from "react-icons/fa";
 import Loading from "@/app/loading";
 import DocumentUpload from "./DocumentUpload";
+import { Industry } from "@/app/type";
 
 export default function RegisterBusiness() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -159,16 +160,16 @@ export default function RegisterBusiness() {
               name="businessStatus"
               options={[
                 {
-                  value: "OWNER",
-                  label: "Owner",
+                  value: "REGISTERED",
+                  label: "Registered",
                 },
                 {
-                  value: "MEMBER",
-                  label: "Member",
+                  value: "UNREGISTERED",
+                  label: "Unregistered",
                 },
                 {
-                  value: "BROKER",
-                  label: "Broker",
+                  value: "PENDING",
+                  label: "Pending",
                 },
               ]}
               value={formikProps.values.businessStatus}
@@ -219,41 +220,118 @@ export default function RegisterBusiness() {
                 error={formikProps.errors.interestedIn}
                 touched={formikProps.touched.interestedIn}
               />
-              <OptionInput
-                label="Industry"
-                name="industry"
-                options={[
-                  {
-                    value: "IT",
-                    label: "IT",
-                  },
-                  {
-                    value: "FINANCE",
-                    label: "Finance",
-                  },
-                  {
-                    value: "HEALTH",
-                    label: "Health",
-                  },
-                  {
-                    value: "EDUCATION",
-                    label: "Education",
-                  },
-                  {
-                    value: "MEDIA",
-                    label: "Media",
-                  },
-                  {
-                    value: "OTHER",
-                    label: "Other",
-                  },
-                ]}
-                value={formikProps.values.industry}
-                onChange={formikProps.handleChange}
-                onBlur={formikProps.handleBlur}
-                error={formikProps.errors.industry}
-                touched={formikProps.touched.industry}
-              />
+             <OptionInput
+  label="Industry"
+  name="industry"
+  options={[
+    { value: Industry.IT, label: "IT" },
+    { value: Industry.FINANCE, label: "Finance" },
+    { value: Industry.HEALTH, label: "Health" },
+    { value: Industry.EDUCATION, label: "Education" },
+    { value: Industry.MEDIA, label: "Media" },
+    { value: Industry.AGRICULTURE, label: "Agriculture" },
+    { value: Industry.AEROSPACE, label: "Aerospace" },
+    { value: Industry.AUTOMOTIVE, label: "Automotive" },
+    { value: Industry.BANKING, label: "Banking" },
+    { value: Industry.BIOTECHNOLOGY, label: "Biotechnology" },
+    { value: Industry.CHEMICAL, label: "Chemical" },
+    { value: Industry.CONSTRUCTION, label: "Construction" },
+    { value: Industry.CONSULTING, label: "Consulting" },
+    { value: Industry.CONSUMER_GOODS, label: "Consumer Goods" },
+    { value: Industry.DEFENSE, label: "Defense" },
+    { value: Industry.ECOMMERCE, label: "E-commerce" },
+    { value: Industry.ELECTRONICS, label: "Electronics" },
+    { value: Industry.ENERGY, label: "Energy" },
+    { value: Industry.ENTERTAINMENT, label: "Entertainment" },
+    { value: Industry.ENVIRONMENTAL, label: "Environmental" },
+    { value: Industry.FASHION, label: "Fashion" },
+    { value: Industry.FOOD_AND_BEVERAGE, label: "Food & Beverage" },
+    { value: Industry.GAMING, label: "Gaming" },
+    { value: Industry.GOVERNMENT, label: "Government" },
+    { value: Industry.HOSPITALITY, label: "Hospitality" },
+    { value: Industry.INSURANCE, label: "Insurance" },
+    { value: Industry.LEGAL, label: "Legal" },
+    { value: Industry.LOGISTICS, label: "Logistics" },
+    { value: Industry.MANUFACTURING, label: "Manufacturing" },
+    { value: Industry.MARKETING, label: "Marketing" },
+    { value: Industry.MINING, label: "Mining" },
+    { value: Industry.NONPROFIT, label: "Nonprofit" },
+    { value: Industry.OIL_AND_GAS, label: "Oil & Gas" },
+    { value: Industry.PHARMACEUTICAL, label: "Pharmaceutical" },
+    { value: Industry.REAL_ESTATE, label: "Real Estate" },
+    { value: Industry.RECREATION, label: "Recreation" },
+    { value: Industry.RETAIL, label: "Retail" },
+    { value: Industry.SHIPPING, label: "Shipping" },
+    { value: Industry.SPORTS, label: "Sports" },
+    { value: Industry.TELECOMMUNICATIONS, label: "Telecommunications" },
+    { value: Industry.TRANSPORTATION, label: "Transportation" },
+    { value: Industry.TRAVEL_AND_TOURISM, label: "Travel & Tourism" },
+    { value: Industry.UTILITIES, label: "Utilities" },
+    { value: Industry.WASTE_MANAGEMENT, label: "Waste Management" },
+    { value: Industry.WHOLESALE, label: "Wholesale" },
+    { value: Industry.ARTS_AND_CULTURE, label: "Arts & Culture" },
+    { value: Industry.AVIATION, label: "Aviation" },
+    { value: Industry.BEAUTY, label: "Beauty" },
+    { value: Industry.CHILDCARE, label: "Childcare" },
+    { value: Industry.CLEANING, label: "Cleaning" },
+    { value: Industry.COSMETICS, label: "Cosmetics" },
+    { value: Industry.CRYPTOCURRENCY, label: "Cryptocurrency" },
+    { value: Industry.CYBERSECURITY, label: "Cybersecurity" },
+    { value: Industry.DAIRY, label: "Dairy" },
+    { value: Industry.DESIGN, label: "Design" },
+    { value: Industry.ELECTRICAL, label: "Electrical" },
+    { value: Industry.EVENT_PLANNING, label: "Event Planning" },
+    { value: Industry.FITNESS, label: "Fitness" },
+    { value: Industry.FORESTRY, label: "Forestry" },
+    { value: Industry.FURNITURE, label: "Furniture" },
+    { value: Industry.HEALTHCARE_EQUIPMENT, label: "Healthcare Equipment" },
+    { value: Industry.HOME_IMPROVEMENT, label: "Home Improvement" },
+    { value: Industry.HORTICULTURE, label: "Horticulture" },
+    { value: Industry.HUMAN_RESOURCES, label: "Human Resources" },
+    { value: Industry.INTERIOR_DESIGN, label: "Interior Design" },
+    { value: Industry.JOURNALISM, label: "Journalism" },
+    { value: Industry.LANDSCAPING, label: "Landscaping" },
+    { value: Industry.MACHINERY, label: "Machinery" },
+    { value: Industry.MARITIME, label: "Maritime" },
+    { value: Industry.MEAT_PROCESSING, label: "Meat Processing" },
+    { value: Industry.METALWORKING, label: "Metalworking" },
+    { value: Industry.MILITARY, label: "Military" },
+    { value: Industry.MUSIC, label: "Music" },
+    { value: Industry.NANOTECHNOLOGY, label: "Nanotechnology" },
+    { value: Industry.PACKAGING, label: "Packaging" },
+    { value: Industry.PAPER, label: "Paper" },
+    { value: Industry.PERFORMING_ARTS, label: "Performing Arts" },
+    { value: Industry.PERSONAL_CARE, label: "Personal Care" },
+    { value: Industry.PEST_CONTROL, label: "Pest Control" },
+    { value: Industry.PET_CARE, label: "Pet Care" },
+    { value: Industry.PRINTING, label: "Printing" },
+    { value: Industry.PUBLISHING, label: "Publishing" },
+    { value: Industry.RAILWAY, label: "Railway" },
+    { value: Industry.RENEWABLE_ENERGY, label: "Renewable Energy" },
+    { value: Industry.RESEARCH, label: "Research" },
+    { value: Industry.RESTAURANTS, label: "Restaurants" },
+    { value: Industry.ROBOTICS, label: "Robotics" },
+    { value: Industry.SECURITY, label: "Security" },
+    { value: Industry.SEMICONDUCTOR, label: "Semiconductor" },
+    { value: Industry.SOCIAL_SERVICES, label: "Social Services" },
+    { value: Industry.SOFTWARE, label: "Software" },
+    { value: Industry.SPACE, label: "Space" },
+    { value: Industry.STAFFING, label: "Staffing" },
+    { value: Industry.TEXTILES, label: "Textiles" },
+    { value: Industry.TOBACCO, label: "Tobacco" },
+    { value: Industry.TOY, label: "Toy" },
+    { value: Industry.VETERINARY, label: "Veterinary" },
+    { value: Industry.WATER, label: "Water" },
+    { value: Industry.WINEMAKING, label: "Winemaking" },
+    { value: Industry.WOODWORKING, label: "Woodworking" },
+    { value: Industry.OTHER, label: "Other" }
+  ]}
+  value={formikProps.values.industry}
+  onChange={formikProps.handleChange}
+  onBlur={formikProps.handleBlur}
+  error={formikProps.errors.industry}
+  touched={formikProps.touched.industry}
+/>
               <OptionInput
                 label="Select business legal entity type"
                 name="businessLegalEntity"
