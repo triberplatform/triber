@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@/app/components/layouts/UserContext";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { FaCalendarAlt, FaFacebook, FaInstagram, FaDownload, FaFileAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaFacebook, FaInstagram, FaDownload, FaFileAlt, FaImage } from "react-icons/fa";
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import { IoCallOutline, IoLocation, IoClose } from "react-icons/io5";
 import { MdEmail, MdOutlinePermIdentity } from "react-icons/md";
@@ -837,170 +837,286 @@ export default function BusinessDetail() {
             </div>
           );
           
-        case 3: // Deal Room Profile
+          case 3: // Deal Room Profile
           return (
-            <div className="bg-mainBlack rounded-lg shadow-lg p-6">
+            <div className="bg-mainBlack rounded-lg p-6 shadow-lg">
               {dealRoomLoading ? (
                 <div className="flex justify-center items-center h-[60vh]">
                   <p>Loading deal room profile...</p>
                 </div>
               ) : dealRoomProfile ? (
                 <>
-                  {/* Business Logo and Name Banner */}
-                  <div className="p-6 border-b border-gray-800">
-                    <div className="flex items-center justify-between space-x-6">
-                      <div className="flex items-center space-x-6">
-                        <div className="relative">
-                          <Image
-                            src={(dealRoomProfile.businessPhotos && dealRoomProfile.businessPhotos.length > 0) 
-                              ? dealRoomProfile.businessPhotos[0] 
-                              : (business?.businessLogoUrl || "/assets/logos.svg")}
-                            width={100}
-                            height={100}
-                            alt="business logo"
-                            className="rounded-lg object-cover w-[100px] h-[100px]"
-                          />
-                        </div>
-                        <div>
-                          <h1 className="text-xl font-semibold text-white mb-2">
-                            {dealRoomProfile.business?.businessName || business?.businessName || "Business Name"}
-                          </h1>
-                          <p className="text-gray-400 text-sm max-w-2xl">
-                            {dealRoomProfile.highlightsOfBusiness || "No business highlights available"}
-                          </p>
-                        </div>
+                  {/* Header Section */}
+                  <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-6 pb-4 border-b border-zinc-800">
+                    <div className="flex items-center space-x-6">
+                      <div className="relative">
+                        <Image
+                          src={(dealRoomProfile.businessPhotos && dealRoomProfile.businessPhotos.length > 0) 
+                            ? dealRoomProfile.businessPhotos[0] 
+                            : (business?.businessLogoUrl || "/assets/logos.svg")}
+                          width={100}
+                          height={100}
+                          alt="business logo"
+                          className="rounded-lg object-cover w-[100px] h-[100px]"
+                        />
                       </div>
-                      <div className="flex gap-3">
-                        <Link
-                          href={`/dashboard/deal-room/edit-profile?id=${id}`}
-                          className="bg-black shadow shadow-white px-3 py-1.5 rounded inline text-sm hover:bg-gray-900 transition"
-                        >
-                          Edit Deal Room
-                        </Link>
+                      <div>
+                        <h2 className="text-xl lg:text-2xl font-semibold mb-2 text-white">
+                          {dealRoomProfile.business?.businessName || business?.businessName || "Business Name"}
+                        </h2>
+                        <p className="text-gray-400 text-sm max-w-2xl">
+                          {dealRoomProfile.highlightsOfBusiness || "No business highlights available"}
+                        </p>
                       </div>
+                    </div>
+                    <div className="mt-4 lg:mt-0">
+                      <Link
+                        href={`/dashboard/deal-room/edit-profile?id=${id}`}
+                        className="bg-black shadow shadow-white px-3 py-1.5 rounded inline text-sm hover:bg-gray-900 transition"
+                      >
+                        Edit Deal Room
+                      </Link>
                     </div>
                   </div>
-
+        
                   {/* Main Content */}
-                  <div className="p-6">
-                    {/* Company Info Section */}
-                    <div className="mb-8">
-                      <h3 className="text-lg font-medium text-mainGreen mb-4">
-                        Company Information
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Business Name</p>
-                          <p className="text-white">
-                            {dealRoomProfile.business?.businessName || business?.businessName || "Not provided"}
-                          </p>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Email Address</p>
-                          <p className="text-white">{dealRoomProfile.business?.businessEmail || business?.businessEmail || "Not provided"}</p>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Phone Number</p>
-                          <p className="text-white">{dealRoomProfile.business?.businessPhone || business?.businessPhone || "Not provided"}</p>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Location</p>
-                          <p className="text-white">{business?.location || "Not provided"}</p>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Industry</p>
-                          <p className="text-white">{business?.industry || "Not provided"}</p>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Funding Details</p>
-                          <p className="text-white">{dealRoomProfile.fundingDetails || "Not provided"}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Business Details Section */}
-                    <div className="mb-8">
-                      <h3 className="text-lg font-medium text-mainGreen mb-4">
-                        Business Details
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">
-                            Top Selling Products
-                          </p>
-                          <div className="text-white">
-                            {formatArrayData(dealRoomProfile.topSellingProducts)}
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Facility Details</p>
-                          <p className="text-white">{dealRoomProfile.facilityDetails || "Not provided"}</p>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Business Highlights</p>
-                          <p className="text-white">
-                            {dealRoomProfile.highlightsOfBusiness || "Not provided"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Financial Information */}
-                    <div className="mb-8">
-                      <h3 className="text-lg font-medium text-mainGreen mb-4">
-                        Financial Information
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Monthly Sales</p>
-                          <p className="text-white">
-                            ${dealRoomProfile.averageMonthlySales?.toLocaleString() || '0'}
-                          </p>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Yearly Sales</p>
-                          <p className="text-white">
-                            ${dealRoomProfile.reportedYearlySales?.toLocaleString() || '0'}
-                          </p>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Profit Margin</p>
-                          <p className="text-white">
-                            {dealRoomProfile.profitMarginPercentage || '0'}%
-                          </p>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">
-                            Physical Assets Value
-                          </p>
-                          <p className="text-white">
-                            ${dealRoomProfile.valueOfPhysicalAssets?.toLocaleString() || '0'}
-                          </p>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Valuation</p>
-                          <p className="text-white">
-                            ${dealRoomProfile.tentativeSellingPrice?.toLocaleString() || '0'}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Additional Information */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Left Column */}
                     <div>
-                      <h3 className="text-lg font-medium text-mainGreen mb-4">
-                        Additional Information
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Reason for Sale</p>
-                          <p className="text-white">{dealRoomProfile.reasonForSale || "Not provided"}</p>
-                        </div>
-                        <div className="space-y-2">
-                          <p className="text-gray-400 text-sm">Asset Details</p>
-                          <div className="text-white">
-                            {formatArrayData(dealRoomProfile.assetsDetails)}
+                      {/* Company Information */}
+                      <div className="mb-6">
+                        <h3 className="text-lg font-medium mb-3 flex items-center">
+                          <MdOutlinePermIdentity className="text-mainGreen mr-2" /> 
+                          Company Information
+                        </h3>
+                        <div className="bg-zinc-800 p-4 rounded-lg">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-xs text-gray-400">Business Name</p>
+                              <p className="text-sm text-white">
+                                {dealRoomProfile.business?.businessName || business?.businessName || "Not provided"}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Email Address</p>
+                              <p className="text-sm text-white">{dealRoomProfile.business?.businessEmail || business?.businessEmail || "Not provided"}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Phone Number</p>
+                              <p className="text-sm text-white">{dealRoomProfile.business?.businessPhone || business?.businessPhone || "Not provided"}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Location</p>
+                              <p className="text-sm text-white">{business?.location || "Not provided"}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Industry</p>
+                              <p className="text-sm text-white">{business?.industry || "Not provided"}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Funding Details</p>
+                              <p className="text-sm text-white">{dealRoomProfile.fundingDetails || "Not provided"}</p>
+                            </div>
                           </div>
+                        </div>
+                      </div>
+        
+                      {/* Business Details */}
+                      <div className="mb-6">
+                        <h3 className="text-lg font-medium mb-3 flex items-center">
+                          <LiaIndustrySolid className="text-mainGreen mr-2" /> 
+                          Business Details
+                        </h3>
+                        <div className="bg-zinc-800 p-4 rounded-lg">
+                          <div className="space-y-4">
+                            <div>
+                              <p className="text-xs text-gray-400">Top Selling Products</p>
+                              <div className="text-sm text-white mt-1">
+                                {formatArrayData(dealRoomProfile.topSellingProducts)}
+                              </div>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Facility Details</p>
+                              <p className="text-sm text-white">{dealRoomProfile.facilityDetails || "Not provided"}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Business Highlights</p>
+                              <p className="text-sm text-white">
+                                {dealRoomProfile.highlightsOfBusiness || "Not provided"}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Additional Information */}
+                      <div>
+                        <h3 className="text-lg font-medium mb-3 flex items-center">
+                          <IoLocation className="text-mainGreen mr-2" /> 
+                          Additional Information
+                        </h3>
+                        <div className="bg-zinc-800 p-4 rounded-lg">
+                          <div className="space-y-4">
+                            <div>
+                              <p className="text-xs text-gray-400">Reason for Sale</p>
+                              <p className="text-sm text-white">{dealRoomProfile.reasonForSale || "Not provided"}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Asset Details</p>
+                              <div className="text-sm text-white mt-1">
+                                {formatArrayData(dealRoomProfile.assetsDetails)}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+        
+                    {/* Right Column */}
+                    <div>
+                      {/* Financial Information */}
+                      <div className="mb-6">
+                        <h3 className="text-lg font-medium mb-3 flex items-center">
+                          <FaCalendarAlt className="text-mainGreen mr-2" /> 
+                          Financial Information
+                        </h3>
+                        <div className="bg-zinc-800 p-4 rounded-lg">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-xs text-gray-400">Monthly Sales</p>
+                              <p className="text-sm text-white">
+                                ${dealRoomProfile.averageMonthlySales?.toLocaleString() || '0'}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Yearly Sales</p>
+                              <p className="text-sm text-white">
+                                ${dealRoomProfile.reportedYearlySales?.toLocaleString() || '0'}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Profit Margin</p>
+                              <p className="text-sm text-white">
+                                {dealRoomProfile.profitMarginPercentage || '0'}%
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Physical Assets Value</p>
+                              <p className="text-sm text-white">
+                                ${dealRoomProfile.valueOfPhysicalAssets?.toLocaleString() || '0'}
+                              </p>
+                            </div>
+                            <div className="col-span-2">
+                              <p className="text-xs text-gray-400">Valuation</p>
+                              <p className="text-sm text-white font-semibold">
+                                ${dealRoomProfile.tentativeSellingPrice?.toLocaleString() || '0'}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Gallery Preview */}
+                      <div className="mb-6">
+                        <h3 className="text-lg font-medium mb-3 flex items-center">
+                          <FaImage className="text-mainGreen mr-2" /> 
+                          Gallery Preview
+                        </h3>
+                        <div className="bg-zinc-800 p-4 rounded-lg">
+                          {dealRoomProfile.businessPhotos && dealRoomProfile.businessPhotos.length > 0 ? (
+                            <>
+                              <div className="grid grid-cols-2 gap-3">
+                                {dealRoomProfile.businessPhotos.slice(0, 4).map((photo, index) => (
+                                  <div 
+                                    key={index} 
+                                    className="relative aspect-video overflow-hidden rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                                    onClick={() => openLightbox(index)}
+                                  >
+                                    {isImageFile(photo) ? (
+                                      <Image 
+                                        src={photo} 
+                                        alt={`Business photo ${index + 1}`} 
+                                        fill
+                                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                                        className="object-cover"
+                                      />
+                                    ) : (
+                                      <div className="bg-zinc-700 h-full w-full flex items-center justify-center">
+                                        <FaFileAlt size={24} className="text-gray-400" />
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                              {dealRoomProfile.businessPhotos.length > 4 && (
+                                <div className="mt-3 text-center">
+                                  <button 
+                                    onClick={() => setCurrentStep(4)}
+                                    className="text-xs text-mainGreen hover:underline"
+                                  >
+                                    View all {dealRoomProfile.businessPhotos.length} photos and documents
+                                  </button>
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <div className="text-center py-6">
+                              <p className="text-sm text-gray-400">No photos available</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Document Preview */}
+                      <div>
+                        <h3 className="text-lg font-medium mb-3 flex items-center">
+                          <FaFileAlt className="text-mainGreen mr-2" /> 
+                          Documents
+                        </h3>
+                        <div className="bg-zinc-800 p-4 rounded-lg">
+                          {dealRoomProfile.businessDocuments && dealRoomProfile.businessDocuments.length > 0 ? (
+                            <>
+                              <div className="space-y-3">
+                                {dealRoomProfile.businessDocuments.slice(0, 2).map((doc, index) => (
+                                  <div 
+                                    key={index} 
+                                    className="flex items-center justify-between p-3 bg-zinc-700 rounded-lg"
+                                  >
+                                    <div className="flex items-center">
+                                      <div className="p-2 bg-zinc-600 rounded-lg mr-3">
+                                        <FaFileAlt className="text-mainGreen" />
+                                      </div>
+                                      <div className="truncate max-w-[150px]">
+                                        <p className="text-xs font-medium truncate">{getFileName(doc)}</p>
+                                        <p className="text-xs text-gray-400">{getFileExtension(doc).toUpperCase()}</p>
+                                      </div>
+                                    </div>
+                                    <a 
+                                      href={doc} 
+                                      download 
+                                      className="p-1.5 bg-mainGreen/20 text-mainGreen rounded-lg hover:bg-mainGreen/30 transition-colors"
+                                    >
+                                      <FaDownload size={14} />
+                                    </a>
+                                  </div>
+                                ))}
+                              </div>
+                              {dealRoomProfile.businessDocuments.length > 2 && (
+                                <div className="mt-3 text-center">
+                                  <button 
+                                    onClick={() => setCurrentStep(4)}
+                                    className="text-xs text-mainGreen hover:underline"
+                                  >
+                                    View all {dealRoomProfile.businessDocuments.length} documents
+                                  </button>
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <div className="text-center py-6">
+                              <p className="text-sm text-gray-400">No documents available</p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1015,6 +1131,85 @@ export default function BusinessDetail() {
                       Next: Documents
                     </button>
                   </div>
+                  
+                  {/* Lightbox for photos */}
+                  {lightboxOpen && dealRoomProfile?.businessPhotos && (
+                    <div 
+                      className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+                      onClick={closeLightbox}
+                    >
+                      <div className="relative max-w-4xl max-h-[80vh] w-full" onClick={(e) => e.stopPropagation()}>
+                        <button 
+                          className="absolute top-2 right-2 z-10 bg-black bg-opacity-50 rounded-full p-2"
+                          onClick={closeLightbox}
+                        >
+                          <IoClose size={24} />
+                        </button>
+                        
+                        <div className="relative h-[80vh]">
+                          {dealRoomProfile.businessPhotos[currentImageIndex] && (
+                            <>
+                              {isImageFile(dealRoomProfile.businessPhotos[currentImageIndex]) ? (
+                                <Image 
+                                  src={dealRoomProfile.businessPhotos[currentImageIndex]} 
+                                  alt="Gallery image" 
+                                  fill
+                                  className="object-contain"
+                                />
+                              ) : (
+                                <div className="bg-zinc-800 h-full w-full flex flex-col items-center justify-center">
+                                  <FaFileAlt size={80} className="text-gray-400" />
+                                  <p className="text-lg mt-4">{getFileName(dealRoomProfile.businessPhotos[currentImageIndex])}</p>
+                                  <a 
+                                    href={dealRoomProfile.businessPhotos[currentImageIndex]} 
+                                    download 
+                                    className="mt-4 flex items-center bg-mainGreen text-black px-4 py-2 rounded-md hover:bg-mainGreen/90 transition-colors"
+                                  >
+                                    <FaDownload className="mr-2" /> Download
+                                  </a>
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
+                        
+                        {dealRoomProfile.businessPhotos.length > 1 && (
+                          <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+                            <div className="bg-black bg-opacity-60 px-3 py-1 rounded-full">
+                              <p className="text-sm">{currentImageIndex + 1} / {dealRoomProfile.businessPhotos.length}</p>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {dealRoomProfile.businessPhotos.length > 1 && (
+                          <>
+                            <button 
+                              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-3"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                prevImage();
+                              }}
+                            >
+                              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                              </svg>
+                            </button>
+                            <button 
+                              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-3"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                nextImage();
+                              }}
+                            >
+                              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="flex flex-col justify-center items-center h-[70vh] px-4 py-8 text-center">
@@ -1034,7 +1229,6 @@ export default function BusinessDetail() {
               )}
             </div>
           );
-          
         case 4: // Documents Tab
           return (
             <div className="bg-mainBlack rounded-lg shadow-lg p-6">
