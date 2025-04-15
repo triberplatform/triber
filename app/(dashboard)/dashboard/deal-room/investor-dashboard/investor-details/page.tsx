@@ -6,8 +6,8 @@ import Loading from "@/app/loading";
 import { getAllInvestors } from "@/app/services/dashboard";
 import { Investor } from "@/app/type";
 import { useSearchParams } from "next/navigation";
-import { ShieldCheck, MapPin, Clock, Mail, Phone, Building, Briefcase, Target, Globe, DollarSign } from "lucide-react";
-import { MdBusinessCenter } from "react-icons/md";
+import {  MapPin,  Mail, Phone, Building, Briefcase, Target, Globe, DollarSign } from "lucide-react";
+
 
 export default function InvestorDetails() {
   const searchParams = useSearchParams();
