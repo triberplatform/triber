@@ -96,6 +96,7 @@ export interface BusinessDetails {
   assignedAt: string; 
   dealRoomDetails: DealRoomDetails | null;
   fundabilityTestDetails: FundabilityTestDetails;
+  businessVerificationStatus:boolean
 }
 
 export interface DealRoomDetails {

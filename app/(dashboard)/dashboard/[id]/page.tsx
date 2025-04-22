@@ -6,7 +6,7 @@ import Image from "next/image";
 import { FaCalendarAlt, FaFacebook, FaInstagram, FaDownload, FaFileAlt, FaImage } from "react-icons/fa";
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import { IoCallOutline, IoLocation, IoClose } from "react-icons/io5";
-import { MdEmail, MdOutlinePermIdentity } from "react-icons/md";
+import { MdEmail, MdOutlinePermIdentity, MdVerified } from "react-icons/md";
 import { LiaIndustrySolid } from "react-icons/lia";
 import Link from "next/link";
 import CircularProgress from "@/app/components/dashboard/Circular";
@@ -18,6 +18,7 @@ import {
 } from "@/app/services/dashboard";
 import { FundType, Proposal, BusinessDetails } from "@/app/type";
 import { formatBusinessTypeToSentence } from "@/app/services/utils";
+import { RxCrossCircled } from "react-icons/rx";
 
 
 // Import the DealRoomProfile type
@@ -276,24 +277,37 @@ export default function BusinessDetail() {
             <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 lg:gap-4">
               {/* Logo and Business Name */}
               <div className="flex items-start lg:col-span-7 gap-4">
-                <div className="flex-shrink-0">
-                  <Image
-                    src={business.businessLogoUrl || "/assets/logos.svg"}
-                    width={80}
-                    height={100}
-                    alt="business logo"
-                    className="rounded-full object-cover w-[50px] h-[50px] lg:w-[100px] lg:h-[100px]"
-                  />
-                </div>
-                <div className="flex flex-col flex-grow">
-                  <p className="text-xl lg:text-2xl mb-2">
-                    {business.businessName || "Business Name"}
-                  </p>
-                  <p className="text-xs lg:text-sm text-gray-300 line-clamp-3 lg:line-clamp-none">
-                    {business.description || "No description available"}
-                  </p>
-                </div>
-              </div>
+  <div className="flex-shrink-0">
+    <Image
+      src={business.businessLogoUrl || "/assets/logos.svg"}
+      width={80}
+      height={100}
+      alt="business logo"
+      className="rounded-full object-cover w-[50px] h-[50px] lg:w-[100px] lg:h-[100px]"
+    />
+  </div>
+  <div className="flex flex-col flex-grow">
+    <div className="flex items-center gap-2 mb-2">
+      <p className="text-xl lg:text-2xl">
+        {business.businessName || "Business Name"}
+      </p>
+      {business.businessVerificationStatus ? (
+        <div className="flex items-center bg-green-900 bg-opacity-40 text-green-400 px-2 py-0.5 rounded-full text-xs">
+          <MdVerified className="mr-1" />
+          Verified
+        </div>
+      ) : (
+        <div className="flex items-center bg-red-900 bg-opacity-40 text-red-400 px-2 py-0.5 rounded-full text-xs">
+          <RxCrossCircled className="mr-1" />
+          Unverified
+        </div>
+      )}
+    </div>
+    <p className="text-xs lg:text-sm text-gray-300 line-clamp-3 lg:line-clamp-none">
+      {business.description || "No description available"}
+    </p>
+  </div>
+</div>
 
               {/* Social Icons */}
               <div className="lg:col-span-2 flex lg:justify-start gap-4 lg:gap-2 text-xl lg:self-start">

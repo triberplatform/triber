@@ -16,8 +16,9 @@ import CircularProgress from "@/app/components/dashboard/Circular";
 // Import icons for the fundability section
 import { FaCalendarAlt, FaDownload, FaFileAlt, FaImage } from "react-icons/fa";
 import { IoLocation, IoClose } from "react-icons/io5";
-import { MdOutlinePermIdentity } from "react-icons/md";
+import { MdOutlinePermIdentity, MdVerified } from "react-icons/md";
 import { LiaIndustrySolid } from "react-icons/lia";
+import { RxCrossCircled } from "react-icons/rx";
 
 // Helper function to format array data as an HTML list with TypeScript types
 const formatArrayData = (data: string | string[] | null | undefined): React.ReactNode => {
@@ -215,47 +216,60 @@ export default function BusinessDetail() {
           <div className="bg-mainBlack rounded-lg p-6 shadow-lg">
             {/* Header Section */}
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-6 pb-4 border-b border-zinc-800">
-              <div className="flex items-center space-x-6">
-                <div className="relative">
-                  <Image
-                    src={dealRoomProfile.businessPhotos[0]}
-                    width={100}
-                    height={100}
-                    alt="business logo"
-                    className="rounded-lg object-cover w-[100px] h-[100px]"
-                  />
-                </div>
-                <div>
-                  <h2 className="text-xl lg:text-2xl font-semibold mb-2 text-white">
-                    {businessDetails && businessDetails.businessName}
-                  </h2>
-                  <p className="text-gray-400 text-sm max-w-2xl">
-                    {dealRoomProfile.highlightsOfBusiness}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 lg:mt-0">
-                <Link
-                  href={`proposal?id=${businessId}`}
-                  className="bg-mainGreen text-white px-6 py-2 text-sm rounded-lg font-medium hover:bg-opacity-90 transition-colors flex items-center gap-2"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  Submit Proposal
-                </Link>
-              </div>
-            </div>
+  <div className="flex items-center space-x-6">
+    <div className="relative">
+      <Image
+        src={dealRoomProfile.businessPhotos[0]}
+        width={100}
+        height={100}
+        alt="business logo"
+        className="rounded-lg object-cover w-[100px] h-[100px]"
+      />
+    </div>
+    <div>
+      <div className="flex items-center gap-2 mb-2">
+        <h2 className="text-xl lg:text-2xl font-semibold text-white">
+          {businessDetails && businessDetails.businessName}
+        </h2>
+        {businessDetails && businessDetails.businessVerificationStatus ? (
+          <div className="flex items-center bg-green-900 bg-opacity-40 text-green-400 px-2 py-0.5 rounded-full text-xs">
+            <MdVerified className="mr-1" />
+            Verified
+          </div>
+        ) : (
+          <div className="flex items-center bg-red-900 bg-opacity-40 text-red-400 px-2 py-0.5 rounded-full text-xs">
+            <RxCrossCircled className="mr-1" />
+            Unverified
+          </div>
+        )}
+      </div>
+      <p className="text-gray-400 text-sm max-w-2xl">
+        {dealRoomProfile.highlightsOfBusiness}
+      </p>
+    </div>
+  </div>
+  <div className="mt-4 lg:mt-0">
+    <Link
+      href={`proposal?id=${businessId}`}
+      className="bg-mainGreen text-white px-6 py-2 text-sm rounded-lg font-medium hover:bg-opacity-90 transition-colors flex items-center gap-2"
+    >
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
+      </svg>
+      Submit Proposal
+    </Link>
+  </div>
+</div>
       
             {/* Main Content */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

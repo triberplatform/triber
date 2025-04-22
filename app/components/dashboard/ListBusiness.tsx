@@ -5,6 +5,8 @@ import Link from "next/link";
 import { GoArrowUpRight } from "react-icons/go";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaBusinessTime, FaLayerGroup } from "react-icons/fa";
+import { MdVerified } from "react-icons/md";
+import { RxCrossCircled } from "react-icons/rx";
 import Image from "next/image";
 import { BusinessDetails } from "@/app/type";
 
@@ -44,7 +46,22 @@ export default function ListBusiness() {
                     <FaBusinessTime className="text-mainGreen text-lg lg:text-xl" />
                   </div>
                 )}
-                <p className="text-base lg:text-xl line-clamp-2 overflow-hidden">{business.businessName}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-base lg:text-xl line-clamp-2 overflow-hidden">{business.businessName}</p>
+                  <div className="flex items-center">
+                    {business.businessVerificationStatus ? (
+                      <div className="flex items-center bg-green-900 bg-opacity-40 text-green-400 px-2 py-0.5 rounded-full text-xs">
+                        <MdVerified className="mr-1" />
+                        Verified
+                      </div>
+                    ) : (
+                      <div className="flex items-center bg-red-900 bg-opacity-40 text-red-400 px-2 py-0.5 rounded-full text-xs">
+                        <RxCrossCircled className="mr-1" />
+                        Unverified
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
               <p className="text-xs lg:text-sm text-mainGreen whitespace-nowrap">
                 Registration Date: {formattedDate(business.createdAt)}
