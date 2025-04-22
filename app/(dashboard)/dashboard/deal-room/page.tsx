@@ -5,7 +5,7 @@ import { useUser } from '@/app/components/layouts/UserContext';
 import { FaCheckCircle, FaPlus, FaHome } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { BusinessDetails } from '@/app/type';
+
 
 const BusinessValuationPage = () => {
   const router = useRouter();
@@ -104,7 +104,7 @@ const BusinessValuationPage = () => {
               
               {business?.length === 0 && (
                 <div className="border border-gray-700 rounded-lg p-6 text-center">
-                  <p className="text-gray-400">You haven't added any businesses yet.</p>
+                  <p className="text-gray-400">You haven&apos;t added any businesses yet.</p>
                 </div>
               )}
             </div>
