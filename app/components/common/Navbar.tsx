@@ -37,13 +37,13 @@ export default function Navbar() {
           <Link className="hover:text-mainGreen" href="/login">
             Fundability test
           </Link>
-          {/* <Link className="hover:text-mainGreen" href="/login">
-            Valuation
-          </Link> */}
           <Link className="hover:text-mainGreen" href="/login">
             Deal Room
           </Link>
           <Link className="hover:text-mainGreen" href="/login">
+            Valuation
+          </Link>
+          <Link className="hover:text-mainGreen" href="/insight">
             Database
           </Link>
           <div className="relative">
@@ -69,11 +69,6 @@ export default function Navbar() {
                   <li>
                     <Link className="hover:text-mainGreen" href="/careers">
                       Careers
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="hover:text-mainGreen" href="/insights">
-                      Insights
                     </Link>
                   </li>
                 </ul>
