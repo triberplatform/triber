@@ -45,7 +45,7 @@ export default function OpenRoles() {
     setIsModalOpen(true);
   };
 
-  const openJobModal = (role:any) => {
+  const openJobModal = (role:string) => {
     setSelectedRole(role);
     setIsModalOpen1(true);
   };
@@ -182,7 +182,7 @@ export default function OpenRoles() {
               <p className="text-xs">
                 As the Business Development and Strategy Lead at Triber, you
                 will play a pivotal role in shaping the future of our platform
-                and the success of small businesses. You'll be at the forefront
+                and the success of small businesses. You&apos;ll be at the forefront
                 of creating and executing strategies that attract users, build
                 partnerships, and drive business growth. Collaborating with
                 cross-functional teams, you will help position Triber as a
@@ -200,7 +200,7 @@ export default function OpenRoles() {
                 <li>
                   Partnership Development: Build and nurture relationships with
                   financial institutions, investors, and other stakeholders to
-                  expand Triber's network.
+                  expand Triber&apos;s network.
                 </li>
                 <li>
                   Market Analysis: Conduct research to identify industry trends,
