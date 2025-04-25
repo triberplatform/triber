@@ -43,7 +43,7 @@ export default function Navbar() {
           <Link className="hover:text-mainGreen" href="/login">
             Valuation
           </Link>
-          <Link className="hover:text-mainGreen" href="/insight">
+          <Link className="hover:text-mainGreen" href="/insights">
             Research and Publications
           </Link>
           <div className="relative">
