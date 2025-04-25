@@ -181,7 +181,7 @@ export default function OpenRoles() {
         <BlackCard
           heading={"Financial Analyst"}
           body={
-            "If you're a seasoned financial professional looking to leverage your expertise to drive business growth. "
+            "If you're a seasoned financial professional looking to leverage your expertise to drive business growth. We invite you to join our network of experts providing critical financial guidiance to SMEs and startups"
           }
         />
         <BlackCard
