@@ -105,13 +105,13 @@ export default function Navbar() {
             >
               Fundability test
             </Link>
-            {/* <Link
+            <Link
               className="text-white text-lg py-3 hover:text-mainGreen"
               href="/login"
               onClick={() => setMobileMenuOpen(false)}
             >
               Valuation
-            </Link> */}
+            </Link>
             <Link
               className="text-white text-lg py-3 hover:text-mainGreen"
               href="/login"
@@ -121,10 +121,10 @@ export default function Navbar() {
             </Link>
             <Link
               className="text-white text-lg py-3 hover:text-mainGreen"
-              href="/login"
+              href="/insights"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Database
+              Research and Publications
             </Link>
             <div className="relative mt-2">
               <button
@@ -154,15 +154,7 @@ export default function Navbar() {
                         Careers
                       </Link>
                     </li>
-                    <li>
-                      <Link
-                        className="hover:text-mainGreen"
-                        href="/insights"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Insights
-                      </Link>
-                    </li>
+            
                   </ul>
                 </div>
               )}
