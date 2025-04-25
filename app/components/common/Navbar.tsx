@@ -44,7 +44,7 @@ export default function Navbar() {
             Valuation
           </Link>
           <Link className="hover:text-mainGreen" href="/insight">
-            Database
+            Research and Publications
           </Link>
           <div className="relative">
             <button

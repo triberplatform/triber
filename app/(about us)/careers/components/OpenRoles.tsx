@@ -12,7 +12,7 @@ import { AiOutlineClose, AiOutlineInfoCircle } from "react-icons/ai";
 import DocumentUpload from "@/app/components/dashboard/DocumentUpload";
 
 // Define types for role-related data
-type RoleType = "Trainee" | "Business Analyst" | "Business Accelerator";
+type RoleType = "Trainee" | "Financial Analyst" | "Business Accelerator";
 type ResponsibilityType = string[];
 
 export default function OpenRoles() {
@@ -59,7 +59,7 @@ export default function OpenRoles() {
           "Organize financial documents and maintain databases."
         ]);
         break;
-      case "Business Analyst":
+      case "Financial Analyst":
         setRoleDescription("As the financial analyst at Triber, you will play a pivotal role in shaping the future and success of small businesses. You&apos;ll be at the forefront, playing a critical role in investment decisions, mergers & acquisitions (M&A), corporate finance, and strategic planning. substantiating balance sheet, building models and company valuations, Analyzing historical financial data to project future revenue, expenses, cash flows. Developing scenario and sensitivity analyses to assess risks and opportunities. you will help position businesses seeking funding and support.");
         setRoleResponsibilities([
           "Business Modeling & Valuation analysis: conduct thorough financial models and valuation",
@@ -157,7 +157,7 @@ export default function OpenRoles() {
           Trainee
         </button>
         <button
-          onClick={() => openJobModal("Business Analyst")}
+          onClick={() => openJobModal("Financial Analyst")}
           className="lg:px-6 px-2 text-sm py-2 rounded border border-black text-black hover:bg-mainGreen hover:text-white hover:border-mainGreen"
         >
           Financial Analyst
