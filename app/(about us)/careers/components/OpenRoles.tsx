@@ -45,7 +45,7 @@ export default function OpenRoles() {
   const getRoleContent = (role: RoleType): void => {
     switch(role) {
       case "Trainee":
-        setRoleDescription("As an at Triber, you will play a pivotal role in shaping the future and success of small businesses. You&apos;ll be at the forefront, playing a critical role in due diligence processes and learn first class financial analysis, documentation, and business value creation knowledge and practice in real time. you&apos;ll be working side-by-side with industry leaders, providing support. helping position businesses seeking funding and business acceleration.");
+        setRoleDescription("As an at Triber, you will play a pivotal role in shaping the future and success of small businesses. You'll be at the forefront, playing a critical role in due diligence processes and learn first class financial analysis, documentation, and business value creation knowledge and practice in real time. you'll be working side-by-side with industry leaders, providing support. helping position businesses seeking funding and business acceleration.");
         setRoleResponsibilities([
           "Shadow senior analysts in meetings (M&A, investor calls).",
           "Supports finance teams in analyzing data, building models, and assisting with key financial processes.",
@@ -60,7 +60,7 @@ export default function OpenRoles() {
         ]);
         break;
       case "Financial Analyst":
-        setRoleDescription("As the financial analyst at Triber, you will play a pivotal role in shaping the future and success of small businesses. You&apos;ll be at the forefront, playing a critical role in investment decisions, mergers & acquisitions (M&A), corporate finance, and strategic planning. substantiating balance sheet, building models and company valuations, Analyzing historical financial data to project future revenue, expenses, cash flows. Developing scenario and sensitivity analyses to assess risks and opportunities. you will help position businesses seeking funding and support.");
+        setRoleDescription("As the financial analyst at Triber, you will play a pivotal role in shaping the future and success of small businesses. You'll be at the forefront, playing a critical role in investment decisions, mergers & acquisitions (M&A), corporate finance, and strategic planning. substantiating balance sheet, building models and company valuations, Analyzing historical financial data to project future revenue, expenses, cash flows. Developing scenario and sensitivity analyses to assess risks and opportunities. you will help position businesses seeking funding and support.");
         setRoleResponsibilities([
           "Business Modeling & Valuation analysis: conduct thorough financial models and valuation",
           "Analyzing historical financial data to project future revenue, expenses, cash flows, and profitability.",
@@ -71,10 +71,10 @@ export default function OpenRoles() {
         ]);
         break;
       case "Business Accelerator":
-        setRoleDescription("As the Business Development and Strategy Lead at Triber, you will play a pivotal role in shaping the future and success of small businesses. You&apos;ll be at the forefront of creating and executing strategies, build partnerships, and driving business growth. Collaborating with cross-functional teams, you will help position businesses seeking funding and support.");
+        setRoleDescription("As the Business Development and Strategy Lead at Triber, you will play a pivotal role in shaping the future and success of small businesses. You'll be at the forefront of creating and executing strategies, build partnerships, and driving business growth. Collaborating with cross-functional teams, you will help position businesses seeking funding and support.");
         setRoleResponsibilities([
           "Strategic Planning: Develop and implement strategies to attract, onboard, and retain small business users and investors.",
-          "Partnership Development: Build and nurture relationships with financial institutions, investors, and other stakeholders to expand Triber&apos;s network.",
+          "Partnership Development: Build and nurture relationships with financial institutions, investors, and other stakeholders to expand Triber's network.",
           "Market Analysis: Conduct research to identify industry trends, market needs, and opportunities to refine and improve the platform.",
           "Fundability Assessment Tools: Oversee the enhancement of tools that help businesses evaluate their readiness for funding."
         ]);
@@ -181,13 +181,13 @@ export default function OpenRoles() {
         <BlackCard
           heading={"Financial Analyst"}
           body={
-            "If you&apos;re a seasoned financial professional looking to leverage your expertise to drive business growth. "
+            "If you're a seasoned financial professional looking to leverage your expertise to drive business growth. "
           }
         />
         <BlackCard
           heading={"Business Accelerator"}
           body={
-            "Join our team of business accelerators! We&apos;re looking for partners to help support small businesses and startups. Collaborating, leveraging resources and expertise to drive entrepreneurship and economic development."
+            "Join our team of business accelerators! We're looking for partners to help support small businesses and startups. Collaborating, leveraging resources and expertise to drive entrepreneurship and economic development."
           }
         />
       </div>
