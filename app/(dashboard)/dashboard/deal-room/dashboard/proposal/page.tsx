@@ -1,12 +1,4 @@
-// Format number with commas
-const formatNumberWithCommas = (num: number): string => {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-};
-
-// Parse formatted number string to pure number
-const parseFormattedNumber = (formattedNum: string): number => {
-  return parseInt(formattedNum.replace(/,/g, ''), 10);
-};"use client";
+"use client";
 
 import React, { useState } from "react";
 import { Formik, Form, FormikProps } from "formik";
