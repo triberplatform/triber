@@ -152,7 +152,7 @@ export interface UserDetails {
 export interface ProposalPayload {
   businessId: string;
   message: string;
-  buyingPrice:number | null
+  buyingPrice?:number | null
 
 }
 
@@ -160,6 +160,8 @@ export interface ProposalPayloadBusiness {
   businessId: string;
   message: string;
   investorId: string;
+  buyingPrice?:number | null
+
 }
 
 
