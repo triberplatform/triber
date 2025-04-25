@@ -11,17 +11,23 @@ import { getJobs, jobRequest } from "@/app/services/dashboard";
 import { AiOutlineClose, AiOutlineInfoCircle } from "react-icons/ai";
 import DocumentUpload from "@/app/components/dashboard/DocumentUpload";
 
+// Define types for role-related data
+type RoleType = "Trainee" | "Business Analyst" | "Business Accelerator";
+type ResponsibilityType = string[];
+
 export default function OpenRoles() {
-  const [isModalOpen1, setIsModalOpen1] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [selectedRole, setSelectedRole] = useState("Trainee");
+  const [isModalOpen1, setIsModalOpen1] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
+  const [selectedRole, setSelectedRole] = useState<RoleType>("Trainee");
+  const [roleDescription, setRoleDescription] = useState<string>("");
+  const [roleResponsibilities, setRoleResponsibilities] = useState<ResponsibilityType>([]);
   const [jobs, setJobs] = useState<JobListing[]>([]);
 
   useEffect(() => {
-    const jobDetails = async () => {
+    const jobDetails = async (): Promise<void> => {
       try {
         const jobs = await getJobs();
         setJobs(jobs.data);
@@ -36,18 +42,62 @@ export default function OpenRoles() {
     jobDetails();
   }, []);
 
-  const toggleModal = () => {
+  const getRoleContent = (role: RoleType): void => {
+    switch(role) {
+      case "Trainee":
+        setRoleDescription("As an at Triber, you will play a pivotal role in shaping the future and success of small businesses. You&apos;ll be at the forefront, playing a critical role in due diligence processes and learn first class financial analysis, documentation, and business value creation knowledge and practice in real time. you&apos;ll be working side-by-side with industry leaders, providing support. helping position businesses seeking funding and business acceleration.");
+        setRoleResponsibilities([
+          "Shadow senior analysts in meetings (M&A, investor calls).",
+          "Supports finance teams in analyzing data, building models, and assisting with key financial processes.",
+          "Conduct ratio analysis (liquidity, profitability, leverage).",
+          "Support building Excel models (DCF, budgeting, forecasting).",
+          "Gather market/industry data (competitor analysis, trends).",
+          "Compile comparable company metrics (P/E, EV/EBITDA).",
+          "Research economic conditions affecting the business.",
+          "Help maintain valuation databases and benchmarking reports.",
+          "Prepare presentations (PowerPoint decks for meetings).",
+          "Organize financial documents and maintain databases."
+        ]);
+        break;
+      case "Business Analyst":
+        setRoleDescription("As the financial analyst at Triber, you will play a pivotal role in shaping the future and success of small businesses. You&apos;ll be at the forefront, playing a critical role in investment decisions, mergers & acquisitions (M&A), corporate finance, and strategic planning. substantiating balance sheet, building models and company valuations, Analyzing historical financial data to project future revenue, expenses, cash flows. Developing scenario and sensitivity analyses to assess risks and opportunities. you will help position businesses seeking funding and support.");
+        setRoleResponsibilities([
+          "Business Modeling & Valuation analysis: conduct thorough financial models and valuation",
+          "Analyzing historical financial data to project future revenue, expenses, cash flows, and profitability.",
+          "Developing scenario and sensitivity analyses to assess risks and opportunities.",
+          "Creating budgeting and forecasting models for internal planning.",
+          "Market Analysis: Conduct research to identify industry trends, market needs, and opportunities to refine and improve SME operation and scale.",
+          "Fundability Assessment Tools: Oversee the enhancement of tools that help businesses evaluate their readiness for funding."
+        ]);
+        break;
+      case "Business Accelerator":
+        setRoleDescription("As the Business Development and Strategy Lead at Triber, you will play a pivotal role in shaping the future and success of small businesses. You&apos;ll be at the forefront of creating and executing strategies, build partnerships, and driving business growth. Collaborating with cross-functional teams, you will help position businesses seeking funding and support.");
+        setRoleResponsibilities([
+          "Strategic Planning: Develop and implement strategies to attract, onboard, and retain small business users and investors.",
+          "Partnership Development: Build and nurture relationships with financial institutions, investors, and other stakeholders to expand Triber&apos;s network.",
+          "Market Analysis: Conduct research to identify industry trends, market needs, and opportunities to refine and improve the platform.",
+          "Fundability Assessment Tools: Oversee the enhancement of tools that help businesses evaluate their readiness for funding."
+        ]);
+        break;
+      default:
+        setRoleDescription("");
+        setRoleResponsibilities([]);
+    }
+  };
+
+  const openJobModal = (role: RoleType): void => {
+    setSelectedRole(role);
+    getRoleContent(role);
+    setIsModalOpen1(true);
+  };
+
+  const toggleModal = (): void => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const applyJob = () => {
+  const applyJob = (): void => {
     setIsModalOpen1(!isModalOpen1);
     setIsModalOpen(true);
-  };
-
-  const openJobModal = (role:string) => {
-    setSelectedRole(role);
-    setIsModalOpen1(true);
   };
 
   const formik = useFormik<JobConnectForm>({
@@ -110,7 +160,7 @@ export default function OpenRoles() {
           onClick={() => openJobModal("Business Analyst")}
           className="lg:px-6 px-2 text-sm py-2 rounded border border-black text-black hover:bg-mainGreen hover:text-white hover:border-mainGreen"
         >
-          Financial Evaluator
+          Financial Analyst
         </button>
         <button
           onClick={() => openJobModal("Business Accelerator")}
@@ -129,15 +179,15 @@ export default function OpenRoles() {
           }
         />
         <BlackCard
-          heading={"Financial Evaluator"}
+          heading={"Financial Analyst"}
           body={
-            "If you're a seasoned financial professional looking to leverage your expertise to drive business growth. "
+            "If you&apos;re a seasoned financial professional looking to leverage your expertise to drive business growth. "
           }
         />
         <BlackCard
           heading={"Business Accelerator"}
           body={
-            "Join our team of business accelerators! We're looking for partners to help support small businesses and startups. Collaborating, leveraging resources and expertise to drive entrepreneurship and economic development."
+            "Join our team of business accelerators! We&apos;re looking for partners to help support small businesses and startups. Collaborating, leveraging resources and expertise to drive entrepreneurship and economic development."
           }
         />
       </div>
@@ -145,7 +195,7 @@ export default function OpenRoles() {
       {/* First Modal - Role Details */}
       {isModalOpen1 && (
         <Modal>
-          <div className="max-h-[90vh] lg:h-[90vh] gap-3 bg-mainBlacks text-white  lg:grid grid-cols-10  modal-scroll w-full">
+          <div className="max-h-[90vh] lg:h-[90vh] gap-3 bg-mainBlacks  text-white lg:grid grid-cols-10  modal-scroll w-full">
             <div className="lg:col-span-3 lg:block hidden relative h-full">
               <Image
                 src="/assets/valuation3.png"
@@ -180,37 +230,17 @@ export default function OpenRoles() {
                 Role Overview
               </p>
               <p className="text-xs">
-                As the Business Development and Strategy Lead at Triber, you
-                will play a pivotal role in shaping the future of our platform
-                and the success of small businesses. You&apos;ll be at the forefront
-                of creating and executing strategies that attract users, build
-                partnerships, and drive business growth. Collaborating with
-                cross-functional teams, you will help position Triber as a
-                trusted partner for businesses seeking funding and support.
+                {roleDescription}
               </p>
               <p className="font-semibold font-serif text-sm py-4">
                 Key Responsibilities
               </p>
               <ul className="pb-4 list-disc text-xs pl-3">
-                <li>
-                  Strategic Planning: Develop and implement strategies to
-                  attract, onboard, and retain small business users and
-                  investors.
-                </li>
-                <li>
-                  Partnership Development: Build and nurture relationships with
-                  financial institutions, investors, and other stakeholders to
-                  expand Triber&apos;s network.
-                </li>
-                <li>
-                  Market Analysis: Conduct research to identify industry trends,
-                  market needs, and opportunities to refine and improve the
-                  platform.
-                </li>
-                <li>
-                  Fundability Assessment Tools: Oversee the enhancement of tools
-                  that help businesses evaluate their readiness for funding.
-                </li>
+                {roleResponsibilities.map((responsibility, index) => (
+                  <li key={index}>
+                    {responsibility}
+                  </li>
+                ))}
               </ul>
               <button
                 onClick={applyJob}
@@ -226,7 +256,7 @@ export default function OpenRoles() {
       {/* Second Modal - Application Form */}
       {isModalOpen && (
         <Modal>
-          <div className="max-h-[85vh] lg:h-[90vh] gap-3 bg-mainBlacks text-white  lg:grid grid-cols-10  modal-scroll w-full">
+          <div className="max-h-[85vh] lg:h-[90vh] gap-3 bg-mainBlacks   lg:grid grid-cols-10  modal-scroll w-full">
             <div className="col-span-3 relative hidden lg:block h-full">
               <Image
                 src="/assets/valuation3.png"
@@ -385,7 +415,7 @@ export default function OpenRoles() {
                   <DocumentUpload
                     label="Upload Resume/cv"
                     name="resume"
-                    onChange={(file) => formik.setFieldValue("resume", file)}
+                    onChange={(file: File | null) => formik.setFieldValue("resume", file)}
                     onBlur={formik.handleBlur}
                   />
                 </div>

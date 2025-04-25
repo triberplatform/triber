@@ -152,6 +152,7 @@ export interface UserDetails {
 export interface ProposalPayload {
   businessId: string;
   message: string;
+  buyingPrice:number | null
 
 }
 
