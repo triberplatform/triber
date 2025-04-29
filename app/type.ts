@@ -81,7 +81,7 @@ export interface BusinessDetails {
   businessPhone: string;
   businessLogoUrl: string;
   businessStatus: "OWNER" | "MEMBER" | "BROKER"; // Enum values
-  interestedIn: "FULL_SALE_OF_BUSINESS" | "PARTIAL_STAKE" | "LOAN" | "SELL_OR_LEASE_OF_BUSINESS_ASSETS"; // Enum values
+  interestedIn: "FULL_SALE_OF_BUSINESS" | "EQUITY_INVESTMENT" | "LOAN" | "SELL_OR_LEASE_OF_BUSINESS_ASSETS"; // Enum values
   industry: "IT" | "FINANCE" | "HEALTH" | "EDUCATION" | "MEDIA" | "OTHER"; // Enum values
   numOfEmployees: "LESS_THAN_10" | "BETWEEN_10_AND_50" | "BETWEEN_50_AND_100" | "BETWEEN_100_AND_500" | "BETWEEN_500_AND_1000" | "OVER_1000"; // Enum values
   yearEstablished: number;
@@ -421,6 +421,7 @@ export interface Proposal {
   createdAt: string;
   updatedAt: string;
   investor: Investor;
+  proposedAmount?:string;
 }
 
 export interface ProposalResponse {
@@ -581,6 +582,8 @@ export interface FundType {
     updatedAt: string;
   
 }
+
+
 
 export enum Industry {
   IT = "IT",

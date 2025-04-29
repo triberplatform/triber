@@ -263,7 +263,7 @@ const InvestorsList = () => {
                   <div className="flex items-center gap-2">
                     <MdBusinessCenter className="text-gray-400 text-sm sm:text-base" />
                     <span className="text-xs sm:text-sm text-gray-400">
-                      Interests: {interestedFactors.length > 0 ? interestedFactors.join(", ") : "Not specified"}
+                     Investment of Interests: {interestedFactors.length > 0 ? interestedFactors.join(", ") : "Not specified"}
                     </span>
                   </div>
                   

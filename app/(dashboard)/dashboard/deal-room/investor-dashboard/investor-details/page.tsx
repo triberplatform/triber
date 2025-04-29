@@ -343,7 +343,7 @@ export default function InvestorDetails() {
                 Industry Focus
               </h3>
               <div className="bg-zinc-800 p-4 rounded-lg">
-                <p className="text-xs text-gray-400 mb-2">Sector Preferences</p>
+                <p className="text-xs text-gray-400 mb-2">Investment of Interests</p>
                 {interestedFactors.length > 0 ? (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {interestedFactors.map((factor, index) => (

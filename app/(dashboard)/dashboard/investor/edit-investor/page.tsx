@@ -374,7 +374,7 @@ export default function EditInvestor() {
             {/* Right Column */}
             <div className="space-y-5 ">
               <ArrayInput
-                label="Interested Factors"
+                label="Investment of Interest"
                 name="interestedFactors"
                 values={formikProps.values.interestedFactors}
                 onChange={(newValues) =>

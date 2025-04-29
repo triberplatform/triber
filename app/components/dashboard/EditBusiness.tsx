@@ -199,7 +199,7 @@ const business = businessDetails.find((b) => b.publicId === id);
                     value: "FULL_SALE_OF_BUSINESS",
                     label: "Full Sale of Business",
                   },
-                  { value: "PARTIAL_STAKE", label: "Partial Stake" },
+                  { value: "EQUITY_INVESTMENT", label: "Equity Investment" },
                   { value: "LOAN", label: "Loan" },
                   {
                     value: "SELL_OR_LEASE_OF_BUSINESS_ASSETS",

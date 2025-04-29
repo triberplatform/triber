@@ -76,6 +76,8 @@ export default function RegisterInvestor() {
     window.location.href = "/dashboard"; // Replace with the desired path
   };
 
+  
+
   const handleNext = () => {
     if (currentStep < 1) {
       setCurrentStep(currentStep + 1);
@@ -262,7 +264,7 @@ export default function RegisterInvestor() {
             {/* Right Column */}
             <div className="space-y-5 ">
               <ArrayInput
-                label="Interested Factors"
+                label="Investment of Interest"
                 name="interestedFactors"
                 values={formikProps.values.interestedFactors}
                 onChange={(newValues) =>

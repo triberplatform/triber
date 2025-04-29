@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/app/components/layouts/UserContext";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaCalendarAlt, FaFacebook, FaInstagram, FaDownload, FaFileAlt, FaImage } from "react-icons/fa";
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
@@ -19,6 +19,7 @@ import {
 import { FundType, Proposal, BusinessDetails } from "@/app/type";
 import { formatBusinessTypeToSentence } from "@/app/services/utils";
 import { RxCrossCircled } from "react-icons/rx";
+import ProposalDetails from "./proposal-details/page";
 
 
 // Import the DealRoomProfile type
@@ -114,6 +115,7 @@ export default function BusinessDetail() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeGalleryTab] = useState('photos');
+  const router = useRouter()
 
   // Find the business first
   useEffect(() => {
@@ -122,6 +124,7 @@ export default function BusinessDetail() {
       setBusiness(foundBusiness || null);
     }
   }, [businessDetails, id]);
+
 
   // Fetch proposals
   useEffect(() => {
@@ -224,6 +227,10 @@ export default function BusinessDetail() {
 
     fetchFundabilityResults();
   }, [currentStep, business, id]);
+
+  const handleNavigation =(proposalId:string)=>{
+    router.push(`/dashboard/${id}/proposal-details?businessId=${id}&proposalId=${proposalId}`)
+  }
 
   // Function to handle redirecting to the correct fundability test based on business stage
   const handleRefreshRedirectFund = (id: string) => {
@@ -766,7 +773,7 @@ export default function BusinessDetail() {
                       </thead>
                       <tbody>
                         {proposal.map((item, index) => (
-                          <tr key={item.publicId} className="border-b border-gray-800">
+                          <tr onClick={()=>handleNavigation(item.publicId)} key={item.publicId} className="border-b cursor-pointer hover:bg-black border-gray-800">
                             <td className="px-4 py-3">{index + 1}</td>
                             <td className="px-4 py-3 text-mainGreen">
                               {new Date(item.createdAt || Date.now()).toLocaleDateString()}

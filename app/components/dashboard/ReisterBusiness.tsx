@@ -207,7 +207,7 @@ export default function RegisterBusiness() {
                     value: "FULL_SALE_OF_BUSINESS",
                     label: "Full Sale of Business",
                   },
-                  { value: "PARTIAL_STAKE", label: "Partial Stake" },
+                  { value: "EQUITY_INVESTMENT", label: "Equity Investments" },
                   { value: "DEBT_FUNDING", label: "Debt Funding" },
                   {
                     value: "SELL_OR_LEASE_OF_BUSINESS_ASSETS",
