@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getBusinessProposals } from "@/app/services/dashboard";
-import Image from "next/image";
 import { IoChevronBackOutline } from "react-icons/io5";
 import Link from "next/link";
 import { Proposal } from '@/app/type';
@@ -42,7 +41,7 @@ const ProposalDetails = () => {
           
           // Find the specific proposal if proposalId is provided
           if (proposalId) {
-            const foundProposal = response.data.find(p => p.publicId === proposalId);
+            const foundProposal = proposals.find(p => p.publicId === proposalId);
             if (foundProposal) {
               setCurrentProposal(foundProposal);
             } else {
@@ -72,7 +71,7 @@ const ProposalDetails = () => {
   }, [businessId, proposalId]);
 
   // Handle proposal acceptance or rejection
-  const handleProposalResponse = async (action:any) => {
+  const handleProposalResponse = async (action:string) => {
     if (!currentProposal) return;
     
     // Here you would implement API call to accept or reject the proposal

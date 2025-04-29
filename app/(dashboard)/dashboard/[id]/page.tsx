@@ -19,7 +19,7 @@ import {
 import { FundType, Proposal, BusinessDetails } from "@/app/type";
 import { formatBusinessTypeToSentence } from "@/app/services/utils";
 import { RxCrossCircled } from "react-icons/rx";
-import ProposalDetails from "./proposal-details/page";
+
 
 
 // Import the DealRoomProfile type
