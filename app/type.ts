@@ -421,7 +421,7 @@ export interface Proposal {
   createdAt: string;
   updatedAt: string;
   investor: Investor;
-  proposedAmount?:string;
+  
 }
 
 export interface ProposalResponse {
