@@ -17,6 +17,7 @@ import { useSearchParams } from "next/navigation";
 import MultipleDocumentUpload from "@/app/components/dashboard/MultipleDocument";
 import Link from "next/link";
 import ArrayInput from "@/app/components/dashboard/ArrayInput";
+import OptionInput from "@/app/components/dashboard/OptionInput";
 
 export default function EditProfile() {
   const [loading, setLoading] = useState(false);
@@ -69,10 +70,15 @@ export default function EditProfile() {
       "Business highlights are required"
     ),
     facilityDetails: Yup.string().required("Facility details are required"),
+    fundingStructure: Yup.string().required("Facility details are required"),
     fundingDetails: Yup.string().required(
       "Current funding details are required"
     ),
     averageMonthlySales: Yup.number()
+      .typeError("Must be a number")
+      .positive("Must be positive")
+      .required("This field is required"),
+    fundingAmount: Yup.number()
       .typeError("Must be a number")
       .positive("Must be positive")
       .required("This field is required"),
@@ -168,6 +174,8 @@ export default function EditProfile() {
         businessPhotos: dealRoomData.businessPhotos || null,
         proofOfBusiness: dealRoomData.proofOfBusiness || null,
         businessDocuments: dealRoomData.businessDocuments || null,
+        fundingAmount: dealRoomData.fundingAmount || 0,
+        fundingStructure: dealRoomData.fundingStructure || ""
       };
     } else {
       // Default initial values if no deal room data exists
@@ -187,6 +195,8 @@ export default function EditProfile() {
         businessPhotos: null,
         proofOfBusiness: null,
         businessDocuments: null,
+        fundingAmount:0,
+        fundingStructure:""
       };
     }
   };
@@ -492,6 +502,58 @@ export default function EditProfile() {
                       onBlur={formikProps.handleBlur}
                       error={formikProps.errors.reasonForSale}
                       touched={formikProps.touched.reasonForSale}
+                    />
+                  </div>
+                </div>
+                <div className="lg:grid lg:grid-cols-2 flex flex-col lg:items-end gap-5">
+                  <div>
+                    <FormInput
+                      label="How much do you seek in funding?"
+                      name="fundingAmount"
+                      placeholder="Funding amount"
+                      value={
+                        formikProps.values.fundingAmount !== undefined &&
+                        formikProps.values.fundingAmount !== null
+                          ? formikProps.values.fundingAmount
+                              .toString()
+                              .replace(/\B(?=(\d{3})+(?!\d))/g, ",") // Format with commas
+                          : ""
+                      }
+                      onChange={(e) => {
+                        const rawValue = e.target.value.replace(/,/g, ""); // Remove commas
+                        const numericValue = Number(rawValue); // Convert to number
+                        if (!isNaN(numericValue)) {
+                          formikProps.setFieldValue(
+                            "fundingAmount",
+                            numericValue
+                          ); // Store numeric value
+                        }
+                      }}
+                      onBlur={formikProps.handleBlur}
+                      error={formikProps.errors.fundingAmount}
+                      touched={formikProps.touched.fundingAmount}
+                    />
+                  </div>
+                  <div>
+                    <OptionInput
+                      label="What is your proposed funding structure"
+                      name="fundingStructure"
+                      options={[
+                        { value: "Debt Funding", label: "Debt Funding" },
+                        {
+                          value: "Equity",
+                          label: "Equity",
+                        },
+                        {
+                          value: "Partial Stake",
+                          label: "Partial Stake",
+                        }
+                      ]}
+                      value={formikProps.values.fundingStructure}
+                      onChange={formikProps.handleChange}
+                      onBlur={formikProps.handleBlur}
+                      error={formikProps.errors.fundingStructure}
+                      touched={formikProps.touched.fundingStructure}
                     />
                   </div>
                 </div>

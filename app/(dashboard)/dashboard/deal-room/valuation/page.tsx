@@ -13,6 +13,7 @@ import { useSearchParams } from "next/navigation";
 import MultipleDocumentUpload from "@/app/components/dashboard/MultipleDocument";
 import Link from "next/link";
 import ArrayInput from "@/app/components/dashboard/ArrayInput";
+import OptionInput from "@/app/components/dashboard/OptionInput";
 
 export default function Valuation() {
   const [loading, setLoading] = useState(false);
@@ -33,6 +34,9 @@ export default function Valuation() {
     fundingDetails: Yup.string().required(
       "Current funding details are required"
     ),
+    fundingStructure: Yup.string().required(
+      "Funding structure are required"
+    ),
     averageMonthlySales: Yup.number()
       .typeError("Must be a number")
       .positive("Must be positive")
@@ -46,6 +50,10 @@ export default function Valuation() {
       .min(0, "Must be 0 or higher")
       .max(100, "Must be 100 or lower"),
     tentativeSellingPrice: Yup.number()
+      .typeError("Must be a number")
+      .positive("Must be positive")
+      .required("This field is required"),
+      fundingAmount: Yup.number()
       .typeError("Must be a number")
       .positive("Must be positive")
       .required("This field is required"),
@@ -69,15 +77,18 @@ export default function Valuation() {
           )
         );
       }),
-      proofOfBusiness: Yup.mixed()
+    proofOfBusiness: Yup.mixed()
       .nullable()
       .test("fileType", "Unsupported file format", (value) => {
         if (!value) return true;
         // Type guard to check if value is a File
         if (value instanceof File) {
-          return ["image/jpeg", "image/png", "image/jpg", "application/pdf"].includes(
-            value.type
-          );
+          return [
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+            "application/pdf",
+          ].includes(value.type);
         }
         return false;
       }),
@@ -110,6 +121,8 @@ export default function Valuation() {
     businessPhotos: null,
     proofOfBusiness: null,
     businessDocuments: null,
+    fundingAmount: 0,
+    fundingStructure: "",
   };
 
   const handleSubmit = async (values: ValuationFormPayload) => {
@@ -381,6 +394,58 @@ export default function Valuation() {
                     />
                   </div>
                 </div>
+                <div className="lg:grid lg:grid-cols-2 flex flex-col lg:items-end gap-5">
+                  <div>
+                    <FormInput
+                      label="How much do you seek in funding?"
+                      name="fundingAmount"
+                      placeholder="Funding amount"
+                      value={
+                        formikProps.values.fundingAmount !== undefined &&
+                        formikProps.values.fundingAmount !== null
+                          ? formikProps.values.fundingAmount
+                              .toString()
+                              .replace(/\B(?=(\d{3})+(?!\d))/g, ",") // Format with commas
+                          : ""
+                      }
+                      onChange={(e) => {
+                        const rawValue = e.target.value.replace(/,/g, ""); // Remove commas
+                        const numericValue = Number(rawValue); // Convert to number
+                        if (!isNaN(numericValue)) {
+                          formikProps.setFieldValue(
+                            "fundingAmount",
+                            numericValue
+                          ); // Store numeric value
+                        }
+                      }}
+                      onBlur={formikProps.handleBlur}
+                      error={formikProps.errors.fundingAmount}
+                      touched={formikProps.touched.fundingAmount}
+                    />
+                  </div>
+                  <div>
+                    <OptionInput
+                      label="What is your proposed funding structure"
+                      name="fundingStructure"
+                      options={[
+                        { value: "Debt Funding", label: "Debt Funding" },
+                        {
+                          value: "Equity",
+                          label: "Equity",
+                        },
+                        {
+                          value: "Partial Stake",
+                          label: "Partial Stake",
+                        }
+                      ]}
+                      value={formikProps.values.fundingStructure}
+                      onChange={formikProps.handleChange}
+                      onBlur={formikProps.handleBlur}
+                      error={formikProps.errors.fundingStructure}
+                      touched={formikProps.touched.fundingStructure}
+                    />
+                  </div>
+                </div>
                 <div className="grid lg:grid-cols-2 gap-5">
                   <div>
                     <MultipleDocumentUpload
@@ -404,8 +469,14 @@ export default function Valuation() {
                       onChange={(file) => {
                         // If an array is returned (due to component implementation),
                         // take only the first file since we want a single file
-                        const singleFile = Array.isArray(file) && file.length > 0 ? file[0] : file;
-                        formikProps.setFieldValue("proofOfBusiness", singleFile);
+                        const singleFile =
+                          Array.isArray(file) && file.length > 0
+                            ? file[0]
+                            : file;
+                        formikProps.setFieldValue(
+                          "proofOfBusiness",
+                          singleFile
+                        );
                       }}
                       onBlur={formikProps.handleBlur}
                       error={formikProps.errors.proofOfBusiness}

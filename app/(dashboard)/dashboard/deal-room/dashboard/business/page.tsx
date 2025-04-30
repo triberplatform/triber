@@ -354,6 +354,18 @@ export default function BusinessDetail() {
                   </h3>
                   <div className="bg-zinc-800 p-4 rounded-lg">
                     <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <p className="text-xs text-gray-400">Funding Amount Required</p>
+                        <p className="text-sm text-white">
+                          ${dealRoomProfile.fundingAmount.toLocaleString() || "Not Provided"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400">Funding Structure</p>
+                        <p className="text-sm text-white">
+                          ${dealRoomProfile.fundingStructure || "Not Provided"}
+                        </p>
+                      </div>
                       <div>
                         <p className="text-xs text-gray-400">Monthly Sales</p>
                         <p className="text-sm text-white">

@@ -210,6 +210,8 @@ export interface ValuationFormPayload {
   businessPhotos: File[] | null;
   proofOfBusiness: File | null;
   businessDocuments: File[] | null;
+  fundingAmount: number;
+  fundingStructure:string;
 }
 
 export interface FundabilityPayload {
@@ -444,6 +446,8 @@ export type DealRoomProfile = {
   assetsDetails: string[] | string;
   valueOfPhysicalAssets: number;
   tentativeSellingPrice: number;
+  fundingStructure:string;
+  fundingAmount:number;
   reasonForSale: string;
   businessPhotos: string[];
   proofOfBusiness: string; // Changed from array to string
