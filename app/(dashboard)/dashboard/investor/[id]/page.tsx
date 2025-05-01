@@ -134,7 +134,7 @@ const ProposalDetails = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter()
   
-  const searchParams = useSearchParams();
+ 
  
   const params = useParams()
     const proposalId = params.id
