@@ -258,7 +258,7 @@ export default function BusinessDetail() {
 
   const handleNavigation = (proposalId: string) => {
     router.push(
-      `/dashboard/${id}/proposal-details?businessId=${id}&proposalId=${proposalId}`
+      `/dashboard/${id}/proposal-details?proposalId=${proposalId}`
     );
   };
 

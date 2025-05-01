@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { getProposalById } from "@/app/services/dashboard";
 import { IoChevronBackOutline } from "react-icons/io5";
 import Link from "next/link";
@@ -14,7 +14,8 @@ const ProposalDetails = () => {
   
   const searchParams = useSearchParams();
   const proposalId = searchParams.get('proposalId');
-  const businessId = searchParams.get('businessId');
+  const params = useParams();
+  const businessId = params.id;
 
   // Fetch proposal by ID
   useEffect(() => {
