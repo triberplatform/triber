@@ -553,7 +553,7 @@ export const getBusinessProposals = async (token: string, businessId: string) =>
   }
 };
 
-export const getProposalById = async (token: string, id: string) => {
+export const getProposalById = async (token: string, id: string | string[]) => {
 
   
   try {
@@ -676,20 +676,70 @@ export const getFundabilityResultsStartupBusinessId = async (token: string,funda
 }
 
 
-export const acceptProposal = async (token: string, id:string) => {
+export const acceptProposal = async (token: string, id: string | string[]) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dealroom/accept-proposal/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to accept proposal',
+        data: null
+      };
+    }
+    
+    return {
+      success: true,
+      message: data.message || 'Proposal accepted successfully',
+      data: data.data || null
+    };
+  } catch (error) {
+    console.error('Error accepting proposal:', error);
+    return {
+      success: false,
+      message: 'An error occurred while accepting the proposal',
+      data: null
+    };
+  }
+};
 
-const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dealroom/business/${id}`, {
-  method: 'PUT',
-  headers: {
-    'Authorization': `Bearer ${token}`
-  },
-});
-
-if (!response.ok) {
-  const errorData = await response.json();
-  return {
-    success: false,
-    message: errorData.message || 'Failed to update deal room profile',
-    data: null
-  };
-}}
+export const rejectProposal = async (token: string, id: string | string[]) => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dealroom/reject-proposal/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message || 'Failed to reject proposal',
+        data: null
+      };
+    }
+    
+    return {
+      success: true,
+      message: data.message || 'Proposal rejected successfully',
+      data: data.data || null
+    };
+  } catch (error) {
+    console.error('Error rejecting proposal:', error);
+    return {
+      success: false,
+      message: 'An error occurred while rejecting the proposal',
+      data: null
+    };
+  }
+};

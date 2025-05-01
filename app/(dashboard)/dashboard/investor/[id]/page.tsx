@@ -134,10 +134,9 @@ const ProposalDetails = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   
   const searchParams = useSearchParams();
-  const proposalId = searchParams.get('proposalId');
+ 
   const params = useParams()
-  const businessId = params.id // Still needed for back button navigation
-
+    const proposalId = params.id
   // Fetch proposal by ID
   useEffect(() => {
     const fetchProposal = async () => {
@@ -284,7 +283,7 @@ const ProposalDetails = () => {
       <div className="min-h-screen bg-black text-white p-6">
         <div className="bg-gray-800 p-6 rounded-lg text-center">
           <p className="mb-4">No proposal found</p>
-          <Link href={`/dashboard/${businessId}`} className="text-mainGreen">
+          <Link href={`/dashboard/investor`} className="text-mainGreen">
             Back to Business Details
           </Link>
         </div>
@@ -306,7 +305,7 @@ const ProposalDetails = () => {
       {/* Back button */}
       <div className="p-4">
         <Link 
-          href={`/dashboard/${businessId}`} 
+          href={`/dashboard/investor`} 
           className="flex items-center text-gray-400 hover:text-mainGreen"
         >
           <IoChevronBackOutline className="mr-1" />

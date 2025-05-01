@@ -143,7 +143,9 @@ export default function InvestorProfile() {
   if (!user) {
     return <p>No user details available</p>;
   }
-
+  const handleNavigation = (id:string) => {
+    router.push(`/dashboard/investor/${id}`)
+  }
   const handleEdit = () => {
     router.push(`/dashboard/investor/edit-investor?id=${user.investorProfile.publicId}`);
   };
@@ -175,7 +177,7 @@ export default function InvestorProfile() {
                   </thead>
                   <tbody>
                     {proposals.map((item, index) => (
-                      <tr key={item.publicId} className="border-b border-zinc-800">
+                      <tr onClick={()=>handleNavigation(item.publicId)} key={item.publicId} className="border-b border-zinc-800">
                         <td className="px-4 py-3">{String(index + 1).padStart(2, '0')}.</td>
                         <td className="px-4 py-3 text-xs">
                           {new Date(item.createdAt).toLocaleDateString('en-US', { 
@@ -213,7 +215,7 @@ export default function InvestorProfile() {
                           <span 
                             className={`px-3 py-1 text-xs rounded-full inline-flex items-center ${
                               item.status === 'PENDING' 
-                                ? 'bg-blue-500/20 text-blue-400'
+                                ? '   bg-yellow-800 text-yellow-500'
                                 : item.status === 'ACCEPTED'
                                 ? 'bg-green-500/20 text-green-500'
                                 : 'bg-red-500/20 text-red-500'
@@ -221,11 +223,11 @@ export default function InvestorProfile() {
                           >
                             <span className="relative flex h-2 w-2 mr-1">
                               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                                item.status === 'PENDING' ? 'bg-blue-400' : 
+                                item.status === 'PENDING' ? 'bg-yellow-400' : 
                                 item.status === 'ACCEPTED' ? 'bg-green-400' : 'bg-red-400'
                               }`}></span>
                               <span className={`relative inline-flex rounded-full h-2 w-2 ${
-                                item.status === 'PENDING' ? 'bg-blue-500' : 
+                                item.status === 'PENDING' ? 'bg-yellow-500' : 
                                 item.status === 'ACCEPTED' ? 'bg-green-500' : 'bg-red-500'
                               }`}></span>
                             </span>
@@ -239,7 +241,7 @@ export default function InvestorProfile() {
                         </td>
                         <td className="px-4 py-3">
                           <Link 
-                            href={`/dashboard/deal-room/dashboard/business?id=${item.publicId}&businessId=${item.businessId}`}
+                            href={`/dashboard/investor`}
                             className="text-blue-400 hover:underline text-xs"
                           >
                             View Details
