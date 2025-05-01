@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { getProposalById, acceptProposal, rejectProposal } from "@/app/services/dashboard";
 import { IoChevronBackOutline, IoClose } from "react-icons/io5";
 import Link from "next/link";
