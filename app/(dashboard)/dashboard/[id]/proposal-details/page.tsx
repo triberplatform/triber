@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { getProposalById, acceptProposal, rejectProposal } from "@/app/services/dashboard";
 import { IoChevronBackOutline, IoClose } from "react-icons/io5";
 import Link from "next/link";
@@ -84,6 +84,8 @@ interface StatusModalProps {
   isSuccess: boolean;
 }
 
+
+
 const StatusModal: React.FC<StatusModalProps> = ({ 
   isOpen, 
   onClose, 
@@ -133,6 +135,7 @@ const ProposalDetails = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   
+  const router = useRouter();
   const searchParams = useSearchParams();
   const proposalId = searchParams.get('proposalId');
   const params = useParams()
@@ -219,6 +222,10 @@ const ProposalDetails = () => {
       setIsProcessing(false);
     }
   };
+
+  const navigateToInvestor =()=> {
+    router.push(`/dashboard/deal-room/investor-dashboard/investor-details?id=${currentProposal?.investorId}&businessId=${currentProposal?.businessId}`)
+  }
 
   // Handle proposal rejection
   const handleRejectProposal = async () => {
@@ -324,7 +331,7 @@ const ProposalDetails = () => {
           </div>
           <div>
             <div className="text-2xl font-bold">
-              ₦ {currentProposal.buyingPrice?.toLocaleString() || "0"}
+              ₦ {currentProposal.buyingPrice?.toLocaleString() || currentProposal.business?.dealRoomDetails.tentativeSellingPrice || "0"}
             </div>
             <div className="mt-1">
               <span className={`text-xs px-3 py-1 rounded ${
@@ -339,7 +346,14 @@ const ProposalDetails = () => {
             </div>
           </div>
         </div>
-
+        <div className="flex gap-3">
+             <button 
+              onClick={navigateToInvestor}
+              className="border border-white rounded-md text-sm px-6 py-2 hover:bg-gray-800"
+              disabled={isProcessing}
+            >
+              View Investor Profile
+            </button>
         {currentProposal.status === 'PENDING' && (
           <div className="flex gap-3">
             <button 
@@ -358,6 +372,7 @@ const ProposalDetails = () => {
             </button>
           </div>
         )}
+        </div>
       </div>
 
       {/* Proposal Details */}
@@ -392,7 +407,7 @@ const ProposalDetails = () => {
             </div>
             <div>
               <p className="text-gray-400 mb-1">Proposed Amount</p>
-              <p>₦ {currentProposal.buyingPrice?.toLocaleString() || "Fields to be added soon"}</p>
+              <p>₦ {currentProposal.buyingPrice?.toLocaleString() || currentProposal.business?.dealRoomDetails.tentativeSellingPrice || "Fields to be added soon"}</p>
             </div>
 
             {/* Row 3 */}

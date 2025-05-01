@@ -242,7 +242,7 @@ export default function InvestorProfile() {
                         <td className="px-4 py-3">
                           <Link 
                             href={`/dashboard/investor`}
-                            className="text-blue-400 hover:underline text-xs"
+                            className="text-mainGreen hover:underline text-xs"
                           >
                             View Details
                           </Link>

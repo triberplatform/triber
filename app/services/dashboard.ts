@@ -582,7 +582,7 @@ export const getInvestorProposals = async (token: string, investorId: string) =>
         Authorization: `Bearer ${token}`
       }
     });
-    const data: ProposalResponse = await response.json();
+    const data= await response.json();
     return data;
   } catch (error) {
     console.error('Unable to fetch  proposals:', error);

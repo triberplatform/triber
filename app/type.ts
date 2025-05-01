@@ -423,9 +423,16 @@ export interface Proposal {
   createdAt: string;
   updatedAt: string;
   investor: Investor;
-  
+  business?:BusinessP
 }
 
+interface BusinessP {
+  dealRoomDetails:Tentative
+}
+interface Tentative {
+  tentativeSellingPrice:string
+  publicId?:string
+}
 export interface ProposalResponse {
   success: boolean;
   message: string;

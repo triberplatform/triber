@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { getProposalById, acceptProposal, rejectProposal } from "@/app/services/dashboard";
 import { IoChevronBackOutline, IoClose } from "react-icons/io5";
 import Link from "next/link";
@@ -132,6 +132,7 @@ const ProposalDetails = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const router = useRouter()
   
   const searchParams = useSearchParams();
  
@@ -277,6 +278,10 @@ const ProposalDetails = () => {
       </div>
     );
   }
+  const navigateToBusiness =()=> {
+    router.push(`/dashboard/deal-room/dashboard/business?id=${currentProposal?.business?.dealRoomDetails.publicId}&businessId=${currentProposal?.businessId}`)
+  }
+
 
   if (!currentProposal) {
     return (
@@ -309,7 +314,7 @@ const ProposalDetails = () => {
           className="flex items-center text-gray-400 hover:text-mainGreen"
         >
           <IoChevronBackOutline className="mr-1" />
-          Back to Business Details
+          Back to Investor Dashboard
         </Link>
       </div>
 
@@ -339,8 +344,18 @@ const ProposalDetails = () => {
           </div>
         </div>
 
-        {currentProposal.status === 'PENDING' && (
+      
           <div className="flex gap-3">
+
+<button 
+              onClick={navigateToBusiness}
+              className="border border-white rounded-md text-sm px-6 py-2 hover:bg-gray-800"
+              disabled={isProcessing}
+            >
+            View Business Details
+            </button>
+            {currentProposal.status === 'PENDING' && (
+                 <div className="flex gap-3">
             <button 
               onClick={() => setShowRejectModal(true)}
               className="border border-white rounded-md text-sm px-6 py-2 hover:bg-gray-800"
@@ -355,8 +370,9 @@ const ProposalDetails = () => {
             >
               Accept Proposal
             </button>
-          </div>
+  </div>
         )}
+                </div>
       </div>
 
       {/* Proposal Details */}
