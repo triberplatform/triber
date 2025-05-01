@@ -553,6 +553,28 @@ export const getBusinessProposals = async (token: string, businessId: string) =>
   }
 };
 
+export const getProposalById = async (token: string, id: string) => {
+
+  
+  try {
+    const response = await fetch(`${apiUrl}/dealroom/proposal/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Unable to fetch proposal:', error);
+    return {
+      success: false,
+      message: 'Failed to fetch proposal',
+      data: null
+    };
+  }
+}
+
 export const getInvestorProposals = async (token: string, investorId: string) => {
   try {
     const response = await fetch(`${apiUrl}/dealroom/investor/proposals/${investorId}`, {
@@ -652,3 +674,22 @@ export const getFundabilityResultsStartupBusinessId = async (token: string,funda
   }
 
 }
+
+
+export const acceptProposal = async (token: string, id:string) => {
+
+const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dealroom/business/${id}`, {
+  method: 'PUT',
+  headers: {
+    'Authorization': `Bearer ${token}`
+  },
+});
+
+if (!response.ok) {
+  const errorData = await response.json();
+  return {
+    success: false,
+    message: errorData.message || 'Failed to update deal room profile',
+    data: null
+  };
+}}

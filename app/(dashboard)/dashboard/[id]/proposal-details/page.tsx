@@ -1,14 +1,13 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { getBusinessProposals } from "@/app/services/dashboard";
+import { getProposalById } from "@/app/services/dashboard";
 import { IoChevronBackOutline } from "react-icons/io5";
 import Link from "next/link";
 import { Proposal } from '@/app/type';
 import Loading from '@/app/loading';
 
 const ProposalDetails = () => {
-  const [proposals, setProposals] = useState<Proposal[]>([]);
   const [currentProposal, setCurrentProposal] = useState<Proposal | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -17,11 +16,11 @@ const ProposalDetails = () => {
   const proposalId = searchParams.get('proposalId');
   const businessId = searchParams.get('businessId');
 
-  // Fetch all proposals
+  // Fetch proposal by ID
   useEffect(() => {
-    const fetchProposals = async () => {
-      if (!businessId) {
-        setError("Business ID is required");
+    const fetchProposal = async () => {
+      if (!proposalId) {
+        setError("Proposal ID is required");
         setLoading(false);
         return;
       }
@@ -35,40 +34,28 @@ const ProposalDetails = () => {
       
       setLoading(true);
       try {
-        const response = await getBusinessProposals(token, businessId);
+        const response = await getProposalById(token, proposalId);
         if (response && response.success) {
-          setProposals(response.data || []);
-          
-          // Find the specific proposal if proposalId is provided
-          if (proposalId) {
-            const foundProposal = proposals.find(p => p.publicId === proposalId);
-            if (foundProposal) {
-              setCurrentProposal(foundProposal);
-            } else {
-              setError("Proposal not found");
-            }
-          } else if (response.data && response.data.length > 0) {
-            // Default to first proposal if proposalId not provided
-            setCurrentProposal(response.data[0]);
+          // The API returns a single proposal object
+          if (response.data) {
+            setCurrentProposal(response.data);
           } else {
-            setError("No proposals available");
+            setError("Proposal not found");
           }
         } else {
-          console.error('Failed to fetch proposals:', response?.message);
-          setError(response?.message || "Failed to fetch proposals");
-          setProposals([]);
+          console.error('Failed to fetch proposal:', response?.message);
+          setError(response?.message || "Failed to fetch proposal");
         }
       } catch (error) {
-        console.error('Error fetching proposals:', error);
-        setError("An error occurred while fetching proposals");
-        setProposals([]);
+        console.error('Error fetching proposal:', error);
+        setError("An error occurred while fetching the proposal");
       } finally {
         setLoading(false);
       }
     };
   
-    fetchProposals();
-  }, [businessId, proposalId]);
+    fetchProposal();
+  }, [proposalId]);
 
   // Handle proposal acceptance or rejection
   const handleProposalResponse = async (action:string) => {
@@ -85,9 +72,7 @@ const ProposalDetails = () => {
   };
 
   if (loading) {
-    return (
-     <Loading/>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -200,9 +185,8 @@ const ProposalDetails = () => {
                 <p className='text-red-500'>Available upon Connection</p>
             </div>
             <div className='col-span-1'>
-
               <p className="text-gray-400 mb-1">Phone Number</p>
-              <p>{currentProposal.investor?.phoneNumber || "Phone not provided"}</p>
+              <p className='text-red-500'>Available upon Connection</p>
             </div>
 
             {/* Row 2 */}
@@ -220,10 +204,6 @@ const ProposalDetails = () => {
             </div>
 
             {/* Row 3 */}
-            {/* <div>
-              <p className="text-gray-400 mb-1">Investment Type</p>
-              <p>{currentProposal.investmentType || "Not specified"}</p>
-            </div> */}
             <div>
               <p className="text-gray-400 mb-1">Status</p>
               <span className={`text-xs px-3 py-1 rounded ${
