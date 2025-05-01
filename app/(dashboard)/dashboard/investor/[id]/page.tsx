@@ -328,7 +328,7 @@ const ProposalDetails = () => {
           </div>
           <div>
             <div className="text-2xl font-bold">
-              ₦ {currentProposal.buyingPrice?.toLocaleString() || "0"}
+              ₦ {currentProposal.buyingPrice?.toLocaleString() || currentProposal.business?.dealRoomDetails.tentativeSellingPrice || "0"}
             </div>
             <div className="mt-1">
               <span className={`text-xs px-3 py-1 rounded ${
@@ -407,7 +407,7 @@ const ProposalDetails = () => {
             </div>
             <div>
               <p className="text-gray-400 mb-1">Proposed Amount</p>
-              <p>₦ {currentProposal.buyingPrice?.toLocaleString() || "Fields to be added soon"}</p>
+              <p>₦{currentProposal.buyingPrice?.toLocaleString() || currentProposal.business?.dealRoomDetails.tentativeSellingPrice || "0"}</p>
             </div>
 
             {/* Row 3 */}
