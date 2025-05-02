@@ -323,9 +323,6 @@ export default function InvestorDetails() {
                           <p className="text-lg font-semibold text-white">
                             ₦{investor.fundsUnderManagement.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                           </p>
-                          <p className="text-xs text-gray-400">
-                            (USD {(investor.fundsUnderManagement / 500).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")})
-                          </p>
                         </>
                       ) : (
                         <p className="text-sm text-white">Not specified</p>
