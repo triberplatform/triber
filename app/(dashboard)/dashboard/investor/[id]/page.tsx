@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -134,10 +135,18 @@ const ProposalDetails = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter()
   
- 
+  // Helper function to format price values
+  const formatPrice = (price:any) => {
+    if (price === null || price === undefined) return "0";
+    // Convert to number if it's a string
+    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+    // Format with commas
+    return numPrice.toLocaleString();
+  };
  
   const params = useParams()
-    const proposalId = params.id
+  const proposalId = params.id
+  
   // Fetch proposal by ID
   useEffect(() => {
     const fetchProposal = async () => {
@@ -278,10 +287,10 @@ const ProposalDetails = () => {
       </div>
     );
   }
-  const navigateToBusiness =()=> {
+  
+  const navigateToBusiness = () => {
     router.push(`/dashboard/deal-room/dashboard/business?id=${currentProposal?.business?.dealRoomDetails.publicId}&businessId=${currentProposal?.businessId}`)
   }
-
 
   if (!currentProposal) {
     return (
@@ -328,7 +337,7 @@ const ProposalDetails = () => {
           </div>
           <div>
             <div className="text-2xl font-bold">
-              ₦ {currentProposal.buyingPrice?.toLocaleString() || currentProposal.business?.dealRoomDetails.tentativeSellingPrice || "0"}
+              ₦ {formatPrice(currentProposal.buyingPrice || currentProposal.business?.dealRoomDetails.tentativeSellingPrice)}
             </div>
             <div className="mt-1">
               <span className={`text-xs px-3 py-1 rounded ${
@@ -344,35 +353,33 @@ const ProposalDetails = () => {
           </div>
         </div>
 
-      
-          <div className="flex gap-3">
-
-<button 
-              onClick={navigateToBusiness}
-              className="border border-white rounded-md text-sm px-6 py-2 hover:bg-gray-800"
-              disabled={isProcessing}
-            >
+        <div className="flex gap-3">
+          <button 
+            onClick={navigateToBusiness}
+            className="border border-white rounded-md text-sm px-6 py-2 hover:bg-gray-800"
+            disabled={isProcessing}
+          >
             View Business Details
-            </button>
-            {currentProposal.status === 'PENDING' && (
-                 <div className="flex gap-3">
-            <button 
-              onClick={() => setShowRejectModal(true)}
-              className="border border-white rounded-md text-sm px-6 py-2 hover:bg-gray-800"
-              disabled={isProcessing}
-            >
-              Reject Proposal
-            </button>
-            <button 
-              onClick={() => setShowAcceptModal(true)}
-              className="bg-mainGreen rounded-md px-6 py-2 text-sm text-white hover:bg-green-600"
-              disabled={isProcessing}
-            >
-              Accept Proposal
-            </button>
-  </div>
-        )}
-                </div>
+          </button>
+          {currentProposal.status === 'PENDING' && (
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setShowRejectModal(true)}
+                className="border border-white rounded-md text-sm px-6 py-2 hover:bg-gray-800"
+                disabled={isProcessing}
+              >
+                Reject Proposal
+              </button>
+              <button 
+                onClick={() => setShowAcceptModal(true)}
+                className="bg-mainGreen rounded-md px-6 py-2 text-sm text-white hover:bg-green-600"
+                disabled={isProcessing}
+              >
+                Accept Proposal
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Proposal Details */}
@@ -389,7 +396,7 @@ const ProposalDetails = () => {
             </div>
             <div className='col-span-1'>
               <p className="text-gray-400 mb-1">Email</p>
-                <p className='text-red-500'>Available upon Connection</p>
+              <p className='text-red-500'>Available upon Connection</p>
             </div>
             <div className='col-span-1'>
               <p className="text-gray-400 mb-1">Phone Number</p>
@@ -407,7 +414,7 @@ const ProposalDetails = () => {
             </div>
             <div>
               <p className="text-gray-400 mb-1">Proposed Amount</p>
-              <p>₦{currentProposal.buyingPrice?.toLocaleString() || currentProposal.business?.dealRoomDetails.tentativeSellingPrice || "0"}</p>
+              <p>₦{formatPrice(currentProposal.buyingPrice || currentProposal.business?.dealRoomDetails.tentativeSellingPrice)}</p>
             </div>
 
             {/* Row 3 */}
