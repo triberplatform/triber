@@ -3,6 +3,20 @@ import { ConnectFormValues, Investor, InvestorProfilePayload, JobConnectForm, Pr
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+// Helper function to check for 403 status and handle logout
+const handle403 = (response: Response) => {
+  if (response.status === 403) {
+    console.log("Session expired: User unauthorized (403)");
+    // Clear auth data
+    localStorage.removeItem("token");
+    localStorage.removeItem("publicId");
+    // Redirect to login page
+    window.location.href = "/login";
+    throw new Error("Your session has expired. Please log in again.");
+  }
+  return response;
+};
+
 export const getUserDetails = async (token: string, publicId: string) => {
   try {
     const response = await fetch(`${apiUrl}/users/${publicId}`, {
@@ -10,34 +24,39 @@ export const getUserDetails = async (token: string, publicId: string) => {
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
+    
     const userDetails = await response.json();
     return userDetails;
   }
-  catch {
-    console.error('unable to fetch')
+  catch (error) {
+    console.error('unable to fetch', error);
+    throw error;
   }
-
 }
 
-export const getABusiness = async (token: string,publicId:string) => {
+export const getABusiness = async (token: string, publicId: string) => {
   try {
     const response = await fetch(`${apiUrl}/business/${publicId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
+    
     const businesses = await response.json();
     return businesses;
   }
-  catch {
-    console.error('unable to fetch')
+  catch (error) {
+    console.error('unable to fetch', error);
+    throw error;
   }
 }
 
-
-
-
- 
 export const getDealRoomProfile = async (token: string, publicId: string) => {
   try {
     const response = await fetch(`${apiUrl}/dealroom/business/${publicId}`, {
@@ -45,6 +64,9 @@ export const getDealRoomProfile = async (token: string, publicId: string) => {
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
     
     if (!response.ok) {
       const errorData = await response.json();
@@ -67,21 +89,24 @@ export const getDealRoomProfile = async (token: string, publicId: string) => {
   }
 };
 
-
-export const getFundabilityResults = async ( publicId: string,token: string) => {
+export const getFundabilityResults = async (publicId: string, token: string) => {
   try {
     const response = await fetch(`${apiUrl}/fundability/${publicId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
+    
     const fundabilityDetails = await response.json();
     return fundabilityDetails;
   }
-  catch {
-    console.error('unable to fetch')
+  catch (error) {
+    console.error('unable to fetch', error);
+    throw error;
   }
-
 }
 
 export const getJobs = async () => {
@@ -91,13 +116,16 @@ export const getJobs = async () => {
         "Content-Type": "application/json"
       }
     });
+    
+    // No need to check for 403 here as this endpoint doesn't require authentication
+    
     const joDetails = await response.json();
     return joDetails;
   }
-  catch {
-    console.error('unable to fetch')
+  catch (error) {
+    console.error('unable to fetch', error);
+    throw error;
   }
-
 }
 
 export const registerBusiness = async (payload: RegisterBusinessPayload, token: string) => {
@@ -118,6 +146,9 @@ export const registerBusiness = async (payload: RegisterBusinessPayload, token: 
       },
       body: formData, // FormData for file and other fields
     });
+    
+    // Check for 403 status
+    handle403(response);
 
     return response;
   } catch (error) {
@@ -151,6 +182,9 @@ export const registerInvestor = async (payload: InvestorProfilePayload, token: s
       },
       body: formData,
     });
+    
+    // Check for 403 status
+    handle403(response);
 
     return response;
   } catch (error) {
@@ -159,18 +193,23 @@ export const registerInvestor = async (payload: InvestorProfilePayload, token: s
   }
 };
 
-export const getInvestor = async (token: string,publicId:string) => {
+export const getInvestor = async (token: string, publicId: string) => {
   try {
     const response = await fetch(`${apiUrl}/investor/${publicId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
+    
     const businesses = await response.json();
     return businesses;
   }
-  catch {
-    console.error('unable to fetch')
+  catch (error) {
+    console.error('unable to fetch', error);
+    throw error;
   }
 }
 
@@ -199,15 +238,16 @@ export const editInvestor = async (payload: InvestorProfilePayload, token: strin
       },
       body: formData,
     });
+    
+    // Check for 403 status
+    handle403(response);
 
     return response;
   } catch (error) {
-
     console.error("Error during API call:", error);
     throw new Error("Please try again.");
   }
 };
-
 
 export const editBusiness = async (payload: RegisterBusinessPayload, token: string, id: string) => {
   try {
@@ -227,6 +267,9 @@ export const editBusiness = async (payload: RegisterBusinessPayload, token: stri
       },
       body: formData, // FormData for file and other fields
     });
+    
+    // Check for 403 status
+    handle403(response);
 
     return response;
   } catch (error) {
@@ -235,25 +278,23 @@ export const editBusiness = async (payload: RegisterBusinessPayload, token: stri
   }
 };
 
-
-
-
 export const fundabilityTest = async (payload: FormData, token: string) => {
   try {
     const response = await fetch(`${apiUrl}/fundability/test`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
-
       },
       body: payload,
     });
+    
+    // Check for 403 status
+    handle403(response);
 
     return response;
-
-  } catch {
-    console.error("Error:");
-    throw new Error(" Please try again.");
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error("Please try again.");
   }
 }
 
@@ -263,16 +304,17 @@ export const startupFundabilityTest = async (payload: FormData, token: string) =
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
-        
       },
       body: payload,
     });
+    
+    // Check for 403 status
+    handle403(response);
 
     return response;
-
-  } catch {
-    console.error("Error:");
-    throw new Error(" Please try again.");
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error("Please try again.");
   }
 }
 
@@ -285,19 +327,17 @@ export const connectionRequest = async (payload: ConnectFormValues) => {
       },
       body: JSON.stringify(payload),
     });
+    
+    // This endpoint doesn't require authentication, so no 403 check needed
 
     return response;
-
-  } catch {
-    console.error("Error:");
+  } catch (error) {
+    console.error("Error:", error);
     throw new Error("Request failed. Please try again.");
   }
 }
 
-
-
 export const jobRequest = async (payload: JobConnectForm) => {
-
   const formData = new FormData();
 
   // Append payload properties to FormData
@@ -306,21 +346,21 @@ export const jobRequest = async (payload: JobConnectForm) => {
       formData.append(key, value as Blob | string);
     }
   });
+  
   try {
     const response = await fetch(`${apiUrl}/jobs/apply`, {
       method: "POST",
-
       body: formData,
     });
+    
+    // This endpoint doesn't require authentication, so no 403 check needed
 
     return response;
-
-  } catch {
-    console.error("Error:");
+  } catch (error) {
+    console.error("Error:", error);
     throw new Error("Request failed. Please try again.");
   }
 }
-
 
 export const getValuation = async (payload: ValuationFormPayload, token: string) => {
   try {
@@ -367,12 +407,16 @@ export const getValuation = async (payload: ValuationFormPayload, token: string)
       body: formData,
     });
     
+    // Check for 403 status
+    handle403(response);
+    
     return response;
   } catch (error) {
     console.error("Error during API call:", error);
     throw new Error("Please try again.");
   }
 };
+
 export const updateDealRoomProfile = async (data: any, token: string, businessId: string) => {
   try {
     // Create a FormData object for file uploads
@@ -429,11 +473,6 @@ export const updateDealRoomProfile = async (data: any, token: string, businessId
       });
     }
     
-    // Log the form data to check what's being sent (for debugging only)
-    // for (let [key, value] of formData.entries()) {
-    //   console.log(`${key}: ${value}`);
-    // }
-    
     // Make the API call
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dealroom/business/${businessId}`, {
       method: 'PUT',
@@ -442,6 +481,9 @@ export const updateDealRoomProfile = async (data: any, token: string, businessId
       },
       body: formData,
     });
+    
+    // Check for 403 status
+    handle403(response);
     
     if (!response.ok) {
       const errorData = await response.json();
@@ -479,12 +521,14 @@ export const submitProposal = async (payload: ProposalPayload, token: string) =>
       },
       body: JSON.stringify(payload),
     });
+    
+    // Check for 403 status
+    handle403(response);
 
     return response;
-
-  } catch {
-    console.error("Error:");
-    throw new Error(" Please try again.");
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error("Please try again.");
   }
 }
 
@@ -498,15 +542,16 @@ export const submitProposalBusiness = async (payload: ProposalPayload, token: st
       },
       body: JSON.stringify(payload),
     });
+    
+    // Check for 403 status
+    handle403(response);
 
     return response;
-
-  } catch {
-    console.error("Error:");
-    throw new Error(" Please try again.");
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error("Please try again.");
   }
 }
-
 
 export const getValuatedBusiness = async (token: string, page = 1, size = 10) => {
   try {
@@ -520,6 +565,9 @@ export const getValuatedBusiness = async (token: string, page = 1, size = 10) =>
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
     
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);
@@ -541,6 +589,10 @@ export const getBusinessProposals = async (token: string, businessId: string) =>
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
+    
     const data: ProposalResponse = await response.json();
     return data;
   } catch (error) {
@@ -554,14 +606,15 @@ export const getBusinessProposals = async (token: string, businessId: string) =>
 };
 
 export const getProposalById = async (token: string, id: string | string[]) => {
-
-  
   try {
     const response = await fetch(`${apiUrl}/dealroom/proposal/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
     
     const data = await response.json();
     return data;
@@ -582,13 +635,17 @@ export const getInvestorProposals = async (token: string, investorId: string) =>
         Authorization: `Bearer ${token}`
       }
     });
-    const data= await response.json();
+    
+    // Check for 403 status
+    handle403(response);
+    
+    const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Unable to fetch  proposals:', error);
+    console.error('Unable to fetch proposals:', error);
     return {
       success: false,
-      message: 'Failed to fetch  proposals',
+      message: 'Failed to fetch proposals',
       data: []
     };
   }
@@ -601,80 +658,98 @@ export const getAllInvestors = async (token: string) => {
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
+    
     const data = await response.json();
-    const investors :Investor[] = data.data;
-   return investors;
+    const investors: Investor[] = data.data;
+    return investors;
   } catch (error) {
-    console.error('Unable to fetch business proposals:', error);
-    return 
+    console.error('Unable to fetch investors:', error);
+    throw error;
   }
 };
 
-
-export const getFundabilityResultsSme = async (token: string,fundabilityId:string) => {
+export const getFundabilityResultsSme = async (token: string, fundabilityId: string) => {
   try {
     const response = await fetch(`${apiUrl}/fundability/${fundabilityId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
+    
     const BusinessDetails = await response.json();
     return BusinessDetails;
   }
-  catch {
-    console.error('unable to fetch')
+  catch (error) {
+    console.error('unable to fetch', error);
+    throw error;
   }
-
 }
 
-export const getFundabilityResultsStartup = async (token: string,fundabilityId:string) => {
+export const getFundabilityResultsStartup = async (token: string, fundabilityId: string) => {
   try {
     const response = await fetch(`${apiUrl}/fundability/startup/${fundabilityId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
+    
     const BusinessDetails = await response.json();
     return BusinessDetails;
   }
-  catch {
-    console.error('unable to fetch')
+  catch (error) {
+    console.error('unable to fetch', error);
+    throw error;
   }
-
 }
 
-export const getFundabilityResultsSmeBusinessId  = async (token: string,fundabilityId:string) => {
+export const getFundabilityResultsSmeBusinessId = async (token: string, fundabilityId: string) => {
   try {
     const response = await fetch(`${apiUrl}/fundability/test/${fundabilityId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
+    
     const BusinessDetails = await response.json();
     return BusinessDetails;
   }
-  catch {
-    console.error('unable to fetch')
+  catch (error) {
+    console.error('unable to fetch', error);
+    throw error;
   }
-
 }
 
-export const getFundabilityResultsStartupBusinessId = async (token: string,fundabilityId:string) => {
+export const getFundabilityResultsStartupBusinessId = async (token: string, fundabilityId: string) => {
   try {
     const response = await fetch(`${apiUrl}/fundability/test/startup/${fundabilityId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    
+    // Check for 403 status
+    handle403(response);
+    
     const BusinessDetails = await response.json();
     return BusinessDetails;
   }
-  catch {
-    console.error('unable to fetch')
+  catch (error) {
+    console.error('unable to fetch', error);
+    throw error;
   }
-
 }
-
 
 export const acceptProposal = async (token: string, id: string | string[]) => {
   try {
@@ -684,6 +759,9 @@ export const acceptProposal = async (token: string, id: string | string[]) => {
         'Authorization': `Bearer ${token}`
       },
     });
+    
+    // Check for 403 status
+    handle403(response);
     
     const data = await response.json();
     
@@ -719,6 +797,9 @@ export const rejectProposal = async (token: string, id: string | string[]) => {
       },
     });
     
+    // Check for 403 status
+    handle403(response);
+    
     const data = await response.json();
     
     if (!response.ok) {
@@ -742,4 +823,15 @@ export const rejectProposal = async (token: string, id: string | string[]) => {
       data: null
     };
   }
+};
+
+// Export a utility function for other components to use
+export const useLogout = () => {
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("publicId");
+    window.location.href = "/login";
+  };
+
+  return logout;
 };
