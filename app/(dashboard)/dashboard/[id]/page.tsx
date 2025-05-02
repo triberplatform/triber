@@ -56,8 +56,8 @@ type DealRoomProfile = {
   createdAt: string;
   updatedAt: string;
   business: Business;
-  fundingAmount:string;
-  fundingStructure:string;
+  fundingAmount: string;
+  fundingStructure: string;
 };
 
 // Helper function to format array data
@@ -257,9 +257,7 @@ export default function BusinessDetail() {
   }, [currentStep, business, id]);
 
   const handleNavigation = (proposalId: string) => {
-    router.push(
-      `/dashboard/${id}/proposal-details?proposalId=${proposalId}`
-    );
+    router.push(`/dashboard/${id}/proposal-details?proposalId=${proposalId}`);
   };
 
   // Function to handle redirecting to the correct fundability test based on business stage
@@ -677,7 +675,7 @@ export default function BusinessDetail() {
                                 Average Annual Revenue
                               </p>
                               <p className="text-sm">
-                                $
+                                ₦
                                 {fundabilityData.averageAnnualRevenue?.toLocaleString() ||
                                   "Not provided"}
                               </p>
@@ -1339,10 +1337,11 @@ export default function BusinessDetail() {
                               Funding Structure
                             </p>
                             <p className="text-sm text-white">
-                              {dealRoomProfile.fundingStructure || "Not provided"}
+                              {dealRoomProfile.fundingStructure ||
+                                "Not provided"}
                             </p>
                           </div>
-                          
+
                           <div>
                             <p className="text-xs text-gray-400">
                               Asset Details
@@ -1371,9 +1370,10 @@ export default function BusinessDetail() {
                               Monthly Sales
                             </p>
                             <p className="text-sm text-white">
-                              $
-                              {dealRoomProfile.averageMonthlySales?.toLocaleString() ||
-                                "0"}
+                              ₦
+                              {(
+                                Number(dealRoomProfile.averageMonthlySales) || 0
+                              ).toLocaleString()}
                             </p>
                           </div>
                           <div>
@@ -1381,9 +1381,10 @@ export default function BusinessDetail() {
                               Yearly Sales
                             </p>
                             <p className="text-sm text-white">
-                              $
-                              {dealRoomProfile.reportedYearlySales?.toLocaleString() ||
-                                "0"}
+                              ₦
+                              {(
+                                Number(dealRoomProfile.reportedYearlySales) || 0
+                              ).toLocaleString()}
                             </p>
                           </div>
                           <div>
@@ -1399,17 +1400,21 @@ export default function BusinessDetail() {
                               Physical Assets Value
                             </p>
                             <p className="text-sm text-white">
-                              $
-                              {dealRoomProfile.valueOfPhysicalAssets?.toLocaleString() ||
-                                "0"}
+                              ₦
+                              {(
+                                Number(dealRoomProfile.valueOfPhysicalAssets) ||
+                                0
+                              ).toLocaleString()}
                             </p>
                           </div>
                           <div className="col-span-2">
                             <p className="text-xs text-gray-400">Valuation</p>
                             <p className="text-sm text-white font-semibold">
-                              $
-                              {dealRoomProfile.tentativeSellingPrice?.toLocaleString() ||
-                                "0"}
+                              ₦
+                              {(
+                                Number(dealRoomProfile.tentativeSellingPrice) ||
+                                0
+                              ).toLocaleString()}
                             </p>
                           </div>
                         </div>

@@ -17,7 +17,7 @@ const InvestorsList = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
 
   const searchParams = useSearchParams();
   const businessId = searchParams.get('id');
@@ -293,7 +293,7 @@ const InvestorsList = () => {
                 setCurrentPage(1); // Reset to first page when changing rows per page
               }}
             >
-              <option value={10}>10</option>
+             
               <option value={20}>20</option>
               <option value={50}>50</option>
             </select>
