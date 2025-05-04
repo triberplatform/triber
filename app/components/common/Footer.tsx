@@ -49,7 +49,7 @@ export default function Footer() {
           <p className="text-xl font-semibold font-serif">About Us</p>
           <div className="flex flex-col gap-2 mt-2">
             <Link href={"/teams"} className="hover:text-mainGreen transition-colors">Team</Link>
-            <Link href={"/career"} className="hover:text-mainGreen transition-colors">Careers</Link>
+            <Link href={"/teams"} className="hover:text-mainGreen transition-colors">Careers</Link>
             <Link href={"/teams"} className="hover:text-mainGreen transition-colors">Research and Publications</Link>
             <Link href={"/teams"} className="hover:text-mainGreen transition-colors">Partners</Link>
           </div>
