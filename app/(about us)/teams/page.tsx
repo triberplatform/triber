@@ -9,13 +9,13 @@ export default function page() {
   return (
     <LandingLayout>
         <Hero/>
-        <div className='hidden lg:block'>
+        {/* <div className='hidden lg:block'>
         <Teams />
         </div>
 
         <div className='lg:hidden'>
           <TeamsMobile/>
-        </div>
+        </div> */}
       
         <Sponsors/>
     </LandingLayout>
