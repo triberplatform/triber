@@ -1,9 +1,9 @@
 import React from 'react'
 import Hero from './components/Hero'
 import LandingLayout from '@/app/components/layouts/landingLayout'
-import Teams from './components/Teams'
+
 import Sponsors from './components/Sponsors'
-import TeamsMobile from './components/TeamsMobile'
+
 
 export default function page() {
   return (
