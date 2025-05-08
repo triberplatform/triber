@@ -90,10 +90,7 @@ export default function InvestorProfile() {
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const stripHtmlTags = (html: string) => {
-    return html.replace(/<[^>]*>/g, '');
-  };
-  
+
   
   // Mock deal room activity data
   const [activities] = useState<Activity[]>([
