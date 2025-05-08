@@ -44,17 +44,26 @@ type Activity = {
 import { getInvestorProposals } from "@/app/services/dashboard";
 
 // Truncate text component with "View More" functionality
+// Truncate text component with "View More" functionality
 const TruncatedText = ({ text, maxLength = 100 }: { text: string, maxLength?: number }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
+  // Function to strip HTML tags from text
+  const stripHtmlTags = (html: string) => {
+    return html.replace(/<[^>]*>/g, '');
+  };
+  
   if (!text) return <p className="text-gray-400 italic">No proposal details</p>;
   
-  if (text.length <= maxLength) return <p>{text}</p>;
+  // Strip HTML tags from the text
+  const plainText = stripHtmlTags(text);
+  
+  if (plainText.length <= maxLength) return <p>{plainText}</p>;
   
   return (
     <div>
       <p>
-        {isExpanded ? text : `${text.substring(0, maxLength)}...`}
+        {isExpanded ? plainText : `${plainText.substring(0, maxLength)}...`}
       </p>
       <button 
         onClick={() => setIsExpanded(!isExpanded)}
@@ -80,6 +89,11 @@ export default function InvestorProfile() {
   const [currentStep, setCurrentStep] = useState(0);
   const [proposals, setProposals] = useState<Proposal[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const stripHtmlTags = (html: string) => {
+    return html.replace(/<[^>]*>/g, '');
+  };
+  
   
   // Mock deal room activity data
   const [activities] = useState<Activity[]>([

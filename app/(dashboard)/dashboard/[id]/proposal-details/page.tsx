@@ -433,15 +433,14 @@ const ProposalDetails = () => {
             </div>
           </div>
           
-          {/* Proposal Message */}
           {currentProposal.proposal && (
-            <div className="mt-8">
-              <p className="text-gray-400 mb-2">Proposal Message</p>
-              <div className="bg-zinc-900 p-4 rounded-lg">
-                <p>{currentProposal.proposal}</p>
-              </div>
-            </div>
-          )}
+  <div className="mt-8">
+    <p className="text-gray-400 mb-2">Proposal Message</p>
+    <div className="bg-zinc-900 p-4 rounded-lg">
+      <div dangerouslySetInnerHTML={{ __html: currentProposal.proposal }} />
+    </div>
+  </div>
+)}
         </div>
       </div>
       

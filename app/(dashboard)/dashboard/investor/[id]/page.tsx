@@ -432,12 +432,16 @@ const ProposalDetails = () => {
             </div>
           </div>
           
-          {/* Proposal Message */}
+          {/* Proposal Message - Updated to render HTML content */}
           {currentProposal.proposal && (
             <div className="mt-8">
               <p className="text-gray-400 mb-2">Proposal Message</p>
-              <div className="bg-zinc-900 p-4 rounded-lg">
-                <p>{currentProposal.proposal}</p>
+              <div className="bg-zinc-900 p-4 rounded-lg rich-text-content">
+                {/* Use dangerouslySetInnerHTML to render HTML content */}
+                <div 
+                  dangerouslySetInnerHTML={{ __html: currentProposal.proposal }}
+                  className="proposal-content" 
+                />
               </div>
             </div>
           )}
@@ -470,6 +474,50 @@ const ProposalDetails = () => {
         message={statusMessage}
         isSuccess={isSuccess}
       />
+
+      {/* Add some basic styling for the rich text content */}
+      <style jsx global>{`
+        .proposal-content {
+          line-height: 1.6;
+        }
+        .proposal-content h1, 
+        .proposal-content h2, 
+        .proposal-content h3, 
+        .proposal-content h4, 
+        .proposal-content h5, 
+        .proposal-content h6 {
+          margin-top: 1em;
+          margin-bottom: 0.5em;
+          font-weight: 600;
+        }
+        .proposal-content h1 { font-size: 1.5rem; }
+        .proposal-content h2 { font-size: 1.3rem; }
+        .proposal-content h3 { font-size: 1.2rem; }
+        .proposal-content p {
+          margin-bottom: 1em;
+        }
+        .proposal-content ul, 
+        .proposal-content ol {
+          margin-left: 1.5em;
+          margin-bottom: 1em;
+        }
+        .proposal-content ul li {
+          list-style: disc;
+        }
+        .proposal-content ol li {
+          list-style: decimal;
+        }
+        .proposal-content a {
+          color: #10b981;
+          text-decoration: underline;
+        }
+        .proposal-content blockquote {
+          border-left: 4px solid #333;
+          padding-left: 1em;
+          margin-left: 1em;
+          font-style: italic;
+        }
+      `}</style>
     </div>
   );
 };

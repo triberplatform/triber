@@ -60,6 +60,12 @@ type DealRoomProfile = {
   fundingStructure: string;
 };
 
+// Helper function to strip HTML tags from text
+const stripHtmlTags = (html: string | null | undefined): string => {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, '');
+};
+
 // Helper function to format array data
 const formatArrayData = (
   data: string | string[] | null | undefined
@@ -1094,7 +1100,7 @@ export default function BusinessDetail() {
                           </td>
                           <td className="px-4 py-3 max-w-xs">
                             <p className="truncate">
-                              {item.proposal || "No proposal details"}
+                              {stripHtmlTags(item.proposal) || "No proposal details"}
                             </p>
                           </td>
                         </tr>
