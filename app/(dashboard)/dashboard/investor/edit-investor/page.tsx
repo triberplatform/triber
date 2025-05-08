@@ -81,6 +81,7 @@ export default function EditInvestor() {
     companyWebsiteUrl: Yup.string().required("Website URL is required"),
     companyType: Yup.string().required("Company type is required"),
     location: Yup.string().required("Location is required"),
+    preferredIndustry: Yup.string().required("Preferred Industry is required"),
     interestedLocations: Yup.array()
       .of(Yup.string())
       .min(1, "Select at least one location"),
@@ -117,6 +118,7 @@ export default function EditInvestor() {
         companyType: "",
         location: "",
         interestedLocations: [""],
+        preferredIndustry:"",
         designation: "",
         numOfExpectedDeals: "",
         fundsUnderManagement: "",
@@ -137,6 +139,7 @@ export default function EditInvestor() {
       companyType: investorData.companyType || "",
       location: investorData.location || "",
       interestedLocations: investorData.interestedLocations || [""],
+      preferredIndustry:investorData.preferredIndustry  || "",
       designation: investorData.designation || "",
       numOfExpectedDeals: investorData.numOfExpectedDeals || "",
       fundsUnderManagement: investorData.fundsUnderManagement || "",
@@ -189,6 +192,7 @@ export default function EditInvestor() {
           else if (key === 'companyWebsiteUrl') payload.companyWebsiteUrl = value as string;
           else if (key === 'companyType') payload.companyType = value as string;
           else if (key === 'location') payload.location = value as string;
+          else if (key === 'preferredIndustry') payload.preferredIndustry = value as string;
           else if (key === 'interestedLocations') payload.interestedLocations = value as string[];
           else if (key === 'designation') payload.designation = value as string;
           else if (key === 'numOfExpectedDeals') payload.numOfExpectedDeals = value as string;
@@ -316,7 +320,16 @@ export default function EditInvestor() {
                 error={formikProps.errors.location}
                 touched={formikProps.touched.location}
               />
-
+                  <FormInput
+                                label="Preferred Industry of Interest"
+                                name="preferredIndustry"
+                                placeholder="e.g.Fashion"
+                                value={formikProps.values.preferredIndustry}
+                                onChange={formikProps.handleChange}
+                                onBlur={formikProps.handleBlur}
+                                error={formikProps.errors.preferredIndustry}
+                                touched={formikProps.touched.preferredIndustry}
+                              />
               <FormInput
                 label="Funds Under Management"
                 name="fundsUnderManagement"

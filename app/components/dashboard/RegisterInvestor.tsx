@@ -30,6 +30,7 @@ export default function RegisterInvestor() {
     companyWebsiteUrl: Yup.string().required("Website URL is required"),
     companyType: Yup.string().required("Company type is required"),
     location: Yup.string().required("Location is required"),
+    preferredIndustry: Yup.string().required("preferred Industry is required"),
     interestedLocations: Yup.array()
       .of(Yup.string())
       .min(1, "Select at least one location"),
@@ -62,6 +63,7 @@ export default function RegisterInvestor() {
     about: "",
     companyWebsiteUrl: "",
     companyType: "",
+    preferredIndustry:"",
     location: "",
     interestedLocations: [""],
     designation: "",
@@ -208,6 +210,17 @@ export default function RegisterInvestor() {
               />
 
               <FormInput
+                label="Preferred Industry of Interest"
+                name="preferredIndustry"
+                placeholder="e.g.Fashion"
+                value={formikProps.values.preferredIndustry}
+                onChange={formikProps.handleChange}
+                onBlur={formikProps.handleBlur}
+                error={formikProps.errors.preferredIndustry}
+                touched={formikProps.touched.preferredIndustry}
+              />
+
+              <FormInput   
                 label="Funds Under Management"
                 name="fundsUnderManagement"
                 type="text"

@@ -61,6 +61,7 @@ export interface InvestorProfilePayload {
   phoneNumber:string;
   about: string;
   companyWebsiteUrl: string;
+  preferredIndustry:string;
   companyType: string;
   location: string;
   interestedLocations: string[];
