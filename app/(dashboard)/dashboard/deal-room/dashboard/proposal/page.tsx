@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Formik, Form, FormikProps } from "formik";
 import { FaCheckDouble } from "react-icons/fa";
 import Loading from "@/app/loading";
@@ -31,6 +31,7 @@ export default function Valuation() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const { user } = useUser();
+  const formikRef = useRef<FormikProps<ExtendedProposalPayload>>(null);
 
   const businesses = user?.businesses;
   const business = businesses?.find(business => business.publicId === id);
@@ -74,12 +75,9 @@ export default function Valuation() {
   const handlePackageConfirm = (packageId: number) => {
     setSelectedPackage(packageId); // Just for tracking, not used in payload
     showPricingModal(false);
-    // Proceed with form submission
-    const form = document.getElementById("proposal-form");
-    if (form) {
-      form.dispatchEvent(
-        new Event("submit", { cancelable: true, bubbles: true })
-      );
+    // Use Formik's submitForm method instead of DOM manipulation
+    if (formikRef.current) {
+      formikRef.current.submitForm();
     }
   };
 
@@ -119,6 +117,7 @@ export default function Valuation() {
       </div>
       <div className="col-span-8">
         <Formik
+          innerRef={formikRef}
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
