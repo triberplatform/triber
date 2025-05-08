@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Formik, Form, FormikProps } from "formik";
 import { FaCheckDouble } from "react-icons/fa";
 import Loading from "@/app/loading";
@@ -10,8 +10,8 @@ import * as Yup from "yup";
 import { ProposalPayloadBusiness } from "@/app/type";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import TextArea from "@/app/components/dashboard/TextArea";
 import PricingModal from "@/app/components/dashboard/Pricing";
+import QuillEditor from "@/app/components/dashboard/RichText";
 
 export default function Valuation() {
   const [loading, setLoading] = useState(false);
@@ -23,9 +23,21 @@ export default function Valuation() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const businessId = searchParams.get('businessId');
+  const formikRef = useRef<FormikProps<ProposalPayloadBusiness>>(null);
 
+  // Update validation schema to validate HTML content
   const validationSchema = Yup.object().shape({
-    message: Yup.string().required("Please write a message"),
+    message: Yup.string()
+      .required("Please write a message")
+      .test(
+        'not-just-html',
+        'Please write a message with actual content',
+        value => {
+          // Simple test to check if there's content beyond HTML tags
+          const textContent = value ? value.replace(/<[^>]*>/g, '') : '';
+          return textContent.trim().length > 0;
+        }
+      ),
   });
 
   const initialValues: ProposalPayloadBusiness = {
@@ -49,12 +61,9 @@ export default function Valuation() {
   const handlePackageConfirm = (packageId: number) => {
     setSelectedPackage(packageId);
     showPricingModal(false);
-    // Proceed with form submission
-    const form = document.getElementById("proposal-form");
-    if (form) {
-      form.dispatchEvent(
-        new Event("submit", { cancelable: true, bubbles: true })
-      );
+    // Use Formik's submitForm method instead of DOM manipulation
+    if (formikRef.current) {
+      formikRef.current.submitForm();
     }
   };
 
@@ -65,7 +74,8 @@ export default function Valuation() {
       const response = await submitProposalBusiness(values, token ?? "");
       if (response.ok) {
         showModal(true);
-        console.log(selectedPackage);
+        console.log("Selected package:", selectedPackage);
+        console.log("HTML Message:", values.message); // This will now contain HTML
       } else {
         const errorData = await response.json();
         alert(errorData.message);
@@ -89,21 +99,19 @@ export default function Valuation() {
       </div>
       <div className="col-span-8">
         <Formik
+          innerRef={formikRef}
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           {(formikProps: FormikProps<ProposalPayloadBusiness>) => (
             <Form id="proposal-form">
-              <div className="lg:bg-mainBlack flex flex-col h-[50vh] justify-center py-8 lg:gap-0 gap-5 lg:px-5">
-                <TextArea
+              <div className="lg:bg-mainBlack flex flex-col h-auto min-h-[50vh] justify-center py-8 lg:gap-0 gap-5 lg:px-5">
+                {/* Use Quill Editor instead of TextArea */}
+                <QuillEditor
                   label="Send a message to the Investor"
                   name="message"
-                  placeholder="Write a message"
-                  value={formikProps.values.message}
-                  onChange={formikProps.handleChange}
-                  onBlur={formikProps.handleBlur}
-                  error={formikProps.errors.message}
+                  placeholder=""
                 />
 
                 <div className="lg:col-span-2 mt-5">
