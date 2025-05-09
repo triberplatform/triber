@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Formik, Form } from "formik";
 import TextInput from "./TextInput";
 import { signup } from "@/app/services/auth";
