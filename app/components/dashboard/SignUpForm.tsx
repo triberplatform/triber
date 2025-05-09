@@ -66,7 +66,8 @@ const SignUpForm = () => {
       setLoading(true);
       
       // Create a new object without confirmPassword
-      const { confirmPassword, ...signupData } = values;
+      const signupData = { ...values };
+      delete signupData.confirmPassword;
       
       const response = await signup(signupData);
 
