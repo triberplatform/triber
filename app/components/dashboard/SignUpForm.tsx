@@ -64,14 +64,19 @@ const SignUpForm = () => {
 
     try {
       setLoading(true);
-      const response = await signup(values);
+      
+      // Create a new object without confirmPassword
+      const { confirmPassword, ...signupData } = values;
+      
+      const response = await signup(signupData);
 
       if (!response) {
         throw new Error("No response received from the server");
       }
       if (!response.ok) {
         const data = await response.json();
-        setModalMessage(data.error);
+        // Use data.message instead of data.error
+        setModalMessage(data.message || "An error occurred during signup");
         setModalOpen(true);
         return;
       }
