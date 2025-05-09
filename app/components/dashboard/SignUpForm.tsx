@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import TextInput from "./TextInput";
 import { signup } from "@/app/services/auth";
@@ -9,6 +9,7 @@ import Link from "next/link";
 import Modal from "./Modal";
 import Loading from "@/app/loading";
 import { AiOutlineClose, AiOutlineInfoCircle } from "react-icons/ai";
+import { FaCheck, FaTimes } from "react-icons/fa";
 
 const SignUpForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -16,8 +17,31 @@ const SignUpForm = () => {
   const [error, setError] = useState<string>("");
   const [modalMessage, setModalMessage] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [passwordStrength, setPasswordStrength] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    special: false
+  });
 
   const router = useRouter();
+
+  // Password validation functions
+  const hasMinLength = (password: string) => password.length >= 8;
+  const hasUppercase = (password: string) => /[A-Z]/.test(password);
+  const hasLowercase = (password: string) => /[a-z]/.test(password);
+  const hasSpecialChar = (password: string) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+  const validatePassword = (password: string) => {
+    const strength = {
+      length: hasMinLength(password),
+      uppercase: hasUppercase(password),
+      lowercase: hasLowercase(password),
+      special: hasSpecialChar(password)
+    };
+    setPasswordStrength(strength);
+    return strength.length && strength.uppercase && strength.lowercase && strength.special;
+  };
 
   const handleSubmit = async (values: signUpPayload) => {
     if (!agreeToTerms) {
@@ -25,6 +49,18 @@ const SignUpForm = () => {
       return;
     }
     setError(""); // Clear error if checkbox is checked
+
+    // Validate password
+    if (!validatePassword(values.password)) {
+      setError("Password does not meet all requirements.");
+      return;
+    }
+
+    // Confirm passwords match
+    if (values.password !== values.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -44,12 +80,24 @@ const SignUpForm = () => {
         localStorage.setItem("userEmail", values.email);
         router.push("/confirm-email");
       }
-    } catch  {
-      alert( "An unexpected error occurred.");
+    } catch {
+      alert("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
   };
+
+  // Password requirement indicator component
+  const PasswordRequirement = ({ met, text }: { met: boolean; text: string }) => (
+    <div className="flex items-center gap-2 text-sm">
+      {met ? (
+        <FaCheck className="text-green-500" />
+      ) : (
+        <FaTimes className="text-red-500" />
+      )}
+      <span className={met ? "text-green-500" : "text-gray-400"}>{text}</span>
+    </div>
+  );
 
   return (
     <div className="w-full">
@@ -127,10 +175,22 @@ const SignUpForm = () => {
                     type="password"
                     placeholder={"********"}
                     value={values.password}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      validatePassword(e.target.value);
+                    }}
                     onBlur={handleBlur}
                     error={touched.password ? errors.password : undefined}
                   />
+                  {/* Password requirements */}
+                  <div className="mt-2 bg-zinc-900 p-3 rounded">
+                    <div className="grid grid-cols-2 gap-2">
+                      <PasswordRequirement met={passwordStrength.length} text="At least 8 characters" />
+                      <PasswordRequirement met={passwordStrength.uppercase} text="One uppercase letter" />
+                      <PasswordRequirement met={passwordStrength.lowercase} text="One lowercase letter" />
+                      <PasswordRequirement met={passwordStrength.special} text="One special character" />
+                    </div>
+                  </div>
                 </div>
                 <div className="col-span-1">
                   <TextInput
@@ -147,6 +207,9 @@ const SignUpForm = () => {
                         : undefined
                     }
                   />
+                  {values.confirmPassword && values.password !== values.confirmPassword && (
+                    <div className="mt-1 text-red-500 text-sm">Passwords do not match</div>
+                  )}
                 </div>
               </div>
 

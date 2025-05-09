@@ -7,6 +7,7 @@ export interface signUpPayload {
   lastName: string,
   password: string,
   companyName: string
+  confirmPassword?:string
 
 }
 
