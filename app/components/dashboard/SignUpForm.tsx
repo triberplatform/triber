@@ -233,13 +233,14 @@ const SignUpForm = () => {
                   className="text-sm text-white cursor-pointer"
                 >
                   I agree to the{" "}
-                  <span className="text-mainGreen underline">
+                  <Link href={'/terms-and-conditions'}>   <span className="text-mainGreen underline">
                     Terms and Conditions
-                  </span>{" "}
+                  </span>{" "}</Link>
+               
                   and the{" "}
-                  <span className="text-mainGreen underline">
+                  <Link href={'/privacy-policy'}>   <span className="text-mainGreen underline">
                     Privacy Policy
-                  </span>
+                  </span>{" "}</Link>
                   .
                 </label>
               </div>
