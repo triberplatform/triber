@@ -5,7 +5,7 @@ const TermsAndConditions = () => {
   return (
     <>
       <Navbar />
-    <div className="bg-black min-h-screen p-8 text-white">
+   <div className="bg-black min-h-screen p-8 text-white">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-mainGreen text-4xl font-bold mb-6 text-center">Terms of Use of TRIBER</h1>
         
@@ -16,14 +16,14 @@ const TermsAndConditions = () => {
         
         <p className="mb-4">You should contact a party on the website only if you have a genuine interest in the offering advertised on the website by the party and should not contact the person for any other purpose.</p>
         
-        <p className="mb-4">No part of the website and no content may be copied, reproduced, republished, uploaded, posted, publicly displayed, encoded, translated, transmitted or distributed in any way to any other computer, server, website or another medium for publication or distribution or for any commercial purpose, without TRIBER' express prior written consent.</p>
+        <p className="mb-4">No part of the website and no content may be copied, reproduced, republished, uploaded, posted, publicly displayed, encoded, translated, transmitted or distributed in any way to any other computer, server, website or another medium for publication or distribution or for any commercial purpose, without TRIBER&apos; express prior written consent.</p>
         
-        <p className="mb-4">You may not use any "deep-link", "page-scrape", "robot", "spider" or other automatic device, program, algorithm or methodology, or any similar or equivalent manual process, to access, acquire, copy or monitor any portion of the website or any content, materials, documents or information.</p>
+        <p className="mb-4">You may not use any &quot;deep-link&quot;, &quot;page-scrape&quot;, &quot;robot&quot;, &quot;spider&quot; or other automatic device, program, algorithm or methodology, or any similar or equivalent manual process, to access, acquire, copy or monitor any portion of the website or any content, materials, documents or information.</p>
         
         <h2 className="text-mainGreen text-2xl font-semibold mb-4 mt-6">Disclaimer of Warranties</h2>
         <p className="mb-4">Profile advertisement details and other materials posted on our sites are not intended to amount to any form of investment advice from TRIBER. TRIBER is not a broker or the agent of any user, and TRIBER does not partake in any kind of negotiations or discussions between the users.</p>
         
-        <p className="mb-4">TRIBER doesn't provide any representation or warranty as to the completeness or accuracy of any information listed on the website.</p>
+        <p className="mb-4">TRIBER doesn&apos;t provide any representation or warranty as to the completeness or accuracy of any information listed on the website.</p>
         
         <p className="mb-4">You are responsible for verifying all listed details, taking appropriate safety measures and conducting your own due diligence before transacting with any other user from the website. Your use of this website is at your own risk and you assume full responsibility and risk of loss resulting from the use of thereof.</p>
         
@@ -43,7 +43,7 @@ const TermsAndConditions = () => {
         <p className="mb-4">TRIBER has no responsibility or liability for the deletion or failure to store any content maintained or transmitted by the website or the service.</p>
         
         <h2 className="text-mainGreen text-2xl font-semibold mb-4 mt-6">Indemnification</h2>
-        <p className="mb-4">You hereby agree to indemnify TRIBER (who shall have no duty to mitigate its loss) in full and on-demand and keep it so indemnified against all claims, demands, actions, proceedings, and all direct and indirect damages, losses, costs, and expenses (including without limitation legal and other professional advisers' fees, economic loss, loss of profit, future revenue, reputation, goodwill, anticipated savings) and any consequential loss made against or incurred or suffered by TRIBER and whether wholly or in part resulting directly or indirectly from any claim that the content of any material uploaded or posted onto this website infringes the copyright, trademark or other intellectual property rights of any third party.</p>
+        <p className="mb-4">You hereby agree to indemnify TRIBER (who shall have no duty to mitigate its loss) in full and on-demand and keep it so indemnified against all claims, demands, actions, proceedings, and all direct and indirect damages, losses, costs, and expenses (including without limitation legal and other professional advisers&apos; fees, economic loss, loss of profit, future revenue, reputation, goodwill, anticipated savings) and any consequential loss made against or incurred or suffered by TRIBER and whether wholly or in part resulting directly or indirectly from any claim that the content of any material uploaded or posted onto this website infringes the copyright, trademark or other intellectual property rights of any third party.</p>
         
         <h2 className="text-mainGreen text-2xl font-semibold mb-4 mt-6">Governing Law</h2>
         <p className="mb-4">You agree that any disputes and/or differences if any shall be governed by the Laws of India and the exclusive venue for all actions related to or arising out of this engagement shall be the Courts of Bangalore, India.</p>
