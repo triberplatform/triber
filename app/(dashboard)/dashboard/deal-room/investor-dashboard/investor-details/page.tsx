@@ -126,23 +126,6 @@ export default function InvestorDetails() {
     );
   }
 
-  // Try/catch for JSON parsing to handle potential corrupted data
-  let interestedFactors = [];
-  let interestedLocations = [];
-  
-  try {
-    interestedFactors = JSON.parse(investor.interestedFactors || "[]");
-    if (!Array.isArray(interestedFactors)) interestedFactors = [];
-  } catch {
-    interestedFactors = [];
-  }
-  
-  try {
-    interestedLocations = JSON.parse(investor.interestedLocations || "[]");
-    if (!Array.isArray(interestedLocations)) interestedLocations = [];
-  } catch {
-    interestedLocations = [];
-  }
   
   // Format time
   const currentTime = new Date();
@@ -226,10 +209,6 @@ export default function InvestorDetails() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs text-gray-400">Transaction Preference</p>
-                      <p className="text-sm text-white">Acquiring/Buying a Business</p>
-                    </div>
-                    <div>
                       <p className="text-xs text-gray-400">Local Time</p>
                       <p className="text-sm text-white">{timeDisplay}</p>
                     </div>
@@ -280,9 +259,9 @@ export default function InvestorDetails() {
               <div className="bg-zinc-800 p-4 rounded-lg">
                 <div>
                   <p className="text-xs text-gray-400 mb-2">Preferred Locations</p>
-                  {interestedLocations.length > 0 ? (
+                  {investor.interestedLocations.length > 0 ? (
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {interestedLocations.map((location, index) => (
+                      {investor.interestedLocations.map((location, index) => (
                         <span 
                           key={index} 
                           className="bg-zinc-700 px-3 py-1 rounded-full text-xs text-white"
@@ -340,10 +319,10 @@ export default function InvestorDetails() {
                 Industry Focus
               </h3>
               <div className="bg-zinc-800 p-4 rounded-lg">
-                <p className="text-xs text-gray-400 mb-2">Investment of Interests</p>
-                {interestedFactors.length > 0 ? (
+                <p className="text-xs text-gray-400 mb-2">InterestedFactors</p>
+                {investor.interestedFactors.length > 0 ? (
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {interestedFactors.map((factor, index) => (
+                    {investor.interestedFactors.map((factor, index) => (
                       <span 
                         key={index} 
                         className="bg-zinc-700 px-3 py-1 rounded-full text-xs text-white"
@@ -355,6 +334,8 @@ export default function InvestorDetails() {
                 ) : (
                   <p className="text-sm text-white">No specific industry preferences</p>
                 )}
+                 <p className="text-xs text-gray-400 my-2">Industry Preference</p>
+                <p>{investor.preferredIndustry}</p>
               </div>
             </div>
             
@@ -366,7 +347,7 @@ export default function InvestorDetails() {
               </h3>
               <div className="bg-zinc-800 p-4 rounded-lg">
                 <div className="flex flex-wrap gap-2">
-                  {interestedFactors.slice(0, 6).map((factor, index) => (
+                  {investor.interestedFactors.slice(0, 6).map((factor, index) => (
                     <span 
                       key={index} 
                       className="bg-mainBlacks px-3 py-1 rounded-full text-xs"

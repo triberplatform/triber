@@ -8,13 +8,10 @@ import { FaSearch, FaMapMarkerAlt } from 'react-icons/fa';
 import { MdBusinessCenter } from 'react-icons/md';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-const filterOptions = ["AI/ML", "SaaS", "Fintech", "Edtech"];
-
 const InvestorsList = () => {
   const router = useRouter();
   const [investors, setInvestors] = useState<Investor[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -47,28 +44,24 @@ const InvestorsList = () => {
     router.push(`/dashboard/deal-room/investor-dashboard/investor-details?id=${publicId}&businessId=${businessId}`);
   };
 
-  // Filter investors based on search term and active filters
+  // Filter investors based on search term
   const filteredInvestors = investors.filter(investor => {
+    // When no search term is provided, return all investors
+    if (!searchTerm.trim()) return true;
+    
     // Handle potential undefined values
     const companyName = investor.companyName || "";
     const about = investor.about || "";
+    const designation = investor.designation || "";
+    const preferredIndustry = investor.preferredIndustry || "";
     
-    const matchesSearch = searchTerm === "" || 
+    // Check if search term appears in any of these fields
+    return (
       companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      about.toLowerCase().includes(searchTerm.toLowerCase());
-
-    let interestedFactors: string[] = [];
-    try {
-      interestedFactors = JSON.parse(investor.interestedFactors || "[]");
-      if (!Array.isArray(interestedFactors)) interestedFactors = [];
-    } catch {
-      // Handle JSON parse error
-    }
-
-    const matchesFilters = activeFilters.length === 0 || 
-      activeFilters.some(filter => interestedFactors.includes(filter));
-
-    return matchesSearch && matchesFilters;
+      about.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      designation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      preferredIndustry.toLowerCase().includes(searchTerm.toLowerCase())
+    );
   });
 
   // Pagination logic
@@ -157,7 +150,7 @@ const InvestorsList = () => {
         </div>
       </div>
 
-      {/* Search and Filter Section */}
+      {/* Search Section */}
       <div className="mb-6 space-y-4">
         <div className="flex items-center bg-mainBlack rounded-lg p-3">
           <FaSearch className="text-gray-400 mr-2 flex-shrink-0" />
@@ -168,33 +161,6 @@ const InvestorsList = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-        </div>
-        
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <span className="text-sm">Filter by</span>
-          <div className="flex gap-2 flex-wrap">
-            {filterOptions.map((filter) => (
-              <button
-                key={filter}
-                className={`px-3 sm:px-4 py-1 rounded-full text-sm ${
-                  activeFilters.includes(filter)
-                    ? 'bg-mainBlacks'
-                    : 'bg-mainBlack'
-                }`}
-                onClick={() => {
-                  if (activeFilters.includes(filter)) {
-                    setActiveFilters(activeFilters.filter(f => f !== filter));
-                  } else {
-                    setActiveFilters([...activeFilters, filter]);
-                  }
-                  // Reset to first page when filter changes
-                  setCurrentPage(1);
-                }}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -209,22 +175,7 @@ const InvestorsList = () => {
         ) : (
           paginatedInvestors.map((investor) => {
             // Safely parse JSON strings
-            let interestedFactors: string[] = [];
-            let interestedLocations: string[] = [];
-            
-            try {
-              interestedFactors = JSON.parse(investor.interestedFactors || "[]");
-              if (!Array.isArray(interestedFactors)) interestedFactors = [];
-            } catch {
-              // Handle JSON parse error
-            }
-            
-            try {
-              interestedLocations = JSON.parse(investor.interestedLocations || "[]");
-              if (!Array.isArray(interestedLocations)) interestedLocations = [];
-            } catch {
-              // Handle JSON parse error
-            }
+        
             
             return (
               <div 
@@ -263,14 +214,14 @@ const InvestorsList = () => {
                   <div className="flex items-center gap-2">
                     <MdBusinessCenter className="text-gray-400 text-sm sm:text-base" />
                     <span className="text-xs sm:text-sm text-gray-400">
-                     Investment of Interests: {interestedFactors.length > 0 ? interestedFactors.join(", ") : "Not specified"}
+                     Investment of Interests: {investor.preferredIndustry || "None Specified"}
                     </span>
                   </div>
                   
                   <div className="flex items-center gap-2">
                     <FaMapMarkerAlt className="text-gray-400 text-sm sm:text-base" />
                     <span className="text-xs sm:text-sm text-gray-400">
-                      Locations: {interestedLocations.length > 0 ? interestedLocations.join(", ") : "Not specified"}
+                      Locations: {investor.interestedLocations.length > 0 ? investor.interestedLocations.join(", ") : "Not specified"}
                     </span>
                   </div>
                 </div>

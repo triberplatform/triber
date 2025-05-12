@@ -517,12 +517,13 @@ export interface Investor {
   termsOfAgreementDocUrl: string;
   proofOfBusinessDocUrl: string;
   location: string;
-  interestedLocations: string; 
+  interestedLocations: string[]; 
   designation: string;
   numOfExpectedDeals: string[];
   companyType: string[];
-  interestedFactors: string; 
+  interestedFactors: string[]; 
   fundsUnderManagement: number;
+    preferredIndustry:string;
   createdAt: string; 
   updatedAt: string; 
 }
