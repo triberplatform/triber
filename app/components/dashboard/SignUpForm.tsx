@@ -146,7 +146,7 @@ const SignUpForm = () => {
                 </div>
               </div>
 
-              <div className="grid lg:grid-cols-2 px-5 lg:px-[15%] gap-4 lg:gap-7">
+              <div className="grid lg:grid-cols-2 px-5 lg:px-[15%] mt-5 gap-4 lg:gap-7">
                 <div className="col-span-1">
                   <TextInput
                     label="Enter your email address *"
@@ -173,7 +173,7 @@ const SignUpForm = () => {
                 </div>
               </div>
 
-              <div className="grid lg:grid-cols-2 px-5 lg:px-[15%] mb-4 gap-4 lg:gap-7">
+              <div className="grid lg:grid-cols-2 px-5 mt-5 lg:px-[15%] mb-4 gap-4 lg:gap-7">
                 <div className="col-span-1">
                   <TextInput
                     label="Create a new password"

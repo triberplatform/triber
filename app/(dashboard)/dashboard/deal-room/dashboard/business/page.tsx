@@ -72,6 +72,16 @@ export default function BusinessDetail() {
     return null;
   };
 
+  const formatCurrency = (amount: number) => {
+  // Format with commas directly in case Intl doesn't work as expected
+  try {
+    return "₦" + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  } catch {
+    return "₦" + amount;
+  }
+};
+
+
   // Fetch business details and deal room profile
   useEffect(() => {
     const fetchData = async () => {
@@ -357,25 +367,25 @@ export default function BusinessDetail() {
                     <div>
                         <p className="text-xs text-gray-400">Funding Amount Required</p>
                         <p className="text-sm text-white">
-                          ${dealRoomProfile.fundingAmount.toLocaleString() || "Not Provided"}
+                          {formatCurrency(dealRoomProfile.fundingAmount)  || "Not Provided"}
                         </p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-400">Funding Structure</p>
                         <p className="text-sm text-white">
-                          ${dealRoomProfile.fundingStructure || "Not Provided"}
+                          { dealRoomProfile.fundingStructure || "Not Provided"}
                         </p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-400">Monthly Sales</p>
                         <p className="text-sm text-white">
-                          ${dealRoomProfile.averageMonthlySales.toLocaleString()}
+                          {formatCurrency(dealRoomProfile.averageMonthlySales)|| "Not Provided"}
                         </p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-400">Yearly Sales</p>
                         <p className="text-sm text-white">
-                          ${dealRoomProfile.reportedYearlySales.toLocaleString()}
+                          {formatCurrency(dealRoomProfile.reportedYearlySales) || "Not Provided"}
                         </p>
                       </div>
                       <div>
@@ -387,13 +397,13 @@ export default function BusinessDetail() {
                       <div>
                         <p className="text-xs text-gray-400">Physical Assets Value</p>
                         <p className="text-sm text-white">
-                          ${dealRoomProfile.valueOfPhysicalAssets.toLocaleString()}
+                          {formatCurrency(dealRoomProfile.valueOfPhysicalAssets) || "Not Provided"}
                         </p>
                       </div>
                       <div className="col-span-2">
                         <p className="text-xs text-gray-400">Valuation</p>
                         <p className="text-sm text-white font-semibold">
-                          ${dealRoomProfile.tentativeSellingPrice.toLocaleString()}
+                          {formatCurrency(dealRoomProfile.tentativeSellingPrice) || "Not Provided"}
                         </p>
                       </div>
                     </div>

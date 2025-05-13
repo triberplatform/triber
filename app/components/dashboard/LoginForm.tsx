@@ -75,8 +75,9 @@ export default function LoginForm() {
           handleChange,
           handleBlur,
         }) => (
-          <Form className="flex flex-col justify-center">
-            <TextInput
+          <Form className="flex flex-col  justify-center">
+            <div className="mb-5">
+                  <TextInput
               label="Enter your email address *"
               name="email"
               type="text"
@@ -86,6 +87,8 @@ export default function LoginForm() {
               onBlur={handleBlur}
               error={touched.email ? errors.email : undefined}
             />
+            </div>
+          
             <TextInput
               label="Password"
               name="password"

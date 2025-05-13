@@ -22,7 +22,7 @@ const TextInput: React.FC<TextInputProps> = ({
   error,
 }) => {
   return (
-    <div className="lg:mb-7 relative">
+    <div className="lg:mb-7   relative">
       <label
         className="block text-left text-sm font-medium"
         htmlFor={name}
