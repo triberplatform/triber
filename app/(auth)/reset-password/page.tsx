@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import TextInput from "@/app/components/dashboard/TextInput";
 import Modal from "@/app/components/common/Modal";
 import { AiOutlineClose,  AiOutlineLock } from "react-icons/ai";
@@ -82,7 +81,7 @@ export default function ResetPasswordForm() {
         return;
       }
 
-      const data = await response.json();
+     
       setModalOpen(true);
       
       // Clear stored email after successful reset
