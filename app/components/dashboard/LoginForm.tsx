@@ -76,7 +76,7 @@ export default function LoginForm() {
           handleBlur,
         }) => (
           <Form className="flex flex-col  justify-center">
-            <div className="mb-5">
+            <div className="lg:mb-0 mb-5">
                   <TextInput
               label="Enter your email address *"
               name="email"
@@ -99,9 +99,12 @@ export default function LoginForm() {
               onBlur={handleBlur}
               error={touched.password ? errors.password : undefined}
             />
-            <p className="text-mainGreen text-right text-sm">
+            <Link href={'/forgot-password'}>
+              <p className="text-mainGreen text-right text-sm">
               Forgot Password?
             </p>
+            </Link>
+          
             <button
               type="submit"
               className="mt-2 py-2 px-5 bg-mainGreen text-white rounded"

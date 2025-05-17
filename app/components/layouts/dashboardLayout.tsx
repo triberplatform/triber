@@ -209,7 +209,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
             <div className="flex flex-col text-sm pl-3 gap-6">
               <Link
-                href="#"
+                href="/dashboard/settings"
                 className="items-center gap-2 hover:text-mainGreen flex"
               >
                 <IoSettingsOutline /> Settings
@@ -262,7 +262,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
               <div className="mt-auto border-t text-sm border-gray-700 flex flex-col  gap-6">
                 <Link
-                  href="#"
+                  href="/dashboard/settings"
                   className="flex items-center gap-2 p-2  hover:bg-gray-800 rounded"
                 >
                   <IoSettingsOutline /> Settings

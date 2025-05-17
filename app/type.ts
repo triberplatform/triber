@@ -528,6 +528,11 @@ export interface Investor {
   updatedAt: string; 
 }
 
+export interface  changePasswordPayload {
+  email:string;
+  newPassword:string
+}
+
 export interface FundType {
 
     id: number;
