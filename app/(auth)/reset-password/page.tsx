@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import TextInput from "@/app/components/dashboard/TextInput";
 import Modal from "@/app/components/common/Modal";
-import { AiOutlineClose, AiOutlineInfoCircle, AiOutlineLock } from "react-icons/ai";
+import { AiOutlineClose,  AiOutlineLock } from "react-icons/ai";
 import Loading from "@/app/loading";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import { resetPassword } from "@/app/services/auth";
@@ -23,10 +23,10 @@ export default function ResetPasswordForm() {
     special: false
   });
   
-  const router = useRouter();
+  
   
   // Get email from localStorage if available (passed from forgot password page)
-  const [email, setEmail] = useState<string>(() => {
+  const [email] = useState<string>(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('userEmail') || '';
     }

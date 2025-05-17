@@ -7,7 +7,7 @@ import Link from "next/link";
 import { forgotPassword } from "@/app/services/auth";
 import TextInput from "@/app/components/dashboard/TextInput";
 import Modal from "@/app/components/common/Modal";
-import { AiOutlineClose, AiOutlineInfoCircle, AiOutlineMail } from "react-icons/ai";
+import { AiOutlineClose,  AiOutlineMail } from "react-icons/ai";
 import Loading from "@/app/loading";
 
 export default function ForgotPasswordForm() {
@@ -58,7 +58,7 @@ export default function ForgotPasswordForm() {
       <div className="mb-8 text-center">
         <h1 className="text-2xl font-bold mb-2">Forgot Your Password?</h1>
         <p className="text-gray-400">
-          Enter your email address and we'll send you a code to reset your password.
+          Enter your email address and we&apos;ll send you a code to reset your password.
         </p>
       </div>
       
@@ -129,7 +129,7 @@ export default function ForgotPasswordForm() {
               />
               <h3 className="text-xl font-bold mb-2">Check Your Email</h3>
               <p className="text-sm text-gray-300 mb-6">
-                We've sent a password reset code to <span className="font-bold">{email}</span>. 
+                We&apos;ve sent a password reset code to <span className="font-bold">{email}</span>. 
                 Please check your inbox and spam folder.
               </p>
               <p className="text-sm text-gray-400 mb-6">

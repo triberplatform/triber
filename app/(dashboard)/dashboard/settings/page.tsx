@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import Link from "next/link";
 import { changePassword } from "@/app/services/auth";
 import { useRouter } from "next/navigation";
 import { changePasswordPayload } from "@/app/type";
