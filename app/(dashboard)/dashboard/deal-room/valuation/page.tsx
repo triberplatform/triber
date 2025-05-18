@@ -65,7 +65,7 @@ export default function Valuation() {
       .typeError("Must be a number")
       .positive("Must be positive")
       .required("Physical assets value is required"),
-    reasonForSale: Yup.string().required("Reason for sale is required"),
+    reasonForSale: Yup.string().required("Reason for funding need is required"),
     businessPhotos: Yup.mixed()
       .nullable()
       .test("fileType", "Unsupported file format", (value) => {
@@ -383,9 +383,9 @@ export default function Valuation() {
                   </div>
                   <div>
                     <FormInput
-                      label="Provide Reason for sale."
+                      label="Provide Reason for Funding need."
                       name="reasonForSale"
-                      placeholder="Reason for Sale"
+                      placeholder="Reason for Funding need"
                       value={formikProps.values.reasonForSale}
                       onChange={formikProps.handleChange}
                       onBlur={formikProps.handleBlur}

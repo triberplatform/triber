@@ -1324,7 +1324,7 @@ export default function BusinessDetail() {
                         <div className="space-y-4">
                           <div>
                             <p className="text-xs text-gray-400">
-                              Reason for Sale
+                              Reason for Funding Need
                             </p>
                             <p className="text-sm text-white">
                               {dealRoomProfile.reasonForSale || "Not provided"}

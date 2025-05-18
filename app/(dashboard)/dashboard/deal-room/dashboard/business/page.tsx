@@ -419,7 +419,7 @@ export default function BusinessDetail() {
                   <div className="bg-zinc-800 p-4 rounded-lg">
                     <div className="space-y-4">
                       <div>
-                        <p className="text-xs text-gray-400">Reason for Sale</p>
+                        <p className="text-xs text-gray-400">Reason for funding need & your offer</p>
                         <p className="text-sm text-white">{dealRoomProfile.reasonForSale}</p>
                       </div>
                       <div>

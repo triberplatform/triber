@@ -80,8 +80,6 @@ export default function ResetPasswordForm() {
         setError(data.error || data.message || "Failed to reset password. Please try again.");
         return;
       }
-
-     
       setModalOpen(true);
       
       // Clear stored email after successful reset
