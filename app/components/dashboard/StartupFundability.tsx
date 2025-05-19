@@ -233,10 +233,10 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-  
+
       // Create a new FormData object
       const formData = new FormData();
-      
+
       // Filter out empty non-required fields
       // List of fields that are not required according to the validation schema
       const nonRequiredFields = [
@@ -252,9 +252,9 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
         "businessPlan",
         "financialStatements",
         "relevantLicenses",
-        "pitchDeck"
+        "pitchDeck",
       ];
-  
+
       // Append each field to FormData, skipping empty non-required fields
       Object.entries(values).forEach(([key, value]) => {
         // Skip empty non-required fields
@@ -264,7 +264,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
             if (value.length === 0 || (value.length === 1 && value[0] === "")) {
               return; // Skip this field
             }
-          } 
+          }
           // For numbers, check if 0 (might be default value)
           else if (typeof value === "number" && value === 0) {
             return; // Skip this field
@@ -278,7 +278,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
             return; // Skip this field
           }
         }
-  
+
         // Add the field to the payload
         if (value instanceof File || value instanceof Blob) {
           // Append files directly (but only if they exist)
@@ -287,7 +287,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
           }
         } else if (Array.isArray(value)) {
           // Filter out empty strings from arrays before converting to JSON
-          const filteredArray = value.filter(item => item !== "");
+          const filteredArray = value.filter((item) => item !== "");
           if (filteredArray.length > 0) {
             formData.append(key, JSON.stringify(filteredArray));
           }
@@ -299,28 +299,28 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
           formData.append(key, String(value));
         }
       });
-  
+
       // Debugging: Log FormData key-value pairs
       for (const [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
       }
-  
+
       // Call the API
       const response = await startupFundabilityTest(formData, token || "");
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         alert(errorData.message);
         return;
       }
-  
+
       if (response.ok) {
         const data = await response.json();
         setModalMessage(data.data.score);
         showModal(true);
         return;
       }
-  
+
       if (!response) {
         alert("An Error Occurred. Please try again.");
       }
@@ -412,443 +412,443 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
               <OptionInput
                 label="Industry"
                 name="industry"
-              options={[
-                            { value: Industry.AGRICULTURE, label: "Agriculture" },
-                            {
-                              value: Industry.AUTOMOTIVE_AUTO_BODY,
-                              label: "Automotive - Auto Body",
-                            },
-                            {
-                              value: Industry.AUTOMOTIVE_REPAIR_PARTS_SERVICES,
-                              label: "Automotive - Repair, Parts & Services",
-                            },
-                            {
-                              value: Industry.AUTOMOTIVE_DEALERS,
-                              label: "Automotive - Dealers",
-                            },
-                            {
-                              value: Industry.AUTOMOTIVE_CAR_WASH,
-                              label: "Automotive - Car Wash",
-                            },
-                            {
-                              value: Industry.AUTOMOTIVE_GASOLINE_SERVICE_STATIONS,
-                              label: "Automotive - Gasoline Service Stations",
-                            },
-                            {
-                              value: Industry.AUTOMOTIVE_WRECKING_YARD,
-                              label: "Automotive - Wrecking Yard",
-                            },
-                            {
-                              value: Industry.CONSTRUCTION_BUILDING,
-                              label: "Construction - Building",
-                            },
-                            {
-                              value: Industry.CONSTRUCTION_HEAVY,
-                              label: "Construction - Heavy",
-                            },
-                            {
-                              value: Industry.CONSTRUCTION_SPECIAL_TRADES,
-                              label: "Construction - Special Trades",
-                            },
-                            {
-                              value: Industry.ENTERTAINMENT_FILM_PRODUCTION,
-                              label: "Entertainment - Film Production",
-                            },
-                            {
-                              value: Industry.HEALTHCARE_MEDICAL_DENTAL,
-                              label: "Healthcare - Medical & Dental",
-                            },
-                            {
-                              value: Industry.HEALTHCARE_PRODUCTS_SUPPLIES,
-                              label: "Healthcare - Products & Supplies",
-                            },
-                            {
-                              value: Industry.HEALTHCARE_TRANSPORTATION,
-                              label: "Healthcare - Transportation",
-                            },
-                            {
-                              value: Industry.HEALTHCARE_PHARMACIES_DRUG_STORES,
-                              label: "Healthcare - Pharmacies & Drug Stores",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_APPAREL_FABRICS,
-                              label: "Manufacturing - Apparel & Fabrics",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_AVIATION_AEROSPACE,
-                              label: "Manufacturing - Aviation & Aerospace",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_CHEMICALS,
-                              label: "Manufacturing - Chemicals",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_ELECTRONIC_ELECTRICAL,
-                              label: "Manufacturing - Electronic & Electrical",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_FABRICATED_METAL,
-                              label: "Manufacturing - Fabricated Metal",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_FOOD_PRODUCTS,
-                              label: "Manufacturing - Food Products",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_FURNITURE_FIXTURES,
-                              label: "Manufacturing - Furniture & Fixtures",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_INDUSTRIAL_MACHINERY,
-                              label: "Manufacturing - Industrial Machinery",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_LEATHER_PRODUCTS,
-                              label: "Manufacturing - Leather Products",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_LUMBER_WOOD,
-                              label: "Manufacturing - Lumber & Wood",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_MEASURING_INSTRUMENTS,
-                              label: "Manufacturing - Measuring Instruments",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_MISCELLANEOUS,
-                              label: "Manufacturing - Miscellaneous",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_PAPER_PRODUCTS,
-                              label: "Manufacturing - Paper Products",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_PERSONAL_CARE,
-                              label: "Manufacturing - Personal Care",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_PETROLEUM_REFINING,
-                              label: "Manufacturing - Petroleum Refining",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_PRIMARY_METAL,
-                              label: "Manufacturing - Primary Metal",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_PRINTING_PUBLISHING,
-                              label: "Manufacturing - Printing & Publishing",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_RUBBER_PLASTIC,
-                              label: "Manufacturing - Rubber & Plastic",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_STONE_CLAY_GLASS,
-                              label: "Manufacturing - Stone, Clay & Glass",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_TEXTILE,
-                              label: "Manufacturing - Textile",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_TOBACCO,
-                              label: "Manufacturing - Tobacco",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_TRANSPORTATION_EQUIPMENT,
-                              label: "Manufacturing - Transportation Equipment",
-                            },
-                            {
-                              value: Industry.MANUFACTURING_VINYL_PRODUCTS,
-                              label: "Manufacturing - Vinyl Products",
-                            },
-                            { value: Industry.MINING, label: "Mining" },
-                            {
-                              value: Industry.RESTAURANTS_BARS_TAVERNS,
-                              label: "Restaurants - Bars & Taverns",
-                            },
-                            {
-                              value: Industry.RESTAURANTS_COFFEE_SHOP,
-                              label: "Restaurants - Coffee Shop",
-                            },
-                            {
-                              value: Industry.RESTAURANTS_OTHER_EATING_DRINKING,
-                              label: "Restaurants - Other Eating & Drinking",
-                            },
-                            {
-                              value: Industry.RESTAURANTS_RESTAURANT,
-                              label: "Restaurants - Restaurant",
-                            },
-                            {
-                              value: Industry.RETAIL_ATM_MACHINES,
-                              label: "Retail - ATM Machines",
-                            },
-                            {
-                              value: Industry.RETAIL_APPAREL_ACCESSORY,
-                              label: "Retail - Apparel & Accessory",
-                            },
-                            {
-                              value: Industry.RETAIL_BEAUTY_SUPPLIES,
-                              label: "Retail - Beauty Supplies",
-                            },
-                            {
-                              value: Industry.RETAIL_BICYCLE_SHOP,
-                              label: "Retail - Bicycle Shop",
-                            },
-                            {
-                              value: Industry.RETAIL_BUILDING_MATERIALS_HOME_GARDEN,
-                              label: "Retail - Building Materials & Home Garden",
-                            },
-                            {
-                              value: Industry.RETAIL_CELL_PHONES,
-                              label: "Retail - Cell Phones",
-                            },
-                            {
-                              value: Industry.RETAIL_COIN_LAUNDRY,
-                              label: "Retail - Coin Laundry",
-                            },
-                            {
-                              value: Industry.RETAIL_CONVENIENCE_STORES,
-                              label: "Retail - Convenience Stores",
-                            },
-                            {
-                              value: Industry.RETAIL_FLORIST_GIFTS,
-                              label: "Retail - Florist & Gifts",
-                            },
-                            {
-                              value: Industry.RETAIL_FURNITURE,
-                              label: "Retail - Furniture",
-                            },
-                            {
-                              value: Industry.RETAIL_GENERAL_MERCHANDISE,
-                              label: "Retail - General Merchandise",
-                            },
-                            {
-                              value: Industry.RETAIL_GYM_FITNESS,
-                              label: "Retail - Gym & Fitness",
-                            },
-                            {
-                              value: Industry.RETAIL_HOME_FURNISHINGS,
-                              label: "Retail - Home Furnishings",
-                            },
-                            {
-                              value: Industry.RETAIL_JEWELRY_DESIGN_SALES,
-                              label: "Retail - Jewelry Design & Sales",
-                            },
-                            {
-                              value: Industry.RETAIL_LIQUOR_STORES,
-                              label: "Retail - Liquor Stores",
-                            },
-                            {
-                              value: Industry.RETAIL_MARINE_DEALERS_EQUIPMENT,
-                              label: "Retail - Marine Dealers & Equipment",
-                            },
-                            {
-                              value: Industry.RETAIL_MISCELLANEOUS,
-                              label: "Retail - Miscellaneous",
-                            },
-                            {
-                              value: Industry.RETAIL_FOOD_STORES,
-                              label: "Retail - Food Stores",
-                            },
-                            {
-                              value: Industry.RETAIL_PET_SHOPS_SUPPLIES,
-                              label: "Retail - Pet Shops & Supplies",
-                            },
-                            {
-                              value: Industry.RETAIL_POSTAL_CENTERS,
-                              label: "Retail - Postal Centers",
-                            },
-                            {
-                              value: Industry.RETAIL_SUPERMARKETS,
-                              label: "Retail - Supermarkets",
-                            },
-                            {
-                              value: Industry.RETAIL_TOBACCO_PRODUCTS,
-                              label: "Retail - Tobacco Products",
-                            },
-                            {
-                              value: Industry.RETAIL_VENDING_MACHINES,
-                              label: "Retail - Vending Machines",
-                            },
-                            {
-                              value: Industry.RETAIL_VIDEO_RENTALS,
-                              label: "Retail - Video Rentals",
-                            },
-                            {
-                              value: Industry.SERVICES_ACCOUNTING,
-                              label: "Services - Accounting",
-                            },
-                            {
-                              value: Industry.SERVICES_AGENTS_BROKERS,
-                              label: "Services - Agents & Brokers",
-                            },
-                            {
-                              value: Industry.SERVICES_AMUSEMENT_RECREATION,
-                              label: "Services - Amusement & Recreation",
-                            },
-                            {
-                              value: Industry.SERVICES_BEAUTY_BARBER,
-                              label: "Services - Beauty & Barber",
-                            },
-                            {
-                              value: Industry.SERVICES_BUSINESS,
-                              label: "Services - Business",
-                            },
-                            {
-                              value: Industry.SERVICES_COMPUTER_SOFTWARE,
-                              label: "Services - Computer Software",
-                            },
-                            {
-                              value: Industry.SERVICES_DRY_CLEANING_LAUNDRY,
-                              label: "Services - Dry Cleaning & Laundry",
-                            },
-                            {
-                              value: Industry.SERVICES_EDUCATIONAL,
-                              label: "Services - Educational",
-                            },
-                            {
-                              value: Industry.SERVICES_ENGINEERING,
-                              label: "Services - Engineering",
-                            },
-                            {
-                              value: Industry.SERVICES_FINANCE_BANKING_LOANS,
-                              label: "Services - Finance, Banking & Loans",
-                            },
-                            {
-                              value: Industry.SERVICES_FREIGHT_MOVING,
-                              label: "Services - Freight & Moving",
-                            },
-                            {
-                              value: Industry.SERVICES_HOTELS_LODGING,
-                              label: "Services - Hotels & Lodging",
-                            },
-                            { value: Industry.SERVICES_IT, label: "Services - IT" },
-                            {
-                              value: Industry.SERVICES_INSURANCE,
-                              label: "Services - Insurance",
-                            },
-                            {
-                              value: Industry.SERVICES_JANITORIAL_CARPET_CLEANING,
-                              label: "Services - Janitorial & Carpet Cleaning",
-                            },
-                            {
-                              value: Industry.SERVICES_JEWELRY_REPAIR,
-                              label: "Services - Jewelry Repair",
-                            },
-                            {
-                              value: Industry.SERVICES_LANDSCAPING_YARD,
-                              label: "Services - Landscaping & Yard",
-                            },
-                            { value: Industry.SERVICES_LEGAL, label: "Services - Legal" },
-                            {
-                              value: Industry.SERVICES_LOCAL_PASSENGER_TRANSPORTATION,
-                              label: "Services - Local Passenger Transportation",
-                            },
-                            {
-                              value: Industry.SERVICES_MAGAZINE,
-                              label: "Services - Magazine",
-                            },
-                            {
-                              value: Industry.SERVICES_MARINE_REPAIR,
-                              label: "Services - Marine Repair",
-                            },
-                            {
-                              value: Industry.SERVICES_MEDIA_COMMUNICATIONS_ADVERTISING,
-                              label: "Services - Media, Communications & Advertising",
-                            },
-                            {
-                              value: Industry.SERVICES_MEMBERSHIP_ORGANIZATIONS,
-                              label: "Services - Membership Organizations",
-                            },
-                            {
-                              value: Industry.SERVICES_MISCELLANEOUS_REPAIR,
-                              label: "Services - Miscellaneous Repair",
-                            },
-                            {
-                              value: Industry.SERVICES_MUSEUMS_ART_GALLERIES,
-                              label: "Services - Museums & Art Galleries",
-                            },
-                            {
-                              value: Industry.SERVICES_OTHER_BUSINESS,
-                              label: "Services - Other Business",
-                            },
-                            {
-                              value: Industry.SERVICES_OTHER_MISCELLANEOUS,
-                              label: "Services - Other Miscellaneous",
-                            },
-                            {
-                              value: Industry.SERVICES_OTHER_PERSONAL,
-                              label: "Services - Other Personal",
-                            },
-                            {
-                              value: Industry.SERVICES_OTHER_TRAVEL_TRANSPORTATION,
-                              label: "Services - Other Travel & Transportation",
-                            },
-                            {
-                              value: Industry.SERVICES_PET_CARE_GROOMING,
-                              label: "Services - Pet Care & Grooming",
-                            },
-                            {
-                              value: Industry.SERVICES_SOCIAL,
-                              label: "Services - Social",
-                            },
-                            {
-                              value: Industry.SERVICES_STAFFING,
-                              label: "Services - Staffing",
-                            },
-                            {
-                              value: Industry.SERVICES_STORAGE_WAREHOUSING,
-                              label: "Services - Storage & Warehousing",
-                            },
-                            {
-                              value: Industry.SERVICES_TANNING_SALONS,
-                              label: "Services - Tanning Salons",
-                            },
-                            {
-                              value: Industry.SERVICES_TRAVEL_AGENCIES,
-                              label: "Services - Travel Agencies",
-                            },
-                            {
-                              value: Industry.SOFTWARE_TECHNOLOGY_B2B,
-                              label: "Software Technology - B2B",
-                            },
-                            {
-                              value: Industry.SOFTWARE_TECHNOLOGY_B2C,
-                              label: "Software Technology - B2C",
-                            },
-                            {
-                              value: Industry.SOFTWARE_TECHNOLOGY_DOMAIN_WEBSITE,
-                              label: "Software Technology - Domain & Website",
-                            },
-                            {
-                              value: Industry.SOFTWARE_TECHNOLOGY_GENERAL_INTERNET,
-                              label: "Software Technology - General Internet",
-                            },
-                            {
-                              value: Industry.SOFTWARE_TECHNOLOGY_ISP_ASP,
-                              label: "Software Technology - ISP & ASP",
-                            },
-                            {
-                              value: Industry.SOFTWARE_TECHNOLOGY_SOFTWARE,
-                              label: "Software Technology - Software",
-                            },
-                            {
-                              value: Industry.SOFTWARE_TECHNOLOGY_WEB_DESIGN,
-                              label: "Software Technology - Web Design",
-                            },
-                            { value: Industry.UTILITIES, label: "Utilities" },
-                            {
-                              value: Industry.WHOLESALE_DISTRIBUTION_DURABLE,
-                              label: "Wholesale Distribution - Durable",
-                            },
-                            {
-                              value: Industry.WHOLESALE_DISTRIBUTION_NON_DURABLE,
-                              label: "Wholesale Distribution - Non-Durable",
-                            },
-                            { value: Industry.ECOMMERCE, label: "E-Commerce" },
-                            { value: Industry.OTHER, label: "Other" },
-                          ]}
+                options={[
+                  { value: Industry.AGRICULTURE, label: "Agriculture" },
+                  {
+                    value: Industry.AUTOMOTIVE_AUTO_BODY,
+                    label: "Automotive - Auto Body",
+                  },
+                  {
+                    value: Industry.AUTOMOTIVE_REPAIR_PARTS_SERVICES,
+                    label: "Automotive - Repair, Parts & Services",
+                  },
+                  {
+                    value: Industry.AUTOMOTIVE_DEALERS,
+                    label: "Automotive - Dealers",
+                  },
+                  {
+                    value: Industry.AUTOMOTIVE_CAR_WASH,
+                    label: "Automotive - Car Wash",
+                  },
+                  {
+                    value: Industry.AUTOMOTIVE_GASOLINE_SERVICE_STATIONS,
+                    label: "Automotive - Gasoline Service Stations",
+                  },
+                  {
+                    value: Industry.AUTOMOTIVE_WRECKING_YARD,
+                    label: "Automotive - Wrecking Yard",
+                  },
+                  {
+                    value: Industry.CONSTRUCTION_BUILDING,
+                    label: "Construction - Building",
+                  },
+                  {
+                    value: Industry.CONSTRUCTION_HEAVY,
+                    label: "Construction - Heavy",
+                  },
+                  {
+                    value: Industry.CONSTRUCTION_SPECIAL_TRADES,
+                    label: "Construction - Special Trades",
+                  },
+                  {
+                    value: Industry.ENTERTAINMENT_FILM_PRODUCTION,
+                    label: "Entertainment - Film Production",
+                  },
+                  {
+                    value: Industry.HEALTHCARE_MEDICAL_DENTAL,
+                    label: "Healthcare - Medical & Dental",
+                  },
+                  {
+                    value: Industry.HEALTHCARE_PRODUCTS_SUPPLIES,
+                    label: "Healthcare - Products & Supplies",
+                  },
+                  {
+                    value: Industry.HEALTHCARE_TRANSPORTATION,
+                    label: "Healthcare - Transportation",
+                  },
+                  {
+                    value: Industry.HEALTHCARE_PHARMACIES_DRUG_STORES,
+                    label: "Healthcare - Pharmacies & Drug Stores",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_APPAREL_FABRICS,
+                    label: "Manufacturing - Apparel & Fabrics",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_AVIATION_AEROSPACE,
+                    label: "Manufacturing - Aviation & Aerospace",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_CHEMICALS,
+                    label: "Manufacturing - Chemicals",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_ELECTRONIC_ELECTRICAL,
+                    label: "Manufacturing - Electronic & Electrical",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_FABRICATED_METAL,
+                    label: "Manufacturing - Fabricated Metal",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_FOOD_PRODUCTS,
+                    label: "Manufacturing - Food Products",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_FURNITURE_FIXTURES,
+                    label: "Manufacturing - Furniture & Fixtures",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_INDUSTRIAL_MACHINERY,
+                    label: "Manufacturing - Industrial Machinery",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_LEATHER_PRODUCTS,
+                    label: "Manufacturing - Leather Products",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_LUMBER_WOOD,
+                    label: "Manufacturing - Lumber & Wood",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_MEASURING_INSTRUMENTS,
+                    label: "Manufacturing - Measuring Instruments",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_MISCELLANEOUS,
+                    label: "Manufacturing - Miscellaneous",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_PAPER_PRODUCTS,
+                    label: "Manufacturing - Paper Products",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_PERSONAL_CARE,
+                    label: "Manufacturing - Personal Care",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_PETROLEUM_REFINING,
+                    label: "Manufacturing - Petroleum Refining",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_PRIMARY_METAL,
+                    label: "Manufacturing - Primary Metal",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_PRINTING_PUBLISHING,
+                    label: "Manufacturing - Printing & Publishing",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_RUBBER_PLASTIC,
+                    label: "Manufacturing - Rubber & Plastic",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_STONE_CLAY_GLASS,
+                    label: "Manufacturing - Stone, Clay & Glass",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_TEXTILE,
+                    label: "Manufacturing - Textile",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_TOBACCO,
+                    label: "Manufacturing - Tobacco",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_TRANSPORTATION_EQUIPMENT,
+                    label: "Manufacturing - Transportation Equipment",
+                  },
+                  {
+                    value: Industry.MANUFACTURING_VINYL_PRODUCTS,
+                    label: "Manufacturing - Vinyl Products",
+                  },
+                  { value: Industry.MINING, label: "Mining" },
+                  {
+                    value: Industry.RESTAURANTS_BARS_TAVERNS,
+                    label: "Restaurants - Bars & Taverns",
+                  },
+                  {
+                    value: Industry.RESTAURANTS_COFFEE_SHOP,
+                    label: "Restaurants - Coffee Shop",
+                  },
+                  {
+                    value: Industry.RESTAURANTS_OTHER_EATING_DRINKING,
+                    label: "Restaurants - Other Eating & Drinking",
+                  },
+                  {
+                    value: Industry.RESTAURANTS_RESTAURANT,
+                    label: "Restaurants - Restaurant",
+                  },
+                  {
+                    value: Industry.RETAIL_ATM_MACHINES,
+                    label: "Retail - ATM Machines",
+                  },
+                  {
+                    value: Industry.RETAIL_APPAREL_ACCESSORY,
+                    label: "Retail - Apparel & Accessory",
+                  },
+                  {
+                    value: Industry.RETAIL_BEAUTY_SUPPLIES,
+                    label: "Retail - Beauty Supplies",
+                  },
+                  {
+                    value: Industry.RETAIL_BICYCLE_SHOP,
+                    label: "Retail - Bicycle Shop",
+                  },
+                  {
+                    value: Industry.RETAIL_BUILDING_MATERIALS_HOME_GARDEN,
+                    label: "Retail - Building Materials & Home Garden",
+                  },
+                  {
+                    value: Industry.RETAIL_CELL_PHONES,
+                    label: "Retail - Cell Phones",
+                  },
+                  {
+                    value: Industry.RETAIL_COIN_LAUNDRY,
+                    label: "Retail - Coin Laundry",
+                  },
+                  {
+                    value: Industry.RETAIL_CONVENIENCE_STORES,
+                    label: "Retail - Convenience Stores",
+                  },
+                  {
+                    value: Industry.RETAIL_FLORIST_GIFTS,
+                    label: "Retail - Florist & Gifts",
+                  },
+                  {
+                    value: Industry.RETAIL_FURNITURE,
+                    label: "Retail - Furniture",
+                  },
+                  {
+                    value: Industry.RETAIL_GENERAL_MERCHANDISE,
+                    label: "Retail - General Merchandise",
+                  },
+                  {
+                    value: Industry.RETAIL_GYM_FITNESS,
+                    label: "Retail - Gym & Fitness",
+                  },
+                  {
+                    value: Industry.RETAIL_HOME_FURNISHINGS,
+                    label: "Retail - Home Furnishings",
+                  },
+                  {
+                    value: Industry.RETAIL_JEWELRY_DESIGN_SALES,
+                    label: "Retail - Jewelry Design & Sales",
+                  },
+                  {
+                    value: Industry.RETAIL_LIQUOR_STORES,
+                    label: "Retail - Liquor Stores",
+                  },
+                  {
+                    value: Industry.RETAIL_MARINE_DEALERS_EQUIPMENT,
+                    label: "Retail - Marine Dealers & Equipment",
+                  },
+                  {
+                    value: Industry.RETAIL_MISCELLANEOUS,
+                    label: "Retail - Miscellaneous",
+                  },
+                  {
+                    value: Industry.RETAIL_FOOD_STORES,
+                    label: "Retail - Food Stores",
+                  },
+                  {
+                    value: Industry.RETAIL_PET_SHOPS_SUPPLIES,
+                    label: "Retail - Pet Shops & Supplies",
+                  },
+                  {
+                    value: Industry.RETAIL_POSTAL_CENTERS,
+                    label: "Retail - Postal Centers",
+                  },
+                  {
+                    value: Industry.RETAIL_SUPERMARKETS,
+                    label: "Retail - Supermarkets",
+                  },
+                  {
+                    value: Industry.RETAIL_TOBACCO_PRODUCTS,
+                    label: "Retail - Tobacco Products",
+                  },
+                  {
+                    value: Industry.RETAIL_VENDING_MACHINES,
+                    label: "Retail - Vending Machines",
+                  },
+                  {
+                    value: Industry.RETAIL_VIDEO_RENTALS,
+                    label: "Retail - Video Rentals",
+                  },
+                  {
+                    value: Industry.SERVICES_ACCOUNTING,
+                    label: "Services - Accounting",
+                  },
+                  {
+                    value: Industry.SERVICES_AGENTS_BROKERS,
+                    label: "Services - Agents & Brokers",
+                  },
+                  {
+                    value: Industry.SERVICES_AMUSEMENT_RECREATION,
+                    label: "Services - Amusement & Recreation",
+                  },
+                  {
+                    value: Industry.SERVICES_BEAUTY_BARBER,
+                    label: "Services - Beauty & Barber",
+                  },
+                  {
+                    value: Industry.SERVICES_BUSINESS,
+                    label: "Services - Business",
+                  },
+                  {
+                    value: Industry.SERVICES_COMPUTER_SOFTWARE,
+                    label: "Services - Computer Software",
+                  },
+                  {
+                    value: Industry.SERVICES_DRY_CLEANING_LAUNDRY,
+                    label: "Services - Dry Cleaning & Laundry",
+                  },
+                  {
+                    value: Industry.SERVICES_EDUCATIONAL,
+                    label: "Services - Educational",
+                  },
+                  {
+                    value: Industry.SERVICES_ENGINEERING,
+                    label: "Services - Engineering",
+                  },
+                  {
+                    value: Industry.SERVICES_FINANCE_BANKING_LOANS,
+                    label: "Services - Finance, Banking & Loans",
+                  },
+                  {
+                    value: Industry.SERVICES_FREIGHT_MOVING,
+                    label: "Services - Freight & Moving",
+                  },
+                  {
+                    value: Industry.SERVICES_HOTELS_LODGING,
+                    label: "Services - Hotels & Lodging",
+                  },
+                  { value: Industry.SERVICES_IT, label: "Services - IT" },
+                  {
+                    value: Industry.SERVICES_INSURANCE,
+                    label: "Services - Insurance",
+                  },
+                  {
+                    value: Industry.SERVICES_JANITORIAL_CARPET_CLEANING,
+                    label: "Services - Janitorial & Carpet Cleaning",
+                  },
+                  {
+                    value: Industry.SERVICES_JEWELRY_REPAIR,
+                    label: "Services - Jewelry Repair",
+                  },
+                  {
+                    value: Industry.SERVICES_LANDSCAPING_YARD,
+                    label: "Services - Landscaping & Yard",
+                  },
+                  { value: Industry.SERVICES_LEGAL, label: "Services - Legal" },
+                  {
+                    value: Industry.SERVICES_LOCAL_PASSENGER_TRANSPORTATION,
+                    label: "Services - Local Passenger Transportation",
+                  },
+                  {
+                    value: Industry.SERVICES_MAGAZINE,
+                    label: "Services - Magazine",
+                  },
+                  {
+                    value: Industry.SERVICES_MARINE_REPAIR,
+                    label: "Services - Marine Repair",
+                  },
+                  {
+                    value: Industry.SERVICES_MEDIA_COMMUNICATIONS_ADVERTISING,
+                    label: "Services - Media, Communications & Advertising",
+                  },
+                  {
+                    value: Industry.SERVICES_MEMBERSHIP_ORGANIZATIONS,
+                    label: "Services - Membership Organizations",
+                  },
+                  {
+                    value: Industry.SERVICES_MISCELLANEOUS_REPAIR,
+                    label: "Services - Miscellaneous Repair",
+                  },
+                  {
+                    value: Industry.SERVICES_MUSEUMS_ART_GALLERIES,
+                    label: "Services - Museums & Art Galleries",
+                  },
+                  {
+                    value: Industry.SERVICES_OTHER_BUSINESS,
+                    label: "Services - Other Business",
+                  },
+                  {
+                    value: Industry.SERVICES_OTHER_MISCELLANEOUS,
+                    label: "Services - Other Miscellaneous",
+                  },
+                  {
+                    value: Industry.SERVICES_OTHER_PERSONAL,
+                    label: "Services - Other Personal",
+                  },
+                  {
+                    value: Industry.SERVICES_OTHER_TRAVEL_TRANSPORTATION,
+                    label: "Services - Other Travel & Transportation",
+                  },
+                  {
+                    value: Industry.SERVICES_PET_CARE_GROOMING,
+                    label: "Services - Pet Care & Grooming",
+                  },
+                  {
+                    value: Industry.SERVICES_SOCIAL,
+                    label: "Services - Social",
+                  },
+                  {
+                    value: Industry.SERVICES_STAFFING,
+                    label: "Services - Staffing",
+                  },
+                  {
+                    value: Industry.SERVICES_STORAGE_WAREHOUSING,
+                    label: "Services - Storage & Warehousing",
+                  },
+                  {
+                    value: Industry.SERVICES_TANNING_SALONS,
+                    label: "Services - Tanning Salons",
+                  },
+                  {
+                    value: Industry.SERVICES_TRAVEL_AGENCIES,
+                    label: "Services - Travel Agencies",
+                  },
+                  {
+                    value: Industry.SOFTWARE_TECHNOLOGY_B2B,
+                    label: "Software Technology - B2B",
+                  },
+                  {
+                    value: Industry.SOFTWARE_TECHNOLOGY_B2C,
+                    label: "Software Technology - B2C",
+                  },
+                  {
+                    value: Industry.SOFTWARE_TECHNOLOGY_DOMAIN_WEBSITE,
+                    label: "Software Technology - Domain & Website",
+                  },
+                  {
+                    value: Industry.SOFTWARE_TECHNOLOGY_GENERAL_INTERNET,
+                    label: "Software Technology - General Internet",
+                  },
+                  {
+                    value: Industry.SOFTWARE_TECHNOLOGY_ISP_ASP,
+                    label: "Software Technology - ISP & ASP",
+                  },
+                  {
+                    value: Industry.SOFTWARE_TECHNOLOGY_SOFTWARE,
+                    label: "Software Technology - Software",
+                  },
+                  {
+                    value: Industry.SOFTWARE_TECHNOLOGY_WEB_DESIGN,
+                    label: "Software Technology - Web Design",
+                  },
+                  { value: Industry.UTILITIES, label: "Utilities" },
+                  {
+                    value: Industry.WHOLESALE_DISTRIBUTION_DURABLE,
+                    label: "Wholesale Distribution - Durable",
+                  },
+                  {
+                    value: Industry.WHOLESALE_DISTRIBUTION_NON_DURABLE,
+                    label: "Wholesale Distribution - Non-Durable",
+                  },
+                  { value: Industry.ECOMMERCE, label: "E-Commerce" },
+                  { value: Industry.OTHER, label: "Other" },
+                ]}
                 value={formikProps.values.industry}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
@@ -1070,21 +1070,24 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                 error={formikProps.errors.isicIndustry}
                 touched={formikProps.touched.isicIndustry}
               />
-              <FormInput
-                label="ISIC Activities (International standard industrial classification)"
-                name="isicActivity"
-                placeholder="e.g., Selling"
-                value={formikProps.values.isicActivity}
-                onChange={formikProps.handleChange}
-                onBlur={formikProps.handleBlur}
-                error={formikProps.errors.isicActivity}
-                touched={formikProps.touched.isicActivity}
-              />
+
+              {/* Only render isicActivity field when isicIndustry is true */}
+              {formikProps.values.isicIndustry === true && (
+                <FormInput
+                  label="ISIC Activities (International standard industrial classification)"
+                  name="isicActivity"
+                  placeholder="e.g., Selling"
+                  value={formikProps.values.isicActivity}
+                  onChange={formikProps.handleChange}
+                  onBlur={formikProps.handleBlur}
+                  error={formikProps.errors.isicActivity}
+                  touched={formikProps.touched.isicActivity}
+                />
+              )}
             </div>
             <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 gap-5 items-end">
-                 
-                <FormInput
-               label="What is your Total Addressable Market Size (TAM)"
+              <FormInput
+                label="What is your Total Addressable Market Size (TAM)"
                 name="totalAddressableMarket"
                 type="number"
                 placeholder="Total Addressable Market"
@@ -1307,7 +1310,7 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
             <div className="grid lg:grid-cols-2 mt-5 lg:mt-0 items-end gap-5">
               <OptionInput
                 label="Has the company been 3 years profitable"
-                name="company3YearProfitable" 
+                name="company3YearProfitable"
                 options={[
                   { value: "", label: "Select an Option" },
                   { value: true, label: "Yes" },
@@ -1523,7 +1526,6 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
                   accept="application/pdf, image/*"
                 />
               </div>
-            
             </div>
           </div>
         );
@@ -1668,10 +1670,10 @@ export default function StartupFundability({ id }: FundabilityFormProps) {
               </div>
             </div>
             <p className="text-sm lg:hidden mt-32  mb-4">
-                  Your business profile has been successfully submitted. We’re
-                  now reviewing your information and verifying your financial
-                  records. This process may take up to 48 hours.
-                </p>
+              Your business profile has been successfully submitted. We’re now
+              reviewing your information and verifying your financial records.
+              This process may take up to 48 hours.
+            </p>
 
             {/* Buttons */}
             <div className="flex lg:justify-center justify-between gap-6 mt-5  lg:mt-8">

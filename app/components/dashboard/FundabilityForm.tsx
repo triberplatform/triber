@@ -1040,35 +1040,39 @@ export default function FundabilityForm({ id }: FundabilityFormProps) {
             </div>
 
             {/* Right Column */}
-            <div className="grid lg:grid-cols-2 gap-5 items-end">
-              <OptionInput
-                label="ISIC Industry (do you belong to any industry Association)"
-                name="isicIndustry"
-                options={[
-                  { value: "", label: "Select an Option" },
-                  { value: true, label: "Yes" },
-                  { value: false, label: "No" },
-                ]}
-                value={formikProps.values.isicIndustry.toString()}
-                onChange={(e) => {
-                  const booleanValue = e.target.value === "true"; // Convert string to boolean
-                  formikProps.setFieldValue("isicIndustry", booleanValue);
-                }}
-                onBlur={formikProps.handleBlur}
-                error={formikProps.errors.isicIndustry}
-                touched={formikProps.touched.isicIndustry}
-              />
-              <FormInput
-                label="ISIC Activities (International standard industrial classification)"
-                name="isicActivity"
-                placeholder="e.g., Selling"
-                value={formikProps.values.isicActivity}
-                onChange={formikProps.handleChange}
-                onBlur={formikProps.handleBlur}
-                error={formikProps.errors.isicActivity}
-                touched={formikProps.touched.isicActivity}
-              />
-            </div>
+         <div className="grid lg:grid-cols-2 gap-5 items-end">
+  <OptionInput
+    label="ISIC Industry (do you belong to any industry Association)"
+    name="isicIndustry"
+    options={[
+      { value: "", label: "Select an Option" },
+      { value: true, label: "Yes" },
+      { value: false, label: "No" },
+    ]}
+    value={formikProps.values.isicIndustry.toString()}
+    onChange={(e) => {
+      const booleanValue = e.target.value === "true"; // Convert string to boolean
+      formikProps.setFieldValue("isicIndustry", booleanValue);
+    }}
+    onBlur={formikProps.handleBlur}
+    error={formikProps.errors.isicIndustry}
+    touched={formikProps.touched.isicIndustry}
+  />
+  
+  {/* Only render isicActivity field when isicIndustry is true */}
+  {formikProps.values.isicIndustry === true && (
+    <FormInput
+      label="ISIC Activities (International standard industrial classification)"
+      name="isicActivity"
+      placeholder="e.g., Selling"
+      value={formikProps.values.isicActivity}
+      onChange={formikProps.handleChange}
+      onBlur={formikProps.handleBlur}
+      error={formikProps.errors.isicActivity}
+      touched={formikProps.touched.isicActivity}
+    />
+  )}
+</div>
           </div>
         );
       case 2:
