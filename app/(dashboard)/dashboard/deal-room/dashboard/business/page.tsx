@@ -579,7 +579,7 @@ export default function BusinessDetail() {
                           {businessDetails?.businessStage?.toLowerCase() !== "startup" && (
                             <div>
                               <p className="text-xs text-gray-400">Average Annual Revenue</p>
-                              <p className="text-sm">${fundabilityData.averageAnnualRevenue?.toLocaleString() || 'Not provided'}</p>
+                              <p className="text-sm">{formatCurrency(fundabilityData.averageAnnualRevenue || 0)}</p>
                             </div>
                           )}
       

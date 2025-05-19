@@ -77,7 +77,7 @@ export default function BusinessListings() {
 
   // Get pagination parameters from URL query or use defaults
   const currentPage = Number(searchParams.get("page") || 1);
-  const rowsPerPage = Number(searchParams.get("limit") || 10);
+  const rowsPerPage = Number(searchParams.get("limit") || 20);
 
   const [businesses, setBusinesses] = useState<DealRoomProfile[]>([]);
   const [metadata, setMetadata] = useState<PaginationMetadata>({
