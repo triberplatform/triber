@@ -19,7 +19,7 @@ export default function CounterGroup() {
           <Counter targetNumber={8} duration={2} text="Banking Partners" />
         </div>
         <div className="flex flex-col items-center lg:border-r  border-gray-300 last:border-none">
-          <Counter targetNumber={1.28} Amt="Bn" duration={2} text="Fund raised" />
+          <Counter targetNumber={1.61} Amt="Bn" duration={2} text="Fund raised" />
         </div>
         <div className="flex flex-col items-center">
           <Counter targetNumber={300} duration={2} text="Financial Experts" />
