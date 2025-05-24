@@ -374,11 +374,7 @@ export default function InvestorDetails() {
         {/* Disclaimer */}
         <div className="mt-8 text-xs text-gray-500 border-t border-gray-800 pt-6">
           <p>
-            Disclaimer: Triber is a regulated marketplace for connecting business sell sides with investors, buyers, lenders and 
-            advisors. Neither Triber represents nor guarantees that the information mentioned above is complete or correct. Note 
-            that Triber is not liable for any loss, damage, costs, claims and expenses whatsoever arising from transacting with any 
-            other user from the website. The final responsibility of conducting a thorough due diligence and taking the transaction 
-            forward lies with the users. Please read best practices on Triber.
+          Disclaimer: Triber is NOT a regulated marketplace for connecting business sell sides with investors, buyers, lenders and advisors. Neither does Triber represents nor guarantees that the information mentioned above is complete or correct. Note that Triber is not liable for any loss, damage, costs, claims and expenses whatsoever arising from transacting with any other user from the website. The final responsibility of conducting a thorough due diligence and taking the transaction forward lies with the users. Please read best practices on Triber.
           </p>
         </div>
       </div>
