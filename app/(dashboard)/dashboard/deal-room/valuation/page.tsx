@@ -15,6 +15,81 @@ import Link from "next/link";
 import ArrayInput from "@/app/components/dashboard/ArrayInput";
 import OptionInput from "@/app/components/dashboard/OptionInput";
 
+// Helper function to count words
+const countWords = (text: string): number => {
+  if (!text || text.trim() === "") return 0;
+  return text.trim().split(/\s+/).length;
+};
+
+// TextareaInput component matching FormInput design
+interface TextareaInputProps {
+  label: string;
+  name: string;
+  placeholder?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  error?: string;
+  touched?: boolean;
+  maxWords?: number;
+  rows?: number;
+}
+
+const TextareaInput: React.FC<TextareaInputProps> = ({
+  label,
+  name,
+  placeholder = "",
+  value,
+  onBlur,
+  onChange,
+  touched,
+  error,
+  maxWords = 300,
+  rows = 4,
+}) => {
+  const wordCount = countWords(value);
+  const isOverLimit = wordCount > maxWords;
+
+  return (
+    <div className="lg:mb-7 relative">
+      <label
+        className="block text-left text-sm font-medium"
+        htmlFor={name}
+      >
+        {label}
+      </label>
+      <textarea
+        className={`mt-1 block lg:bg-mainBlack placeholder:text-gray-500  text-white p-2 w-full border-gray-500 border ${
+          touched && error ? "border-red-500" : "border-gray-300"
+        } rounded-md focus:ring-indigo-500 focus:border-indigo-500 resize-vertical`}
+        id={name}
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        rows={rows}
+      />
+      
+      {/* Word counter */}
+      <div className={`text-xs mt-1 absolute ${isOverLimit ? 'text-red-500' : 'text-gray-400'}`}>
+        {wordCount}/{maxWords} words
+        {isOverLimit && (
+          <span className="ml-2 font-medium">
+            ({wordCount - maxWords} words over limit)
+          </span>
+        )}
+      </div>
+      
+      {touched && error && (
+        <div className="text-red-500 text-sm mt-1 absolute mx-auto italic">
+          {error}
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function Valuation() {
   const [loading, setLoading] = useState(false);
   const [errorModal, showErrorModal] = useState(false);
@@ -65,7 +140,13 @@ export default function Valuation() {
       .typeError("Must be a number")
       .positive("Must be positive")
       .required("Physical assets value is required"),
-    reasonForSale: Yup.string().required("Reason for funding need is required"),
+    reasonForSale: Yup.string()
+      .required("Reason for funding need is required")
+      .test("word-count", "Reason for funding need must not exceed 300 words", function(value) {
+        if (!value) return false;
+        const wordCount = countWords(value);
+        return wordCount <= 300;
+      }),
     businessPhotos: Yup.mixed()
       .nullable()
       .test("fileType", "Unsupported file format", (value) => {
@@ -382,15 +463,19 @@ export default function Valuation() {
                     />
                   </div>
                   <div>
-                    <FormInput
-                      label="Provide Reason for Funding need."
+                    <TextareaInput
+                      label="Provide Reason for Funding need (Maximum 300 words)"
                       name="reasonForSale"
                       placeholder="Reason for Funding need"
                       value={formikProps.values.reasonForSale}
-                      onChange={formikProps.handleChange}
+                      onChange={(e) => {
+                        formikProps.handleChange(e);
+                      }}
                       onBlur={formikProps.handleBlur}
                       error={formikProps.errors.reasonForSale}
                       touched={formikProps.touched.reasonForSale}
+                      maxWords={300}
+                      rows={1}
                     />
                   </div>
                 </div>
@@ -592,7 +677,7 @@ export default function Valuation() {
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-              </button>
+                </button>
             </div>
             <p className="text-gray-400 mb-3">
               Please ensure the following fields are filled correctly:

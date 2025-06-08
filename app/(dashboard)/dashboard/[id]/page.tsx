@@ -26,6 +26,7 @@ import {
 import { FundType, Proposal, BusinessDetails } from "@/app/type";
 import { formatBusinessTypeToSentence } from "@/app/services/utils";
 import { RxCrossCircled } from "react-icons/rx";
+import ListBusiness from "@/app/components/dashboard/ListBusiness";
 
 // Import the DealRoomProfile type
 type Business = {
@@ -460,6 +461,7 @@ export default function BusinessDetail() {
                 Next: Fundability Check
               </button>
             </div>
+                    <ListBusiness />
           </div>
         );
 
@@ -2002,13 +2004,13 @@ export default function BusinessDetail() {
         >
           Fundability Check
         </p>
-        <p
+          <p
           className={`cursor-pointer pb-1 ${
-            currentStep === 2 ? "border-b-2 border-mainGreen" : ""
+            currentStep === 5 ? "border-b-2 border-mainGreen" : ""
           }`}
-          onClick={() => setCurrentStep(2)}
+          onClick={() => setCurrentStep(5)}
         >
-          Investment Proposals
+          Valuation
         </p>
         <p
           className={`cursor-pointer pb-1 ${
@@ -2020,20 +2022,21 @@ export default function BusinessDetail() {
         </p>
         <p
           className={`cursor-pointer pb-1 ${
+            currentStep === 2 ? "border-b-2 border-mainGreen" : ""
+          }`}
+          onClick={() => setCurrentStep(2)}
+        >
+          Investment Proposals
+        </p>
+        <p
+          className={`cursor-pointer pb-1 ${
             currentStep === 4 ? "border-b-2 border-mainGreen" : ""
           }`}
           onClick={() => setCurrentStep(4)}
         >
           Documents
         </p>
-        <p
-          className={`cursor-pointer pb-1 ${
-            currentStep === 5 ? "border-b-2 border-mainGreen" : ""
-          }`}
-          onClick={() => setCurrentStep(5)}
-        >
-          Valuation
-        </p>
+      
       </div>
 
       <div className="mt-4">{renderContent()}</div>
