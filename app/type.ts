@@ -7,7 +7,7 @@ export interface signUpPayload {
   lastName: string,
   password: string,
   companyName: string
-  confirmPassword?:string
+  confirmPassword?: string
 
 }
 
@@ -59,10 +59,10 @@ export interface loginpayload {
 export interface InvestorProfilePayload {
   email: string;
   companyName: string;
-  phoneNumber:string;
+  phoneNumber: string;
   about: string;
   companyWebsiteUrl: string;
-  preferredIndustry:string;
+  preferredIndustry: string;
   companyType: string;
   location: string;
   interestedLocations: string[];
@@ -93,12 +93,12 @@ export interface BusinessDetails {
   reportedSales: string;
   businessStage: "SME" | "Startup";
   businessLegalEntity: "PRIVATE_LIABILITY_COMPANY" | "LIMITED_LIABILITY_COMPANY" | "PUBLIC_LIMITED_COMPANY" | "GENERAL_PARTNERSHIP" | "SOLE_PROPRIETORSHIP"; // Enum values
-  createdAt: string; 
-  updatedAt: string; 
-  assignedAt: string; 
+  createdAt: string;
+  updatedAt: string;
+  assignedAt: string;
   dealRoomDetails: DealRoomDetails | null;
   fundabilityTestDetails: FundabilityTestDetails;
-  businessVerificationStatus:boolean
+  businessVerificationStatus: boolean
 }
 
 export interface DealRoomDetails {
@@ -154,7 +154,7 @@ export interface UserDetails {
 export interface ProposalPayload {
   businessId: string;
   message: string;
-  buyingPrice?:number | null
+  buyingPrice?: number | null
 
 }
 
@@ -162,7 +162,7 @@ export interface ProposalPayloadBusiness {
   businessId: string;
   message: string;
   investorId: string;
-  buyingPrice?:number | null
+  buyingPrice?: number | null
 
 }
 
@@ -213,7 +213,7 @@ export interface ValuationFormPayload {
   proofOfBusiness: File | null;
   businessDocuments: File[] | null;
   fundingAmount: number;
-  fundingStructure:string;
+  fundingStructure: string;
 }
 
 export interface FundabilityPayload {
@@ -312,7 +312,7 @@ export interface StartupFundabilityPayload {
   businessPlan: File | null;
   financialStatements: File | null;
   relevantLicenses: File | null;
-  pitchDeck:File | null;
+  pitchDeck: File | null;
   businessId: string;
 }
 
@@ -425,15 +425,15 @@ export interface Proposal {
   createdAt: string;
   updatedAt: string;
   investor: Investor;
-  business?:BusinessP
+  business?: BusinessP
 }
 
 interface BusinessP {
-  dealRoomDetails:Tentative
+  dealRoomDetails: Tentative
 }
 interface Tentative {
-  tentativeSellingPrice:string
-  publicId?:string
+  tentativeSellingPrice: string
+  publicId?: string
 }
 export interface ProposalResponse {
   success: boolean;
@@ -455,8 +455,8 @@ export type DealRoomProfile = {
   assetsDetails: string[] | string;
   valueOfPhysicalAssets: number;
   tentativeSellingPrice: number;
-  fundingStructure:string;
-  fundingAmount:number;
+  fundingStructure: string;
+  fundingAmount: number;
   reasonForSale: string;
   businessPhotos: string[];
   proofOfBusiness: string; // Changed from array to string
@@ -517,89 +517,89 @@ export interface Investor {
   termsOfAgreementDocUrl: string;
   proofOfBusinessDocUrl: string;
   location: string;
-  interestedLocations: string[]; 
+  interestedLocations: string[];
   designation: string;
   numOfExpectedDeals: string[];
   companyType: string[];
-  interestedFactors: string[]; 
+  interestedFactors: string[];
   fundsUnderManagement: number;
-    preferredIndustry:string;
-  createdAt: string; 
-  updatedAt: string; 
+  preferredIndustry: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface  changePasswordPayload {
-  email:string;
-  newPassword:string
+export interface changePasswordPayload {
+  email: string;
+  newPassword: string
 }
 
 export interface FundType {
 
-    id: number;
-    userId: number;
-    publicId: string;
-    score: number;
-    businessId: string;
-    
-    // Company information
-    registeredCompany: boolean;
-    legalName: string;
-    companyRegistration: string;
-    city: string;
-    country: string;
-    industry: string;
-    registeredAddress: string;
-    companyEmail: string;
-    contactNumber: string;
-    principalAddress: string;
-    applicantsAddress: string;
-    
-    // Position information
-    position: string;
-    title: string;
-    
-    // Business metrics
-    yearsOfOperation: number;
-    companySize: number;
-    companyLegalCases: boolean;
-    startupStage: string;
-    
-    // People and organization
-    ownership: string[];
-    executiveManagement: string[];
-    boardOfDirectors: string[];
-    isicIndustry: boolean;
-    isicActivity: string;
-    legalAdvisors: string[];
-    
-    // Financial metrics
-    averageAnnualRevenue?: number; // Optional as it appears in only one example
-    revenueGrowthRate?: number; // Optional as it appears in only one example
-    totalAddressableMarket?: number; // Optional as it appears in only one example
-    customerLifetimeValue?: number; // Optional as it appears in only one example
-    customerAcquisitionCost?: number; // Optional as it appears in only one example
-    expectedAnnualGrowthRate?: number; // Optional as it appears in only one example
-    
-    // Compliance and documentation status
-    auditedFinancialStatement?: boolean; // Optional as it appears in only one example
-    licensesToOperate?: boolean; // Optional as it appears in only one example
-    companyPitchDeck: boolean;
-    companyBusinessPlan: boolean;
-    company5yearCashFlow: boolean;
-    companySolidAssetHolding: boolean;
-    companyLargeInventory: boolean;
-    company3YearProfitable: boolean;
-    companyHighScalibilty: boolean; // Note: Potential typo in field name (scalibility)
-    companyCurrentLiabilities: boolean;
-    ownerCurrentLiabilities: boolean;
-    
-    // Documents
-    docs: CompanyDocs;
-    
-    // Timestamps
-    createdAt: string;
-    updatedAt: string;
-  
+  id: number;
+  userId: number;
+  publicId: string;
+  score: number;
+  businessId: string;
+
+  // Company information
+  registeredCompany: boolean;
+  legalName: string;
+  companyRegistration: string;
+  city: string;
+  country: string;
+  industry: string;
+  registeredAddress: string;
+  companyEmail: string;
+  contactNumber: string;
+  principalAddress: string;
+  applicantsAddress: string;
+
+  // Position information
+  position: string;
+  title: string;
+
+  // Business metrics
+  yearsOfOperation: number;
+  companySize: number;
+  companyLegalCases: boolean;
+  startupStage: string;
+
+  // People and organization
+  ownership: string[];
+  executiveManagement: string[];
+  boardOfDirectors: string[];
+  isicIndustry: boolean;
+  isicActivity: string;
+  legalAdvisors: string[];
+
+  // Financial metrics
+  averageAnnualRevenue?: number; // Optional as it appears in only one example
+  revenueGrowthRate?: number; // Optional as it appears in only one example
+  totalAddressableMarket?: number; // Optional as it appears in only one example
+  customerLifetimeValue?: number; // Optional as it appears in only one example
+  customerAcquisitionCost?: number; // Optional as it appears in only one example
+  expectedAnnualGrowthRate?: number; // Optional as it appears in only one example
+
+  // Compliance and documentation status
+  auditedFinancialStatement?: boolean; // Optional as it appears in only one example
+  licensesToOperate?: boolean; // Optional as it appears in only one example
+  companyPitchDeck: boolean;
+  companyBusinessPlan: boolean;
+  company5yearCashFlow: boolean;
+  companySolidAssetHolding: boolean;
+  companyLargeInventory: boolean;
+  company3YearProfitable: boolean;
+  companyHighScalibilty: boolean; // Note: Potential typo in field name (scalibility)
+  companyCurrentLiabilities: boolean;
+  ownerCurrentLiabilities: boolean;
+
+  // Documents
+  docs: CompanyDocs;
+
+  // Timestamps
+  createdAt: string;
+  updatedAt: string;
+
 }
 
 
@@ -718,4 +718,81 @@ export enum Industry {
   WHOLESALE_DISTRIBUTION_NON_DURABLE = "WHOLESALE_DISTRIBUTION_NON_DURABLE",
   ECOMMERCE = "ECOMMERCE",
   OTHER = "OTHER"
+}
+
+
+
+
+export enum Plans {
+  BASIC = "BASIC",
+  PRO = "PRO",
+  PREMIUM = "PREMIUM",
+  UNLIMITED = "UNLIMITED"
+}
+
+export enum BillingCycle {
+  THREE_MONTHS = "THREE_MONTHS",
+  EIGHT_MONTHS = "EIGHT_MONTHS",
+  ONE_YEAR = "ONE_YEAR",
+  FOREVER = "FOREVER"
+}
+
+export interface SubscriptionResponse {
+  success: boolean;
+  message: string;
+  data: {
+    subscription: {
+      id: number;
+      publicId: string;
+      userId: number;
+      plan: string;
+      status: string;
+      amount: string;
+      currency: string;
+      billingCycle: string;
+      startDate: string;
+      endDate: string | null;
+      autoRenew: boolean;
+      createdAt: string;
+      updatedAt: string;
+      user: {
+        email: string;
+        firstname: string;
+        lastname: string;
+      };
+    };
+    paymentUrl: string;
+    reference: string;
+  };
+}
+export interface subscribePayload {
+  amount: number;
+  plan: Plans;
+  billingCycle: BillingCycle;
+
+}
+
+export interface PaymentVerificationResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    publicId: string;
+    userId: number;
+    plan: string;
+    status: string;
+    amount: string;
+    currency: string;
+    billingCycle: string;
+    startDate: string;
+    endDate: string | null;
+    autoRenew: boolean;
+    createdAt: string;
+    updatedAt: string;
+    user: {
+      email: string;
+      firstname: string;
+      lastname: string;
+    };
+  };
 }

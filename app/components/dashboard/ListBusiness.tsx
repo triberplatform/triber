@@ -20,6 +20,15 @@ export default function ListBusiness() {
       day: "numeric",
     });
 
+   // Helper function to format industry by replacing underscores with spaces and capitalizing first letters
+  const formatIndustry = (industry: string) => {
+    return industry
+      .replace(/_/g, " ")
+      .toLowerCase()
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  };
+
+  
   const { businessDetails } = useUser();
   
   const displayedBusinesses = showAll 
@@ -71,7 +80,7 @@ export default function ListBusiness() {
             <div className="flex flex-col lg:flex-row gap-3 lg:gap-5 text-xs lg:text-sm mt-4 lg:mt-5">
               <p className="flex items-center gap-2">
                 <FaLayerGroup className="text-mainGreen flex-shrink-0" /> 
-                <span className="truncate">Industry: {business.industry.toLowerCase()}</span>
+                <span className="truncate">Industry: {formatIndustry(business.industry)}</span>
               </p>
               <p className="flex items-center gap-2">
                 <FaLocationDot className="text-mainGreen flex-shrink-0" />

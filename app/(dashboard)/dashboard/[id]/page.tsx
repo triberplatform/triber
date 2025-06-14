@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useUser } from "@/app/components/layouts/UserContext";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -112,6 +112,14 @@ const getFileName = (url: string): string => {
   return decodeURIComponent(fileName);
 };
 
+   // Helper function to format industry by replacing underscores with spaces and capitalizing first letters
+  const formatIndustry = (industry: string) => {
+    return industry
+      .replace(/_/g, " ")
+      .toLowerCase()
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  };
+
 // Helper function to determine if a file is an image
 const isImageFile = (url: string): boolean => {
   const extension = getFileExtension(url);
@@ -127,14 +135,47 @@ export default function BusinessDetail() {
   const [fundabilityData, setFundabilityData] = useState<FundType | null>(null);
   const [fundabilityLoading, setFundabilityLoading] = useState(false);
   const [business, setBusiness] = useState<BusinessDetails | null>(null);
-  const [dealRoomProfile, setDealRoomProfile] =
-    useState<DealRoomProfile | null>(null);
+  const [dealRoomProfile, setDealRoomProfile] = useState<DealRoomProfile | null>(null);
   const [dealRoomLoading, setDealRoomLoading] = useState(false);
-  // State for photo gallery lightbox
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeGalleryTab] = useState("photos");
   const router = useRouter();
+
+   // Add refs to prevent race conditions
+  const fetchingRef = useRef({
+    dealRoom: false,
+    fundability: false,
+    proposals: false
+  });
+
+  // Memoize business finding to prevent unnecessary re-renders
+  const foundBusiness = useMemo(() => {
+    if (businessDetails && businessDetails.length > 0) {
+      return businessDetails.find((b) => b.publicId === id) || null;
+    }
+    return null;
+  }, [businessDetails, id]);
+
+  // Set business when foundBusiness changes
+  useEffect(() => {
+    setBusiness(foundBusiness);
+  }, [foundBusiness]);
+
+  // Memoize navigation handler
+  const handleNavigation = useCallback((proposalId: string) => {
+    router.push(`/dashboard/${id}/proposal-details?proposalId=${proposalId}`);
+  }, [router, id]);
+
+  // Memoize refresh redirect handler
+  const handleRefreshRedirectFund = useCallback((businessId: string) => {
+    if (business?.businessStage?.toLowerCase() === "sme") {
+      window.location.href = `/dashboard/fundability-test/${businessId}`;
+    } else {
+      window.location.href = `/dashboard/fundability-test/select-startup/${businessId}`;
+    }
+  }, [business?.businessStage]);
+
 
   // Find the business first
   useEffect(() => {
@@ -144,13 +185,15 @@ export default function BusinessDetail() {
     }
   }, [businessDetails, id]);
 
-  // Fetch proposals
+  // Fetch proposals - only depend on id
   useEffect(() => {
     const fetchProposals = async () => {
       const token = localStorage.getItem("token");
-      if (!token || !id) return;
+      if (!token || !id || fetchingRef.current.proposals) return;
 
+      fetchingRef.current.proposals = true;
       setLoading(true);
+      
       try {
         const response = await getBusinessProposals(
           token,
@@ -167,25 +210,30 @@ export default function BusinessDetail() {
         setProposal([]);
       } finally {
         setLoading(false);
+        fetchingRef.current.proposals = false;
       }
     };
 
     fetchProposals();
   }, [id]);
 
-  // Fetch deal room profile when on step 3 or 4
+
+  // Fetch deal room profile - improved dependencies
   useEffect(() => {
     const fetchDealRoomProfile = async () => {
+      // Only fetch if we're on the right step, don't have data, not already fetching, and have an id
       if (
         (currentStep === 3 || currentStep === 4) &&
         !dealRoomProfile &&
-        !dealRoomLoading &&
+        !fetchingRef.current.dealRoom &&
         id
       ) {
         const token = localStorage.getItem("token");
         if (!token) return;
 
+        fetchingRef.current.dealRoom = true;
         setDealRoomLoading(true);
+        
         try {
           const response = await getDealRoomProfile(
             token,
@@ -194,62 +242,57 @@ export default function BusinessDetail() {
           if (response && response.success && response.data) {
             setDealRoomProfile(response.data);
           } else {
-            // Set to null explicitly
-            setDealRoomProfile(null);
-            console.error(
-              "Failed to fetch deal room profile:",
-              response?.message
-            );
+            console.error("Failed to fetch deal room profile:", response?.message);
+            // Don't set to null here to avoid triggering re-renders
           }
         } catch (error) {
-          // Set to null on error
-          setDealRoomProfile(null);
           console.error("Error fetching deal room profile:", error);
+          // Don't set to null here to avoid triggering re-renders
         } finally {
           setDealRoomLoading(false);
+          fetchingRef.current.dealRoom = false;
         }
       }
     };
 
     fetchDealRoomProfile();
-  }, [currentStep, id, dealRoomProfile, dealRoomLoading]);
+  }, [currentStep, id, dealRoomProfile]); // Keep dealRoomProfile in deps but use ref to prevent race conditions
 
-  // Fetch fundability results based on business stage when tab is switched
+
+ // Fetch fundability results - improved dependencies
   useEffect(() => {
     const fetchFundabilityResults = async () => {
-      if (currentStep !== 1 || !business || !id) return;
+      if (
+        currentStep !== 1 || 
+        !business || 
+        !id || 
+        fetchingRef.current.fundability
+      ) return;
 
       const token = localStorage.getItem("token");
       if (!token) return;
 
+      const fundabilityId = business.fundabilityTestDetails?.publicId;
+      if (!fundabilityId) {
+        setFundabilityLoading(false);
+        return;
+      }
+
+      fetchingRef.current.fundability = true;
       setFundabilityLoading(true);
+      
       try {
-        // Use fundabilityTestDetails.publicId instead of business ID
-        const fundabilityId = business.fundabilityTestDetails?.publicId;
-
-        // If no fundability ID exists, exit early
-        if (!fundabilityId) {
-          setFundabilityLoading(false);
-          return;
-        }
-
         let response;
-
-        // Check business stage and call appropriate API
         if (business.businessStage?.toLowerCase() === "startup") {
           response = await getFundabilityResultsStartup(token, fundabilityId);
         } else {
-          // Default to SME if not startup or if stage is undefined
           response = await getFundabilityResultsSme(token, fundabilityId);
         }
 
         if (response && response.success) {
           setFundabilityData(response.data);
         } else {
-          console.error(
-            "Failed to fetch fundability results:",
-            response?.message
-          );
+          console.error("Failed to fetch fundability results:", response?.message);
           setFundabilityData(null);
         }
       } catch (error) {
@@ -257,36 +300,27 @@ export default function BusinessDetail() {
         setFundabilityData(null);
       } finally {
         setFundabilityLoading(false);
+        fetchingRef.current.fundability = false;
       }
     };
 
     fetchFundabilityResults();
-  }, [currentStep, business, id]);
+  }, [currentStep, business?.fundabilityTestDetails?.publicId, business?.businessStage, id]);
 
-  const handleNavigation = (proposalId: string) => {
-    router.push(`/dashboard/${id}/proposal-details?proposalId=${proposalId}`);
-  };
 
-  // Function to handle redirecting to the correct fundability test based on business stage
-  const handleRefreshRedirectFund = (id: string) => {
-    if (business?.businessStage?.toLowerCase() === "sme") {
-      window.location.href = `/dashboard/fundability-test/${id}`;
-    } else {
-      window.location.href = `/dashboard/fundability-test/select-startup/${id}`;
-    }
-  };
+ 
 
-  // Lightbox functions for photo gallery
-  const openLightbox = (index: number) => {
+ // Memoize lightbox functions to prevent re-renders
+  const openLightbox = useCallback((index: number) => {
     setCurrentImageIndex(index);
     setLightboxOpen(true);
-  };
+  }, []);
 
-  const closeLightbox = () => {
+  const closeLightbox = useCallback(() => {
     setLightboxOpen(false);
-  };
+  }, []);
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     if (
       activeGalleryTab === "photos" &&
       dealRoomProfile?.businessPhotos &&
@@ -296,9 +330,9 @@ export default function BusinessDetail() {
         (prevIndex) => (prevIndex + 1) % dealRoomProfile.businessPhotos.length
       );
     }
-  };
+  }, [activeGalleryTab, dealRoomProfile?.businessPhotos]);
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     if (
       activeGalleryTab === "photos" &&
       dealRoomProfile?.businessPhotos &&
@@ -310,19 +344,25 @@ export default function BusinessDetail() {
           dealRoomProfile.businessPhotos.length
       );
     }
-  };
+  }, [activeGalleryTab, dealRoomProfile?.businessPhotos]);
 
-  // Function to move to the next step
-  const handleNext = () => {
+  // Memoize the next handler
+  const handleNext = useCallback(() => {
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     }
-  };
+  }, [currentStep]);
 
-  // If no business is found, show loading or not found message
+  // Memoize step change handler
+  const handleStepChange = useCallback((step: number) => {
+    setCurrentStep(step);
+  }, []);
+
+   // Early return if no business found
   if (!business) {
     return <p className="text-center text-white">Business not found</p>;
   }
+
 
   const renderContent = () => {
     switch (currentStep) {
@@ -407,7 +447,7 @@ export default function BusinessDetail() {
                 <div className="flex items-center gap-2">
                   <MdOutlinePermIdentity className="text-mainGreen text-lg" />
                   <span>
-                    Employees: {business.numOfEmployees || "Not provided"}
+                    Employees: {formatIndustry(business.numOfEmployees) || "Not provided"}
                   </span>
                 </div>
               </div>
@@ -433,7 +473,7 @@ export default function BusinessDetail() {
                 </div>
                 <div className="flex items-center gap-2">
                   <LiaIndustrySolid className="text-mainGreen text-lg" />
-                  <span>Industry: {business.industry || "Not provided"}</span>
+                  <span>Industry: {formatIndustry(business.industry)|| "Not provided"}</span>
                 </div>
               </div>
 
@@ -1984,7 +2024,7 @@ export default function BusinessDetail() {
     }
   };
 
-  return (
+ return (
     <div className="font-sansSerif">
       {/* Navigation Tabs */}
       <div className="flex flex-wrap gap-4 lg:gap-7 text-sm lg:text-base px-2 lg:px-0">
@@ -1992,7 +2032,7 @@ export default function BusinessDetail() {
           className={`cursor-pointer pb-1 ${
             currentStep === 0 ? "border-b-2 border-mainGreen" : ""
           }`}
-          onClick={() => setCurrentStep(0)}
+          onClick={() => handleStepChange(0)}
         >
           Business Overview
         </p>
@@ -2000,15 +2040,15 @@ export default function BusinessDetail() {
           className={`cursor-pointer pb-1 ${
             currentStep === 1 ? "border-b-2 border-mainGreen" : ""
           }`}
-          onClick={() => setCurrentStep(1)}
+          onClick={() => handleStepChange(1)}
         >
           Fundability Check
         </p>
-          <p
+        <p
           className={`cursor-pointer pb-1 ${
             currentStep === 5 ? "border-b-2 border-mainGreen" : ""
           }`}
-          onClick={() => setCurrentStep(5)}
+          onClick={() => handleStepChange(5)}
         >
           Valuation
         </p>
@@ -2016,7 +2056,7 @@ export default function BusinessDetail() {
           className={`cursor-pointer pb-1 ${
             currentStep === 3 ? "border-b-2 border-mainGreen" : ""
           }`}
-          onClick={() => setCurrentStep(3)}
+          onClick={() => handleStepChange(3)}
         >
           Deal Room Profile
         </p>
@@ -2024,7 +2064,7 @@ export default function BusinessDetail() {
           className={`cursor-pointer pb-1 ${
             currentStep === 2 ? "border-b-2 border-mainGreen" : ""
           }`}
-          onClick={() => setCurrentStep(2)}
+          onClick={() => handleStepChange(2)}
         >
           Investment Proposals
         </p>
@@ -2032,11 +2072,10 @@ export default function BusinessDetail() {
           className={`cursor-pointer pb-1 ${
             currentStep === 4 ? "border-b-2 border-mainGreen" : ""
           }`}
-          onClick={() => setCurrentStep(4)}
+          onClick={() => handleStepChange(4)}
         >
           Documents
         </p>
-      
       </div>
 
       <div className="mt-4">{renderContent()}</div>
