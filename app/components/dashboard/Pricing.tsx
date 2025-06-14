@@ -3,7 +3,7 @@ import {
   BillingCycle,
   Plans,
   subscribePayload,
-  SubscriptionResponse,
+
 } from "@/app/type";
 import React, { useState } from "react";
 import {
@@ -36,7 +36,7 @@ interface PricingModalProps {
 
 const PricingModal: React.FC<PricingModalProps> = ({
   onClose,
-  onConfirm,
+
   businessName,
 }) => {
   const [selectedPackage, setSelectedPackage] = useState<number | null>(null);

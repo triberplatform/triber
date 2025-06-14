@@ -1,7 +1,7 @@
+'use client'
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { verifyPayment } from '@/app/services/payments';
-import { subscribePayload, PaymentVerificationResponse } from '@/app/type';
 import { 
   CheckCircle, 
   Crown, 
@@ -90,10 +90,8 @@ const PaymentSuccessPage: React.FC = () => {
       }
     };
 
-    if (router.isReady) {
-      verifyPaymentStatus();
-    }
-  }, [router.isReady, router]);
+    verifyPaymentStatus();
+  }, [router]);
 
   const handleNavigateDashboard = () => {
     router.push('/dashboard');
@@ -184,7 +182,7 @@ const PaymentSuccessPage: React.FC = () => {
           <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-white mb-2">Payment Verification Failed</h2>
           <p className="text-gray-300 mb-6">
-            We couldn't verify your payment. Please contact support or try again.
+            We couldn&apos;t verify your payment. Please contact support or try again.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
@@ -362,7 +360,7 @@ const PaymentSuccessPage: React.FC = () => {
 
             {/* What's Next Section */}
             <div className={`mt-8 transform transition-all duration-1000 delay-700 ${animateElements ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <h3 className="text-2xl font-semibold text-white mb-6 text-center">What's Next?</h3>
+              <h3 className="text-2xl font-semibold text-white mb-6 text-center">What&apos;s Next?</h3>
               
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6 text-center hover:bg-gray-800/50 transition-colors">
@@ -391,7 +389,7 @@ const PaymentSuccessPage: React.FC = () => {
                   <Mail className="w-8 h-8 text-purple-400 mx-auto mb-3" />
                   <h4 className="text-lg font-semibold text-white mb-2">Check Your Email</h4>
                   <p className="text-gray-400 text-sm mb-4">
-                    We've sent important information to your inbox
+                    We&apos;ve sent important information to your inbox
                   </p>
                   <button className="text-purple-400 hover:text-purple-300 text-sm font-medium flex items-center mx-auto">
                     Open Email <ArrowRight className="w-4 h-4 ml-1" />

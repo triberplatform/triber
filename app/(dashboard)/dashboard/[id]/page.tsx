@@ -305,7 +305,7 @@ export default function BusinessDetail() {
     };
 
     fetchFundabilityResults();
-  }, [currentStep, business?.fundabilityTestDetails?.publicId, business?.businessStage, id]);
+  }, [currentStep,business, business?.fundabilityTestDetails?.publicId, business?.businessStage, id]);
 
 
  
