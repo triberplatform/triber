@@ -149,6 +149,7 @@ export interface UserDetails {
   updatedAt: string; // ISO string format
   businesses: BusinessDetails[];
   investorProfile: InvestorProfile;
+  subscriptions:Subscription[]
 }
 
 export interface ProposalPayload {
@@ -795,4 +796,21 @@ export interface PaymentVerificationResponse {
       lastname: string;
     };
   };
+}
+
+
+export interface Subscription {
+  id: number;
+  publicId: string;
+  userId: number;
+  plan: string;
+  status: string;
+  amount: string; // Stored as string for precision
+  currency: string;
+  billingCycle: string;
+  startDate: string; // ISO date string
+  endDate: string | null; // ISO date string or null
+  autoRenew: boolean;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
 }

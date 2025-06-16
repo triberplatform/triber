@@ -10,19 +10,19 @@ import * as Yup from "yup";
 import { ProposalPayloadBusiness } from "@/app/type";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import PricingModal from "@/app/components/dashboard/Pricing";
 import QuillEditor from "@/app/components/dashboard/RichText";
+import SubscriptionStatus from "@/app/components/dashboard/SubscriptionStatus";
+import { useSubscription } from "@/app/hooks/useSubscription";
 
 export default function Valuation() {
   const [loading, setLoading] = useState(false);
   const [errorModal, showErrorModal] = useState(false);
   const [modal, showModal] = useState(false);
-  const [pricingModal, showPricingModal] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<number | null>(null);
   const [modalErrors, setModalErrors] = useState<string[]>([]);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const businessId = searchParams.get('businessId');
+  const subscription = useSubscription();
   const formikRef = useRef<FormikProps<ProposalPayloadBusiness>>(null);
 
   // Update validation schema to validate HTML content
@@ -46,25 +46,27 @@ export default function Valuation() {
     investorId: id || "",
   };
 
-  // Handle validation and show pricing modal
+  // Handle validation and check subscription
   const handleValidationAndSubmit = (formikProps: FormikProps<ProposalPayloadBusiness>) => {
     if (Object.keys(formikProps.errors).length > 0) {
       setModalErrors(Object.values(formikProps.errors) as string[]);
       showErrorModal(true);
     } else {
-      // Show pricing modal instead of submitting directly
-      showPricingModal(true);
+      // Check if user has active subscription using the hook
+      if (subscription.isActive) {
+        // Submit directly for premium users
+        formikProps.submitForm();
+      } else {
+        // For non-premium users, show message to upgrade
+        alert("Please upgrade to submit proposals. Click the upgrade button above.");
+      }
     }
   };
 
-  // Handle package selection and continue with submission
-  const handlePackageConfirm = (packageId: number) => {
-    setSelectedPackage(packageId);
-    showPricingModal(false);
-    // Use Formik's submitForm method instead of DOM manipulation
-    if (formikRef.current) {
-      formikRef.current.submitForm();
-    }
+  const handleUpgradeSuccess = (packageId: number) => {
+    console.log("Selected package:", packageId);
+    // After successful payment, the page will refresh with active subscription
+    // Then user can submit the proposal for free
   };
 
   const handleSubmit = async (values: ProposalPayloadBusiness) => {
@@ -74,8 +76,8 @@ export default function Valuation() {
       const response = await submitProposalBusiness(values, token ?? "");
       if (response.ok) {
         showModal(true);
-        console.log("Selected package:", selectedPackage);
         console.log("HTML Message:", values.message); // This will now contain HTML
+        console.log("Has active subscription:", subscription.isActive);
       } else {
         const errorData = await response.json();
         alert(errorData.message);
@@ -93,9 +95,28 @@ export default function Valuation() {
         <p className="lg:text-3xl font-serif font-semibold text-3xl mb-4">
           Submit a Proposal
         </p>
-        <p className="lg:text-sm text-xs">
+        <p className="lg:text-sm text-xs mb-4">
           Please enter your details here. Information entered here is not publicly displayed.
         </p>
+        
+        {/* Subscription Status with built-in modal */}
+        <SubscriptionStatus 
+          variant="compact" 
+          showUpgradeButton={true}
+          businessName="this investor"
+          onUpgradeSuccess={handleUpgradeSuccess}
+        />
+        
+        {subscription.isActive && (
+          <div className="mt-4 p-3 bg-green-900/30 border border-green-600 rounded-lg">
+            <div className="flex items-center gap-2">
+              <FaCheckDouble className="text-green-400" />
+              <span className="text-green-400 text-sm font-medium">
+                Free proposal submission
+              </span>
+            </div>
+          </div>
+        )}
       </div>
       <div className="col-span-8">
         <Formik
@@ -116,11 +137,12 @@ export default function Valuation() {
 
                 <div className="lg:col-span-2 mt-5">
                   <button
-                    className="px-4 py-2 w-full text-white bg-mainGreen rounded"
+                    className="px-4 py-2 w-full text-white bg-mainGreen rounded flex items-center justify-center gap-2"
                     type="button"
                     onClick={() => handleValidationAndSubmit(formikProps)}
                   >
-                    Submit
+                    {subscription.isActive && <FaCheckDouble className="text-sm" />}
+                    Submit {subscription.isActive ? '(Free)' : ''}
                   </button>
                 </div>
               </div>
@@ -152,15 +174,6 @@ export default function Valuation() {
             </button>
           </div>
         </Modal>
-      )}
-
-      {/* Pricing Modal */}
-      {pricingModal && (
-        <PricingModal 
-          onClose={() => showPricingModal(false)}
-          onConfirm={handlePackageConfirm}
-          businessName="this investor" // Changed to be investor focused
-        />
       )}
 
       {errorModal && (

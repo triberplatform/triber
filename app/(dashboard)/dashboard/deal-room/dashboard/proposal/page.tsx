@@ -11,11 +11,11 @@ import { ProposalPayload } from "@/app/type";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useUser } from "@/app/components/layouts/UserContext";
-import PricingModal from "@/app/components/dashboard/Pricing";
 import QuillEditor from "@/app/components/dashboard/RichText";
+import SubscriptionStatus from "@/app/components/dashboard/SubscriptionStatus";
+import { useSubscription } from "@/app/hooks/useSubscription";
 
 // Extend the ProposalPayload interface to include buyingPrice
-// Note: This is a temporary solution. Ideally, you should update the type definition in @/app/type
 interface ExtendedProposalPayload extends ProposalPayload {
   buyingPrice: number;
 }
@@ -24,19 +24,17 @@ export default function Valuation() {
   const [loading, setLoading] = useState(false);
   const [errorModal, showErrorModal] = useState(false);
   const [modal, showModal] = useState(false);
-  const [pricingModal, showPricingModal] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<number | null>(null);
   const [modalErrors, setModalErrors] = useState<string[]>([]);
-  const [formattedPrice, setFormattedPrice] = useState<string>("500,000"); // For display
+  const [formattedPrice, setFormattedPrice] = useState<string>("500,000");
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const { user } = useUser();
+  const subscription = useSubscription();
   const formikRef = useRef<FormikProps<ExtendedProposalPayload>>(null);
 
   const businesses = user?.businesses;
   const business = businesses?.find(business => business.publicId === id);
 
-  // Update validation schema to validate HTML content
   const validationSchema = Yup.object().shape({
     message: Yup.string()
       .required("Please write a message")
@@ -44,7 +42,6 @@ export default function Valuation() {
         'not-just-html',
         'Please write a message with actual content',
         value => {
-          // Simple test to check if there's content beyond HTML tags
           const textContent = value ? value.replace(/<[^>]*>/g, '') : '';
           return textContent.trim().length > 0;
         }
@@ -57,28 +54,29 @@ export default function Valuation() {
   const initialValues: ExtendedProposalPayload = {
     businessId: id || "",
     message: "",
-    buyingPrice: 0, // Set default value
+    buyingPrice: 0,
   };
 
-  // Updated to handle package selection first
   const handleValidationAndSubmit = (formikProps: FormikProps<ExtendedProposalPayload>) => {
     if (Object.keys(formikProps.errors).length > 0) {
       setModalErrors(Object.values(formikProps.errors) as string[]);
       showErrorModal(true);
     } else {
-      // Show pricing modal instead of submitting directly
-      showPricingModal(true);
+      // Check if user has active subscription using the hook
+      if (subscription.isActive) {
+        // Skip pricing modal and submit directly
+        formikProps.submitForm();
+      } else {
+        // For non-premium users, show message to upgrade
+        alert("Please upgrade to submit proposals. Click the upgrade button above.");
+      }
     }
   };
 
-  // Handle package selection and continue with submission
-  const handlePackageConfirm = (packageId: number) => {
-    setSelectedPackage(packageId); // Just for tracking, not used in payload
-    showPricingModal(false);
-    // Use Formik's submitForm method instead of DOM manipulation
-    if (formikRef.current) {
-      formikRef.current.submitForm();
-    }
+  const handleUpgradeSuccess = (packageId: number) => {
+    console.log("Selected package:", packageId);
+    // After successful payment, the page will refresh with active subscription
+    // Then user can submit the proposal for free
   };
 
   const handleSubmit = async (values: ExtendedProposalPayload) => {
@@ -86,14 +84,13 @@ export default function Valuation() {
       setLoading(true);
       const token = localStorage.getItem("token");
       
-      // Include buyingPrice in the payload
       const response = await submitProposal(values, token ?? "");
 
       if (response.ok) {
         showModal(true);
-        console.log("Selected package:", selectedPackage);
         console.log("Buying price:", values.buyingPrice);
-        console.log("HTML Message:", values.message); // This will now contain HTML
+        console.log("HTML Message:", values.message);
+        console.log("Has active subscription:", subscription.isActive);
       } else {
         const errorData = await response.json();
         alert(errorData.message);
@@ -111,10 +108,30 @@ export default function Valuation() {
         <p className="lg:text-3xl font-serif font-semibold text-3xl mb-4">
           Submit a Proposal
         </p>
-        <p className="lg:text-sm text-xs">
+        <p className="lg:text-sm text-xs mb-4">
           Please enter your details here. Information entered here is not publicly displayed.
         </p>
+        
+        {/* Subscription Status with built-in modal */}
+        <SubscriptionStatus 
+          variant="compact" 
+          showUpgradeButton={true}
+          businessName={business?.businessName || "this business"}
+          onUpgradeSuccess={handleUpgradeSuccess}
+        />
+        
+        {subscription.isActive && (
+          <div className="mt-4 p-3 bg-green-900/30 border border-green-600 rounded-lg">
+            <div className="flex items-center gap-2">
+              <FaCheckDouble className="text-green-400" />
+              <span className="text-green-400 text-sm font-medium">
+                Free proposal submission
+              </span>
+            </div>
+          </div>
+        )}
       </div>
+      
       <div className="col-span-8">
         <Formik
           innerRef={formikRef}
@@ -135,16 +152,10 @@ export default function Valuation() {
                     name="buyingPrice"
                     value={formattedPrice}
                     onChange={(e) => {
-                      // Remove non-numeric characters
                       const numericValue = e.target.value.replace(/[^0-9]/g, '');
-                      
-                      // Convert to number for formik state
                       const numberValue = numericValue ? parseInt(numericValue, 10) : 0;
-                      
-                      // Format with commas for display
                       const formatted = numberValue.toLocaleString();
                       
-                      // Update both states
                       setFormattedPrice(formatted);
                       formikProps.setFieldValue('buyingPrice', numberValue);
                     }}
@@ -156,7 +167,6 @@ export default function Valuation() {
                   )}
                 </div>
                 
-                {/* Use Quill Editor instead of RichTextEditor */}
                 <QuillEditor
                   label="Send an elevation Pitch to the business and include your proposal"
                   name="message"
@@ -165,11 +175,12 @@ export default function Valuation() {
                 
                 <div className="lg:col-span-2 mt-5">
                   <button
-                    className="px-4 py-2 w-full text-white bg-mainGreen rounded"
+                    className="px-4 py-2 w-full text-white bg-mainGreen rounded flex items-center justify-center gap-2"
                     type="button"
                     onClick={() => handleValidationAndSubmit(formikProps)}
                   >
-                    Submit
+                    {subscription.isActive && <FaCheckDouble className="text-sm" />}
+                    Submit {subscription.isActive ? '(Free)' : ''}
                   </button>
                 </div>
               </div>
@@ -201,14 +212,6 @@ export default function Valuation() {
             </button>
           </div>
         </Modal>
-      )}
-
-      {pricingModal && (
-        <PricingModal 
-          onClose={() => showPricingModal(false)}
-          onConfirm={handlePackageConfirm}
-          businessName={business?.businessName || "this business"}
-        />
       )}
       
       {errorModal && (

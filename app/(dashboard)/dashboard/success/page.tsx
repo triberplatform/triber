@@ -8,12 +8,9 @@ import {
   Calendar, 
   Mail, 
   CreditCard, 
-  ArrowRight, 
-  Download, 
   Users, 
   Sparkles,
   Home,
-  FileText,
   Gift,
   Star,
   Loader2,
@@ -358,48 +355,8 @@ const PaymentSuccessPage: React.FC = () => {
               </div>
             </div>
 
-            {/* What's Next Section */}
-            <div className={`mt-8 transform transition-all duration-1000 delay-700 ${animateElements ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <h3 className="text-2xl font-semibold text-white mb-6 text-center">What&apos;s Next?</h3>
-              
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6 text-center hover:bg-gray-800/50 transition-colors">
-                  <FileText className="w-8 h-8 text-green-400 mx-auto mb-3" />
-                  <h4 className="text-lg font-semibold text-white mb-2">Complete Your Profile</h4>
-                  <p className="text-gray-400 text-sm mb-4">
-                    Add your business details to start receiving proposals
-                  </p>
-                  <button className="text-green-400 hover:text-green-300 text-sm font-medium flex items-center mx-auto">
-                    Get Started <ArrowRight className="w-4 h-4 ml-1" />
-                  </button>
-                </div>
-                
-                <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6 text-center hover:bg-gray-800/50 transition-colors">
-                  <Download className="w-8 h-8 text-blue-400 mx-auto mb-3" />
-                  <h4 className="text-lg font-semibold text-white mb-2">Download Resources</h4>
-                  <p className="text-gray-400 text-sm mb-4">
-                    Access your welcome package and getting started guide
-                  </p>
-                  <button className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center mx-auto">
-                    Download <ArrowRight className="w-4 h-4 ml-1" />
-                  </button>
-                </div>
-                
-                <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6 text-center hover:bg-gray-800/50 transition-colors">
-                  <Mail className="w-8 h-8 text-purple-400 mx-auto mb-3" />
-                  <h4 className="text-lg font-semibold text-white mb-2">Check Your Email</h4>
-                  <p className="text-gray-400 text-sm mb-4">
-                    We&apos;ve sent important information to your inbox
-                  </p>
-                  <button className="text-purple-400 hover:text-purple-300 text-sm font-medium flex items-center mx-auto">
-                    Open Email <ArrowRight className="w-4 h-4 ml-1" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
             {/* Action Buttons */}
-            <div className={`mt-8 flex flex-col sm:flex-row gap-4 justify-center transform transition-all duration-1000 delay-1000 ${animateElements ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <div className={`mt-8 flex flex-col sm:flex-row gap-4 justify-center transform transition-all duration-1000 delay-700 ${animateElements ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               <button
                 onClick={handleNavigateDashboard}
                 className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center justify-center transition-colors"
