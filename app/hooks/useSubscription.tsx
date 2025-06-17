@@ -61,8 +61,8 @@ export const useSubscription = (): SubscriptionStatusInfo => {
     
     const getPlanDisplayName = (plan: string) => {
       switch (plan?.toUpperCase()) {
-        case 'BASIC': return 'Simple Plan';
-        case 'PRO': return 'Active Plan';
+        case 'BASIC': return 'Basic Plan';
+        case 'PRO': return 'Pro Plan';
         case 'PREMIUM': return 'Premium Plan';
         case 'UNLIMITED': return 'Unlimited Plan';
         default: return plan || 'Unknown Plan';
