@@ -69,6 +69,7 @@ export const useSubscription = (): SubscriptionStatusInfo => {
       }
     };
     
+    
     let daysRemaining = 0;
 
     if (subscription.endDate) {
