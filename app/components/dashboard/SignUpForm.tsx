@@ -84,7 +84,9 @@ const SignUpForm = () => {
 
       if (response.ok) {
         localStorage.setItem("userEmail", values.email);
-        router.push("/confirm-email");
+        // router.push("/confirm-email");
+        setModalOpen(true)
+        router.push("/login")
       }
     } catch {
       alert("An unexpected error occurred.");
@@ -289,7 +291,7 @@ const SignUpForm = () => {
                 size={40}
                 className="mx-auto text-mainGreen mb-4"
               />
-              <p className="text-sm text-gray-300 mb-6">{modalMessage}</p>
+              <p className="text-sm text-gray-300 mb-6">{modalMessage || "Sign Up Successful"}</p>
             </div>
 
             {/* Action Buttons */}
