@@ -17,7 +17,7 @@ import {
   Loader2,
   XCircle,
 } from "lucide-react";
-import { FaCrown, FaRegCreditCard, FaBriefcase, FaRocket, FaInfinity, FaSpinner } from 'react-icons/fa';
+import {  FaRegCreditCard, FaBriefcase, FaRocket, FaInfinity, FaSpinner } from 'react-icons/fa';
 
 // Plans enum
 export enum Plans {
@@ -209,7 +209,7 @@ const PaymentSuccessPage: React.FC = () => {
     };
 
     verifyPaymentStatus();
-  }, [router]);
+  }, [router,referenceId]);
 
   const handleNavigateDashboard = () => {
     router.push("/dashboard");
