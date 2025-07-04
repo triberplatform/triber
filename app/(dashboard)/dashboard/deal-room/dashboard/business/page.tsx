@@ -315,11 +315,11 @@ export default function BusinessDetail() {
                       </div>
                       <div>
                         <p className="text-xs text-gray-400">Industry</p>
-                        <p className="text-sm text-white">{businessDetails?.industry}</p>
+                        <p className="text-sm text-white">{businessDetails?.industry && toSentenceCase(businessDetails?.industry)}</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-400">Funding Requirement</p>
-                        <p className="text-sm text-white">{businessDetails?.interestedIn}</p>
+                        <p className="text-sm text-white">{businessDetails?.interestedIn && toSentenceCase(businessDetails?.interestedIn)}</p>
                       </div>
                     </div>
                   </div>

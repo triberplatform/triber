@@ -258,6 +258,10 @@ export default function BusinessDetail() {
     fetchDealRoomProfile();
   }, [currentStep, id, dealRoomProfile]); // Keep dealRoomProfile in deps but use ref to prevent race conditions
 
+    const toSentenceCase = (str: string) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
 
  // Fetch fundability results - improved dependencies
   useEffect(() => {
@@ -1301,7 +1305,7 @@ export default function BusinessDetail() {
                           <div>
                             <p className="text-xs text-gray-400">Industry</p>
                             <p className="text-sm text-white">
-                              {business?.industry || "Not provided"}
+                              {business?.industry && toSentenceCase(business?.industry)}
                             </p>
                           </div>
                           <div>
@@ -1377,7 +1381,9 @@ export default function BusinessDetail() {
                               Funding required
                             </p>
                             <p className="text-sm text-white">
-                              {dealRoomProfile.fundingAmount || "Not provided"}
+                                   ₦ {(
+                                Number(dealRoomProfile.fundingAmount) || 0
+                              ).toLocaleString() }
                             </p>
                           </div>
                           <div>
