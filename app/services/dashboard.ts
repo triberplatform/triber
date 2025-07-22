@@ -442,6 +442,10 @@ export const updateDealRoomProfile = async (data: any, token: string, businessId
     if (data.valueOfPhysicalAssets !== undefined) formData.append('valueOfPhysicalAssets', data.valueOfPhysicalAssets.toString());
     if (data.reasonForSale) formData.append('reasonForSale', data.reasonForSale);
     
+    // ADD THESE MISSING FIELDS:
+    if (data.fundingAmount !== undefined) formData.append('fundingAmount', data.fundingAmount.toString());
+    if (data.fundingStructure) formData.append('fundingStructure', data.fundingStructure);
+    
     // Handle asset details array - using JSON.stringify instead of individual entries
     if (data.assetsDetails) {
       formData.append('assetsDetails', JSON.stringify(data.assetsDetails));
@@ -449,8 +453,8 @@ export const updateDealRoomProfile = async (data: any, token: string, businessId
     
     // Handle file uploads - only append if new files were provided
     // Business Photos (multiple files)
-    if (data.businessPhotos && (data.businessPhotos instanceof FileList || 
-       (Array.isArray(data.businessPhotos) && data.businessPhotos[0] instanceof File))) {
+    if (data.businessPhotos && (data.businessPhotos instanceof FileList ||
+        (Array.isArray(data.businessPhotos) && data.businessPhotos[0] instanceof File))) {
       
       const files = Array.from(data.businessPhotos);
       files.forEach((file: any) => {
@@ -464,8 +468,8 @@ export const updateDealRoomProfile = async (data: any, token: string, businessId
     }
     
     // Business Documents (multiple files)
-    if (data.businessDocuments && (data.businessDocuments instanceof FileList || 
-       (Array.isArray(data.businessDocuments) && data.businessDocuments[0] instanceof File))) {
+    if (data.businessDocuments && (data.businessDocuments instanceof FileList ||
+        (Array.isArray(data.businessDocuments) && data.businessDocuments[0] instanceof File))) {
       
       const files = Array.from(data.businessDocuments);
       files.forEach((file: any) => {
