@@ -21,7 +21,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
   onBlur,
   error,
   touched,
-  maxSizeKB = 2200, // Default to 800KB if not specified
+  maxSizeKB = 5000, // Default to 800KB if not specified
 }) => {
   const [fileName, setFileName] = useState<string>('');
   const [inputKey, setInputKey] = useState<number>(Date.now());
