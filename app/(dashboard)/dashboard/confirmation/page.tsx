@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { verifyPayment, subscribeToService } from "@/app/services/payments";
-import { BillingCycle, subscribePayload } from "@/app/type";
+import { BillingCycle, Plans, subscribePayload } from "@/app/type";
 import {
   CheckCircle,
   Crown,
@@ -19,13 +19,7 @@ import {
 } from "lucide-react";
 import {  FaRegCreditCard, FaBriefcase, FaRocket, FaInfinity, FaSpinner } from 'react-icons/fa';
 
-// Plans enum
-export enum Plans {
-  BASIC = "BASIC",
-  PRO = "PRO",
-  PREMIUM = "PREMIUM",
-  UNLIMITED = "UNLIMITED"
-}
+
 
 interface PricingPackage {
   id: number;
